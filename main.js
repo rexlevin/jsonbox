@@ -1,7 +1,10 @@
 const { app, BrowserWindow, Menu, Tray } = require('electron')
 const path = require('path')
 
-app.whenReady().then(() => { createTray();createWindow() })
+app.whenReady().then(() => {
+    // createTray();
+    createWindow()
+})
 
 app.on('window-all-closed', () => {
     if(process.platform !== 'darwin') app.quit();
