@@ -1,0 +1,37 @@
+{
+  "name": "jsonbox",
+  "version": "1.0.0",
+  "description": "一个跨平台的json格式化工具",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-pack": "electron-builder --dir",
+    "build-dist:linux": "electron-builder -l",
+    "build-dist:win": "electron-builder -w"
+  },
+  "build": {
+    "appId": "org.lizl6.jsonbox",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "asar": true,
+    "directories": {
+      "output": "./dist"
+    },
+    "linux": {
+      "target": ["appimage"]
+    },
+    "win": {
+      "target": ["nsis"]
+    }
+  },
+  "keywords": [
+    "json"
+  ],
+  "author": "lizl6",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^19.0.8"
+  },
+  "dependencies": {
+    "vue": "^3.2.37"
+  }
+}

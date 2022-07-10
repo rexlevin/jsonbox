@@ -1,0 +1,13 @@
+/* 将默认body 的margin值改为0，当内容出现滚动条则不包含margin部分 */
+html body{background-color: #e7eaed; height:100%; margin: 0 !important; font-family: Arial, Helvetica, sans-serif;}
+button {width: 100px; height: 30px; font-size: 20px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.2); text-shadow: 0 1px 1px rgba(0,0,0,.3);}
+button:hover{text-decoration: none;}
+
+/* #app{width:100%; height: 100%;} */
+/* #container{width:100%; height:100%;} */
+#container textarea{width:100%; height:100%; background-color: white; padding: 0; outline: none; border: 0; resize: none; font-size:18px;}
+
+.frame_page { display: flex; height:100vh; flex-direction:column; margin: 0 10; }
+.frame_header { height:40px; }
+.frame_content { flex:1; overflow:none; }
+.frame_footer { height: 60px; line-height: 60px; }
