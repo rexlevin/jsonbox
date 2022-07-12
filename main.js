@@ -1,5 +1,7 @@
-const { app, BrowserWindow, Menu, Tray } = require('electron')
+const { app, BrowserWindow, Menu, Tray, ipcMain } = require('electron')
 const path = require('path')
+
+let win;
 
 app.whenReady().then(() => {
     // createTray();
@@ -11,7 +13,8 @@ app.on('window-all-closed', () => {
 });
 
 const createWindow = () => {
-    const win = new BrowserWindow({
+    Menu.setApplicationMenu(null);
+    win = new BrowserWindow({
         width: 800,
         height: 600,
         minWidth: 800,
@@ -45,3 +48,12 @@ const trayMenuTemplate = [{
         app.quit();
     }
 }]
+
+ipcMain.on('devTools', () => {
+    if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
+    else win.webContents.openDevTools();
+});
+ipcMain.on('reload', () => {
+    win.reload();
+    // win.webContents.reload();
+});

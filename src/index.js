@@ -1,6 +1,15 @@
 const app = {
     data() {},
-    created() {},
+    created() {
+        document.addEventListener('keyup', (e) => {
+            if(e.ctrlKey && e.shiftKey && e.key == 'I'|'i') {
+                window.api.devTools();
+            }
+            if(e.ctrlKey && e.key == 'r') {
+                window.api.reload();
+            }
+        });
+    },
     mounted() {
         let el = document.getElementById('ta');
         el.focus();
