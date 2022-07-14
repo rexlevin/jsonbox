@@ -27,7 +27,7 @@
     "json"
   ],
   "author": "lizl6",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "electron": "^19.0.8"
   },
