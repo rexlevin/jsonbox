@@ -10,7 +10,7 @@
     "build-dist:win": "electron-builder -w"
   },
   "build": {
-    "appId": "org.lizl6.jsonbox",
+    "appId": "com.lizl6.jsonbox",
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "asar": true,
     "directories": {
