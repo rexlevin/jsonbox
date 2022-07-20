@@ -43,18 +43,16 @@ const app = {
     methods: {
         parse() {
             let el = document.getElementById('ta');
-            console.info('============content=========' + el.value);
             let tmp;
             try {
-                tmp = JSON.parse(el.value);
+                tmp = JSON.parse(el.innerText);
             } catch(err) {
                 console.error(err);
                 alert('please input valid json string');
                 return;
             }
             let after = JSON.stringify(tmp, null, 4);
-            console.info('========' + after);
-            el.value = after;
+            el.innerHTML = '<pre>' + after + '</pre>';
         }
     }
 }

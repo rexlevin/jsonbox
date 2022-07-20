@@ -5,9 +5,10 @@ button:hover{text-decoration: none;}
 
 /* #app{width:100%; height: 100%;} */
 /* #container{width:100%; height:100%;} */
-#container textarea{width:100%; height:100%; background-color: white; padding: 0; outline: none; border: 0; resize: none; font-size:18px;}
+/* #container textarea{width:100%; height:100%; background-color: white; padding: 0; outline: none; border: 0; resize: none; font-size:18px;} */
+#container #ta{width:100%; height:100%; background-color: white; padding: 0; outline: none; border: 0; font-size:18px; overflow-y:auto;}
 
-.frame_page { display: flex; height:100vh; flex-direction:column; margin: 0 10; }
+.frame_page { display: flex; height:100vh; flex-direction:column; margin: 0 10;}
 .frame_header { height:40px; }
-.frame_content { flex:1; overflow:none; }
+.frame_content { flex:1; overflow:auto; }
 .frame_footer { height: 60px; line-height: 60px; }

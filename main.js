@@ -57,3 +57,6 @@ ipcMain.on('reload', () => {
     win.reload();
     // win.webContents.reload();
 });
+ipcMain.on('exit', () => {
+    app.quit();
+});
