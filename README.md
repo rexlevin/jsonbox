@@ -4,6 +4,16 @@
 
 吐个槽，electron的体积是真大啊，待tauri成熟了换成tauri，毕竟体积更小。
 
+# 功能/计划
+
+1. 粘贴即格式化（偶尔会不灵敏，就点下“parse”:cry:，待优化吧～）
+
+2. 代码着色（感谢“化名三爷”的[json着色](https://blog.csdn.net/zlxls/article/details/83185627)）
+
+3. ctrl + f 搜索（待完成）
+
+4. 行号（待完成）
+
 # 开发
 
 ```bash
@@ -23,4 +33,4 @@ npm run build-dist:linux
 
 # 截图
 
-![image-20220710192722168](https://imgbd.r-xnoro.com//image-20220710192722168.png)
+![image-20220723145629746](https://imgbd.r-xnoro.com//image-20220723145629746.png)
