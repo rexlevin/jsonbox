@@ -33,4 +33,4 @@ npm run build-dist:linux
 
 # 截图
 
-![image-20220723145629746](https://imgbd.r-xnoro.com//image-20220723145629746.png)
+![image-20220727155139151](https://imgbd.r-xnoro.com//image-20220727155139151.png)
