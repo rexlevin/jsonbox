@@ -73,7 +73,7 @@ function Process(text) {
         if (text == "") {
             text = '""';
         }
-        let obj = eval("[" + text + "]");
+        let obj = eval(text); // eval("[" + text + "]");
         html = ProcessObject(obj[0], 0, false, false, false);
         return html;
     } catch (e) {}
@@ -97,7 +97,8 @@ function ProcessObject(obj, indent, addComma, isArray, isPropertyContent) {
             html += FormatLiteral("null", "", comma, indent, isArray, "Null");
         } else {
             if (type == "object") {
-                let numProps = (undefined == obj || null == obj) ? 0 : obj.length;
+                let numProps = 0;
+                for(let prop in obj) numProps++; 
                 if (numProps == 0) {
                     html += GetRow(indent, "<span class='ObjectBrace'>{}</span>" + comma, isPropertyContent)
                 } else {
