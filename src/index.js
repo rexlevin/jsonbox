@@ -11,14 +11,31 @@ const app = {
         });
     },
     mounted() {
+        let txtSearch = document.getElementById('txtSearch');
+        let el = document.getElementById('ta');
+
         document.addEventListener('keypress', (e) => {
             if (!(e.ctrlKey && e.key == 'f')) {
                 return;
             }
-            let txtSearch = document.getElementById('txtSearch');
             txtSearch.focus();
         });
-        let el = document.getElementById('ta');
+
+        txtSearch.addEventListener('keypress', (e) => {
+            if(!(e.key == 'Enter')) {
+                return;
+            }
+            this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
+            let searchText = txtSearch.value;
+            let content = el.innerHTML;
+            if(0 === content.length) {
+                return;
+            }
+            let reg = new RegExp(searchText, 'g');
+            var newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
+            el.innerHTML = newHtml;
+        });
+
         el.focus();
         // el.addEventListener('change', () => {
         //     if(undefined == el.value || '' == el.value.trim()) return;
