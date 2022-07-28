@@ -11,6 +11,13 @@ const app = {
         });
     },
     mounted() {
+        document.addEventListener('keypress', (e) => {
+            if (!(e.ctrlKey && e.key == 'f')) {
+                return;
+            }
+            let txtSearch = document.getElementById('txtSearch');
+            txtSearch.focus();
+        });
         let el = document.getElementById('ta');
         el.focus();
         // el.addEventListener('change', () => {
@@ -80,7 +87,7 @@ function Process(text) {
 }
 
 function ProcessObject(obj, indent, addComma, isArray, isPropertyContent) {
-    let html = "", comma = (addComma) ? "<span class='Comma'>,</span> ": "";
+    let html = "", comma = (addComma) ? "<span class='Comma'>,</span>": "";
     let type = typeof obj;
     if (IsArray(obj)) {
         if (obj.length == 0) {

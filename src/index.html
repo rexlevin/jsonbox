@@ -9,10 +9,18 @@
 </head>
 <body>
     <div id="app" class="frame_page">
+        <!-- <div class='frame_header'></div> -->
         <div id="container" class="frame_content">
             <div id="ta" contenteditable="true"></div>
         </div>
-    <div id="foo" class="frame_footer"><button @click="parse">parse</button></div>
+        <div id="foo" class="frame_footer">
+            <div class="ffItem"><button id="btnParse" @click="parse">parse</button></div>
+            <div class="ffItem"><input type="text" name="" id="txtSearch">&nbsp;
+                <button id="btnNext">></button>&nbsp;
+                <button id="btnPre"><</button>
+            </div>
+        </div>
+    </div>
     <script src="../node_modules/vue/dist/vue.global.prod.js" charset="utf-8"></script>
     <script src="./index.js"></script>
 </body>
