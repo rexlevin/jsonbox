@@ -17,10 +17,14 @@
       "output": "./dist"
     },
     "linux": {
-      "target": ["appimage"]
+      "target": [
+        "appimage"
+      ]
     },
     "win": {
-      "target": ["nsis"]
+      "target": [
+        "nsis"
+      ]
     }
   },
   "keywords": [
