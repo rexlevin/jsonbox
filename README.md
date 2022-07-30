@@ -10,9 +10,11 @@
 
 2. 代码着色（感谢“化名三爷”的[json着色](https://blog.csdn.net/zlxls/article/details/83185627)）
 
-3. ctrl + f 搜索（待完成）
+3. ctrl + f 搜索
 
-4. 行号（待完成）
+4. 搜索上一个、下一个（待完成） 
+
+5. 行号（待完成）
 
 # 开发
 
@@ -33,4 +35,4 @@ npm run build-dist:linux
 
 # 截图
 
-![image-20220727155139151](https://imgbd.r-xnoro.com//image-20220727155139151.png)
+![image-20220730132959338](https://imgbd.r-xnoro.com//image-20220730132959338.png)
