@@ -13,56 +13,47 @@ const app = {
     mounted() {
         let txtSearch = document.getElementById('txtSearch');
         let el = document.getElementById('ta');
-
-        document.addEventListener('keypress', (e) => {
-            if (!(e.ctrlKey && e.key == 'f')) {
-                return;
-            }
-            txtSearch.focus();
-        });
-
-        txtSearch.addEventListener('keypress', (e) => {
-            if(!(e.key == 'Enter')) {
-                return;
-            }
-            this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
-            let searchText = txtSearch.value;
-            let content = el.innerHTML;
-            if(0 === content.length) {
-                return;
-            }
-            let reg = new RegExp(searchText, 'g');
-            var newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
-            el.innerHTML = newHtml;
-        });
-
         el.focus();
-        // el.addEventListener('change', () => {
-        //     if(undefined == el.value || '' == el.value.trim()) return;
-        //     this.parse();
-        // });
+
         el.addEventListener('keyup', (e) => {
             if (!(e.ctrlKey && e.key == 'v')) {
                 return;
             }
             this.parse();
         });
-        // el.addEventListener('paste', (e) => {
-        //     e.preventDefault(); // 阻止默认的粘贴事件
-        //     let data = e.clipboardData || window.clipboardData;
-        //     console.info('====paste=====' + data.types + '====' + data.getData('text'));
-        //     let tmp;
-        //     try {
-        //         tmp = JSON.parse(data.getData('text'));
-        //     } catch(err) {
-        //         alert('please input a valid json string');
-        //         return;
-        //     }
-        //     let after = JSON.stringify(tmp, null, 4);
-        //     console.info('========' + after);
-        //     el.value = after;
-        //     return;
-        // });
+
+        document.addEventListener('keypress', (e) => {
+            console.info(1);
+            if (!(e.ctrlKey && e.key == 'f')) {
+                return;
+            }
+            txtSearch.focus();
+        });
+
+        txtSearch.addEventListener('keyup', (e) => {
+            if(e.key == 'Enter') {
+                // 着色并向后找
+                let searchText = txtSearch.value.trim();
+                if(undefined == searchText || '' == searchText) {
+                    return;
+                }
+                this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
+                let content = el.innerHTML;
+                if(0 === content.length) {
+                    return;
+                }
+                let reg = new RegExp(searchText, 'g');
+                var newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
+                el.innerHTML = newHtml;
+            }
+            if(e.shiftKey && e.key == 'Enter') {
+                // 向前找
+                let searchText = txtSearch.value.trim();
+                if(undefined == searchText || '' == searchText) {
+                    return;
+                }
+            }
+        });
     },
     methods: {
         parse() {
