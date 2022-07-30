@@ -15,6 +15,15 @@ const app = {
         let el = document.getElementById('ta');
         el.focus();
 
+        el.addEventListener('keydown', (e) => {
+            if(!(e.key == 'Backspace' || e.key == 'Delete')) {
+                return;
+            }
+            if(document.getSelection().toString().trim() == el.innerText.trim()) {
+                console.info('all selected');
+                el.innerHTML = '';
+            }
+        });
         el.addEventListener('keyup', (e) => {
             if (!(e.ctrlKey && e.key == 'v')) {
                 return;
@@ -23,7 +32,6 @@ const app = {
         });
 
         document.addEventListener('keypress', (e) => {
-            console.info(1);
             if (!(e.ctrlKey && e.key == 'f')) {
                 return;
             }
