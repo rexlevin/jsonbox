@@ -45,12 +45,29 @@ const app = {
                 if(undefined == searchText || '' == searchText) {
                     return;
                 }
-                this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
-                let content = el.innerHTML;
-                if(0 === content.length) {
+                if(undefined == el.innerText || 'undefined' == el.innerText || '' == el.innerText || 0 === el.innerText.length) {
                     return;
                 }
-                let reg = new RegExp(searchText, 'g');
+                this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
+
+                let text = el.innerText, content = el.innerHTML, reg = new RegExp(searchText, 'g');
+
+                let i = 0;
+                while(content.indexOf(searchText, i) != -1) {
+                    let loc = {};
+                    loc.start = content.indexOf(searchText, i);
+                    // loc.end = loc.start + searchText.length  - 1;
+                    if(content.slice(loc.start - 1, loc.start) == '<' || content.slice(loc.start - 2, loc.start) == '</') {
+                        i = loc.start + searchText.length;
+                        continue;
+                    }
+                    content = content.slice(0, loc.start) + '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>' + content.slice(loc.start + searchText.length);
+
+                    i = loc.start + searchText.length + 62 + 1;
+                }
+                el.innerHTML = content;
+
+                return;
                 var newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
                 el.innerHTML = newHtml;
             }
