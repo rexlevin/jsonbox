@@ -20,13 +20,18 @@ const app = {
                 return;
             }
             if(document.getSelection().toString().trim() == el.innerText.trim()) {
-                console.info('all selected');
+                console.info('all selected before delete');
                 el.innerHTML = '';
             }
         });
-        el.addEventListener('keyup', (e) => {
-            if (!(e.ctrlKey && e.key == 'v')) {
-                return;
+        el.addEventListener('paste', (e) => {
+            if(document.getSelection().toString().trim() == el.innerText.trim()) {
+                console.info('all selected before ctrl+v');
+                el.innerHTML = '';
+                navigator.clipboard.readText().then(text => {
+                    el.innerText = text;
+                    this.parse();
+                });
             }
             this.parse();
         });
@@ -50,8 +55,16 @@ const app = {
                 }
                 this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
 
-                let text = el.innerText, content = el.innerHTML, reg = new RegExp(searchText, 'g');
-
+                // let content = el.innerHTML, reg = new RegExp(searchText, 'g');
+                // let newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
+                // el.innerHTML = newHtml;
+                /*
+                 * 由于存在用户搜索类似span这样的内容的可能，这里不能使用上面的regx方式来进行搜索高亮
+                 * 这是因为上一布的this.parse()调用会在content中添加大量的代码着色，
+                 * 而这些着色代码里有大量span、class等关键字，
+                 * 所以这里如果用户搜索span、class这样的关键字，会造成替换掉本来看不到的html标签，进而使内容错乱
+                 */
+                let content = el.innerHTML;
                 let i = 0;
                 while(content.indexOf(searchText, i) != -1) {
                     let loc = {};
@@ -66,10 +79,6 @@ const app = {
                     i = loc.start + searchText.length + 62 + 1;
                 }
                 el.innerHTML = content;
-
-                return;
-                var newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
-                el.innerHTML = newHtml;
             }
             if(e.shiftKey && e.key == 'Enter') {
                 // 向前找
