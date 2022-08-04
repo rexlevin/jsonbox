@@ -9,10 +9,14 @@ input {width: 210px; height: 25px;}
 /* #container textarea{width:100%; height:100%; background-color: white; padding: 0; outline: none; border: 0; resize: none; font-size:18px;} */
 #container #ta{width:100%; height:100%; background-color: white; padding: 0; outline: none; border: 0; font-size:18px; overflow-y:auto;}
 #foo{padding: 0 20px 0 20px; align-items: center;display: inline-block;}
-#foo .ffItem{float: left; width: 50%;}
+#foo .ffItem{float: left;}
+#foo .item01{width: 150px;}
+/* #foo .item02{} */
+
 #foo #btnParse{width: 100px;}
 #foo #btnNext{width: 30px;}
 #foo #btnPre{width: 30px;}
+#foo #match{display:inline-block; width:100px; text-align: right; margin-right: 5px;}
 
 .frame_page { display: flex; height:100vh; flex-direction:column; margin: 0 10;}
 .frame_header { height:40px; }
