@@ -11,6 +11,9 @@ const app = {
         });
     },
     mounted() {
+        // 设置title
+        document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
+
         let txtSearch = document.getElementById('txtSearch');
         let el = document.getElementById('ta');
         el.focus();
@@ -25,6 +28,7 @@ const app = {
             }
         });
         el.addEventListener('paste', (e) => {
+            // e.preventDefault();
             if(document.getSelection().toString().trim() == el.innerText.trim()) {
                 console.info('all selected before ctrl+v');
                 el.innerHTML = '';
@@ -65,7 +69,7 @@ const app = {
                  * 所以这里如果用户搜索span、class这样的关键字，会造成替换掉本来看不到的html标签，进而使内容错乱
                  */
                 let content = el.innerHTML;
-                let i = 0;
+                let i = 0, count = 0;
                 while(content.indexOf(searchText, i) != -1) {
                     let loc = {};
                     loc.start = content.indexOf(searchText, i);
@@ -76,9 +80,12 @@ const app = {
                     }
                     content = content.slice(0, loc.start) + '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>' + content.slice(loc.start + searchText.length);
 
+                    count++;
                     i = loc.start + searchText.length + 62 + 1;
                 }
+                console.info('==all match is====%d', count);
                 el.innerHTML = content;
+                document.getElementById('match').innerText = 'match:' + count;
             }
             if(e.shiftKey && e.key == 'Enter') {
                 // 向前找
