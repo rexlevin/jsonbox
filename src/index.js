@@ -97,7 +97,7 @@ const app = {
                  * 上面的还是有问题，比如避开了<span>，没有避开pan
                  * 我的思路还是有问题的，仍然应该考虑正则的方式
                  */
-                let content = el.innerText, reg = new RegExp(searchText, 'g');
+                let content = el.innerText, reg = new RegExp(searchText, 'gi');
                 let arr = content.match(reg), i = -1;
                 if(undefined == arr || null == arr) {
                     console.info('there is no match');
