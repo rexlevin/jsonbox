@@ -1,7 +1,8 @@
 const app = {
     data() {
         return {
-            content: ''
+            keyword: {},
+            match: ''
         }
     },
     created() {
@@ -9,7 +10,7 @@ const app = {
             if (e.ctrlKey && e.shiftKey && e.key == 'I' | 'i') {
                 window.api.devTools();
             }
-            if (e.ctrlKey && e.key == 'r') {
+            if (e.ctrlKey && e.key == 'r'|'R') {
                 window.api.reload();
             }
         });
@@ -26,18 +27,18 @@ const app = {
             if(!(e.key == 'Backspace' || e.key == 'Delete')) {
                 return;
             }
-            if(document.getSelection().toString().trim() == el.innerText.trim()) {
+            if(document.getSelection().toString().trim() == el.textContent.trim()) {
                 console.info('all selected before delete');
                 el.innerHTML = '';
             }
         });
         el.addEventListener('paste', (e) => {
             // e.preventDefault();
-            if(document.getSelection().toString().trim() == el.innerText.trim()) {
+            if(document.getSelection().toString().trim() == el.textContent.trim()) {
                 console.info('all selected before ctrl+v');
                 el.innerHTML = '';
                 navigator.clipboard.readText().then(text => {
-                    el.innerText = text;
+                    el.textContent = text;
                     this.parse();
                 });
             }
@@ -52,65 +53,43 @@ const app = {
         });
 
         txtSearch.addEventListener('keyup', (e) => {
+            if(e.key == 'Enter' || (e.shiftKey && e.key == 'Enter')) {
+                let kw = txtSearch.value.trim();
+                if(this.keyword.now == kw) {
+                    return;
+                }
+                this.keyword.last = this.keyword.now;
+                this.keyword.now = kw;
+            }
             if(e.key == 'Enter') {
-                // 着色并向后找
+                // 向后找
                 let searchText = txtSearch.value.trim();
                 if(undefined == searchText || '' == searchText) {
                     console.info('clear hilight');
-                    this.clearHilignt();
+                    this.clearHilight();
                     return;
                 }
-                if(undefined == el.innerText || 'undefined' == el.innerText || '' == el.innerText || 0 === el.innerText.length) {
+                let textContent = el.textContent.trim();
+                if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
                     return;
                 }
-                //this.parse();   // 重置json着色内容，即可清除掉上次搜索的高亮内容
-
-                // let content = el.innerHTML, reg = new RegExp(searchText, 'g');
-                // let newHtml = content.replace(reg, '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>');
-                // el.innerHTML = newHtml;
-                /*
-                 * 20220731
-                 * 由于存在用户搜索类似span这样的内容的可能，这里不能使用上面的regx方式来进行搜索高亮
-                 * 这是因为上一布的this.parse()调用会在content中添加大量的代码着色，
-                 * 而这些着色代码里有大量span、class等关键字，
-                 * 所以这里如果用户搜索span、class这样的关键字，会造成替换掉本来看不到的html标签，进而使内容错乱
-                 */
-                // let content = el.innerHTML;
-                // let i = 0, count = 0;
-                // while(content.indexOf(searchText, i) != -1) {
-                //     let loc = {};
-                //     loc.start = content.indexOf(searchText, i);
-                //     // loc.end = loc.start + searchText.length  - 1;
-                //     if(content.slice(loc.start - 1, loc.start) == '<' || content.slice(loc.start - 2, loc.start) == '</') {
-                //         i = loc.start + searchText.length;
-                //         continue;
-                //     }
-                //     content = content.slice(0, loc.start) + '<span id="result" style="background:yellow;color:red;">' + searchText + '</span>' + content.slice(loc.start + searchText.length);
-                //     count++;
-                //     i = loc.start + searchText.length + 62 + 1;
-                // }
-                // console.info('==all match is====%d', count);
-                // el.innerHTML = content;
-                // document.getElementById('match').innerText = 'match:' + count;
-                /*
-                 * 20220805
-                 * 上面的还是有问题，比如避开了<span>，没有避开pan
-                 * 我的思路还是有问题的，仍然应该考虑正则的方式
-                 */
-                let content = el.innerText, reg = new RegExp(searchText, 'gi');
+                this.clearHilight();
+                let content = el.innerHTML;//, reg = new RegExp(searchText, 'gi');
+                let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + searchText + ')', 'gi');
                 let arr = content.match(reg), i = -1;
                 if(undefined == arr || null == arr) {
                     console.info('there is no match');
-                    this.clearHilignt();
+                    this.match = 'match:0'
                     return;
                 }
-                content = content.replace(reg, () => {
-                    i++;
-                    return '<span id=\'result\' class=\'hilight\'>' + arr[i] + '</span>';
-                });
-                // el.innerHTML = '<pre>' + content + '</pre>';
-                this.parse(content);
-                document.getElementById('match').innerText = 'match:' + arr.length;
+                content = content.replace(reg, '$1$2<span id="result" class="hilight">$3</span>');
+                // content = content.replace(reg, (e) => {
+                //     i++;
+                //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
+                // });
+                el.innerHTML = '<pre>' + content + '</pre>';
+                // this.parse(content);
+                this.match = 'match:' + arr.length;
             }
             if(e.shiftKey && e.key == 'Enter') {
                 // 向前找
@@ -123,12 +102,12 @@ const app = {
     },
     methods: {
         parse(content) {
-            if(undefined == content || '' == content.trim()) {
-                content = document.getElementById('ta').innerText;
-            }
             let el = document.getElementById('ta'), tmp;
+            if(undefined == content || '' == content.trim()) {
+                content = el.textContent;
+            }
             try {
-                // tmp = JSON.parse(el.innerText);
+                // tmp = JSON.parse(el.textContent);
                 tmp = eval("[" + content + "]");
             } catch (err) {
                 console.error(err);
@@ -139,10 +118,11 @@ const app = {
             after = Process(after);
             el.innerHTML = '<pre>' + after + '</pre>';
         },
-        clearHilignt() {
+        clearHilight() {
+            let m = '<span id="result" class="hilight">' + this.keyword.last + '</span>'
             let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
-            el.innerHTML = content.replaceAll('hilight', '');
-            document.getElementById('match').innerText = '';
+            el.innerHTML = content.replaceAll(m, this.keyword.last);
+            this.match = '';
         }
     }
 }
@@ -166,7 +146,7 @@ function Process(text) {
 }
 
 function ProcessObject(obj, indent, addComma, isArray, isPropertyContent) {
-    let html = "", comma = (addComma) ? "<span class=\"Comma\">,</span>": "";
+    let html = "", comma = (addComma) ? "," : "";//(addComma) ? "<span class=\"Comma\">,</span>": "";
     let type = typeof obj;
     if (IsArray(obj)) {
         if (obj.length == 0) {
@@ -222,7 +202,7 @@ function ProcessObject(obj, indent, addComma, isArray, isPropertyContent) {
 
 function FormatLiteral(literal, quote, comma, indent, isArray, style) {
     if (typeof literal == "string") {
-        // literal = literal.split("<").join("&lt;").split(">").join("&gt;");
+        literal = literal.split("<").join("&lt;").split(">").join("&gt;");
     }
     var str = "<span class='" + style + "'>" + quote + literal + quote + comma + "</span>";
     if (isArray) {
