@@ -25,6 +25,8 @@ input {width: 210px; height: 25px;}
 
 pre { margin:0; }
 
+.hilight{background:yellow;color:red;}
+
 .Canvas {
     background-color: #ECECEC;
     color: #000000;
