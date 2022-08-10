@@ -11,7 +11,13 @@
     <div id="app" class="frame_page">
         <!-- <div class='frame_header'></div> -->
         <div id="container" class="frame_content">
-            <div id="ta" contenteditable="true"></div>
+            <div id="ln">
+                <ul>
+                    <li v-for="index of lineCount">{{index}}</li>
+                </ul>
+            </div>
+            <div id="ta" class="code" contenteditable="true"></div>
+            <!-- <br style="clear:both"/> -->
         </div>
         <div id="foo" class="frame_footer">
             <div class="ffItem item01"><button id="btnParse" @click="parse">parse</button></div>

@@ -1,6 +1,7 @@
 const app = {
     data() {
         return {
+            lineCount: 1,
             keyword: {},
             match: ''
         }
@@ -19,21 +20,40 @@ const app = {
         // 设置title
         document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
 
+        let con = document.getElementById('container');
         let txtSearch = document.getElementById('txtSearch');
         let el = document.getElementById('ta');
         el.focus();
 
+        con.addEventListener('click', () => {
+            // el.focus(() => {});
+            el.focus();
+            let range = document.createRange();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            let sel = window.getSelection();
+            //判断光标位置，如不需要可删除
+            if(sel.anchorOffset!=0){
+                return;
+            };
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+        el.addEventListener('DOMNodeInserted', () => {
+            this.lineCount = el.offsetHeight / 20;
+        });
         el.addEventListener('keydown', (e) => {
             if(!(e.key == 'Backspace' || e.key == 'Delete')) {
                 return;
             }
             if(document.getSelection().toString().trim() == el.textContent.trim()) {
                 console.info('all selected before delete');
-                el.innerHTML = '';
+                el.innerText = ''; // el.innerHTML = '';
             }
+            this.lineCount = el.offsetHeight / 20;
         });
         el.addEventListener('paste', (e) => {
-            // e.preventDefault();
+            e.preventDefault();
             if(document.getSelection().toString().trim() == el.textContent.trim()) {
                 console.info('all selected before ctrl+v');
                 el.innerHTML = '';
@@ -41,8 +61,20 @@ const app = {
                     el.textContent = text;
                     this.parse();
                 });
+                return;
             }
-            this.parse();
+            let selection=window.getSelection()
+            let range=selection.getRangeAt(0)
+            let node = document.createElement("span");
+            navigator.clipboard.readText().then(text => {
+                node.innerText = text;
+                range.insertNode(node);
+                this.parse();
+            });
+            // node.setAttribute("class", "at");
+            // node.innerHTML = "<span style='color:#f00'>666666</span>";
+            // range.insertNode(node);
+            // this.parse();
         });
 
         document.addEventListener('keypress', (e) => {
@@ -101,11 +133,13 @@ const app = {
         });
     },
     methods: {
-        parse(content) {
+        parse() {
             let el = document.getElementById('ta'), tmp;
-            if(undefined == content || '' == content.trim()) {
-                content = el.textContent;
-            }
+            // console.info(content);
+            // if(undefined == content || '' == content.trim()) {
+            //     content = el.textContent;
+            // }
+            content = el.textContent;
             try {
                 // tmp = JSON.parse(el.textContent);
                 tmp = eval("[" + content + "]");
@@ -117,6 +151,11 @@ const app = {
             let after = JSON.stringify(tmp, null, 4);
             after = Process(after);
             el.innerHTML = '<pre>' + after + '</pre>';
+            // add style
+            // el.className = 'code';
+            // el.style = 'code::before{content: counter(step); counter-increment: step; position: absolute; left: 0;top: 0; display: block; width: 20px; text-align: right; background-color: #eee;}';
+            console.info('==current total line=====%d', after.split('\n').length);
+            this.lineCount = after.split('\n').length;
         },
         clearHilight() {
             let m = '<span id="result" class="hilight">' + this.keyword.last + '</span>'

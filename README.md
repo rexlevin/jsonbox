@@ -6,7 +6,7 @@
 
 # 功能/计划
 
-1. 粘贴即格式化（偶尔会不灵敏，就点下“parse”:cry:，待优化吧～||20220803已优化）
+1. 粘贴即格式化
 
 2. 代码着色（感谢“化名三爷”的[json着色](https://blog.csdn.net/zlxls/article/details/83185627)）
 
@@ -16,7 +16,7 @@
 
 5. 搜索上一个、下一个（待完成） 
 
-5. 行号（待完成）
+5. 行号
 
 # 开发
 
@@ -33,8 +33,10 @@ npm i
 npm i -g electron-builder
 # linux环境下打包
 npm run build-dist:linux
+# win环境下打包
+npm run build-dist:win
 ```
 
 # 截图
 
-![image-20220730132959338](https://imgbd.r-xnoro.com//image-20220730132959338.png)
+![image-20220810141619449](https://imgbd.r-xnoro.com//image-20220810141619449.png)
