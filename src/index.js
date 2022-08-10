@@ -8,10 +8,10 @@ const app = {
     },
     created() {
         document.addEventListener('keyup', (e) => {
-            if (e.ctrlKey && e.shiftKey && e.key == 'I' | 'i') {
+            if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
                 window.api.devTools();
             }
-            if (e.ctrlKey && e.key == 'r'|'R') {
+            if (e.ctrlKey && (e.key == 'r' || e.key == 'R')) {
                 window.api.reload();
             }
         });
@@ -43,14 +43,13 @@ const app = {
             this.lineCount = el.offsetHeight / 20;
         });
         el.addEventListener('keydown', (e) => {
-            if(!(e.key == 'Backspace' || e.key == 'Delete')) {
-                return;
+            if(e.key == 'Backspace' || e.key == 'Delete') {
+                if(document.getSelection().toString().trim() == el.textContent.trim()) {
+                    console.info('all selected before delete');
+                    el.innerText = ''; // el.innerHTML = '';
+                }
+                this.lineCount = el.offsetHeight / 20;
             }
-            if(document.getSelection().toString().trim() == el.textContent.trim()) {
-                console.info('all selected before delete');
-                el.innerText = ''; // el.innerHTML = '';
-            }
-            this.lineCount = el.offsetHeight / 20;
         });
         el.addEventListener('paste', (e) => {
             e.preventDefault();
@@ -78,7 +77,7 @@ const app = {
         });
 
         document.addEventListener('keypress', (e) => {
-            if (!(e.ctrlKey && e.key == 'f')) {
+            if (!(e.ctrlKey && (e.key == 'f' || e.key == 'F'))) {
                 return;
             }
             txtSearch.focus();
