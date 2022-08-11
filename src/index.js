@@ -39,9 +39,13 @@ const app = {
             sel.removeAllRanges();
             sel.addRange(range);
         });
+
+        // 可编辑div里的内容变化事件，这是为了重写linenum
         el.addEventListener('DOMNodeInserted', () => {
             this.lineCount = el.offsetHeight / 20;
         });
+
+        // 可编辑div里的内容全选后删除事件，尤其内容特别多的时候，必须自己来写全选后的删除，否則会卡得cpu狂飙
         el.addEventListener('keydown', (e) => {
             if(e.key == 'Backspace' || e.key == 'Delete') {
                 if(document.getSelection().toString().trim() == el.textContent.trim()) {
@@ -51,6 +55,9 @@ const app = {
                 this.lineCount = el.offsetHeight / 20;
             }
         });
+
+        // 可编辑div里的粘贴事件
+        // 包含全选后粘贴，和 在光标所在处粘贴
         el.addEventListener('paste', (e) => {
             e.preventDefault();
             if(document.getSelection().toString().trim() == el.textContent.trim()) {
@@ -70,12 +77,9 @@ const app = {
                 range.insertNode(node);
                 this.parse();
             });
-            // node.setAttribute("class", "at");
-            // node.innerHTML = "<span style='color:#f00'>666666</span>";
-            // range.insertNode(node);
-            // this.parse();
         });
 
+        // 在app内ctrl+f时focus到搜索关键字输入框
         document.addEventListener('keypress', (e) => {
             if (!(e.ctrlKey && (e.key == 'f' || e.key == 'F'))) {
                 return;
@@ -83,6 +87,8 @@ const app = {
             txtSearch.focus();
         });
 
+        // 在搜索关键字输入框里enter/shift+enter时触发向后找/向前找
+        // 此时第一步是需要进行关键字着色，这里改了好多遍，注意下面的那个正则的使用，下来后要继续多深入学习下正则了-_-!
         txtSearch.addEventListener('keyup', (e) => {
             if(e.key == 'Enter' || (e.shiftKey && e.key == 'Enter')) {
                 let kw = txtSearch.value.trim();
@@ -119,7 +125,6 @@ const app = {
                 //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
                 // });
                 el.innerHTML = '<pre>' + content + '</pre>';
-                // this.parse(content);
                 this.match = 'match:' + arr.length;
             }
             if(e.shiftKey && e.key == 'Enter') {
@@ -134,10 +139,6 @@ const app = {
     methods: {
         parse() {
             let el = document.getElementById('ta'), tmp;
-            // console.info(content);
-            // if(undefined == content || '' == content.trim()) {
-            //     content = el.textContent;
-            // }
             content = el.textContent;
             try {
                 // tmp = JSON.parse(el.textContent);
@@ -148,11 +149,12 @@ const app = {
                 return;
             }
             let after = JSON.stringify(tmp, null, 4);
+            // 开始代码着色
             after = Process(after);
+            // 给定pre标签
             el.innerHTML = '<pre>' + after + '</pre>';
-            // add style
-            // el.className = 'code';
-            // el.style = 'code::before{content: counter(step); counter-increment: step; position: absolute; left: 0;top: 0; display: block; width: 20px; text-align: right; background-color: #eee;}';
+
+            // add linenum
             console.info('==current total line=====%d', after.split('\n').length);
             this.lineCount = after.split('\n').length;
         },

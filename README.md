@@ -6,7 +6,7 @@
 
 # 功能/计划
 
-1. 粘贴即格式化
+1. 粘贴即格式化（偶尔会不灵敏，就点下“parse”:cry:）
 
 2. 代码着色（感谢“化名三爷”的[json着色](https://blog.csdn.net/zlxls/article/details/83185627)）
 
