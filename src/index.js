@@ -28,16 +28,15 @@ const app = {
         con.addEventListener('click', () => {
             // el.focus(() => {});
             el.focus();
+            let selection = window.getSelection();
+            if(selection.anchorOffset != 0) {
+                return;
+            };
             let range = document.createRange();
             range.selectNodeContents(el);
             range.collapse(false);
-            let sel = window.getSelection();
-            //判断光标位置，如不需要可删除
-            if(sel.anchorOffset!=0){
-                return;
-            };
-            sel.removeAllRanges();
-            sel.addRange(range);
+            selection.removeAllRanges();
+            selection.addRange(range);
         });
 
         // 可编辑div里的内容变化事件，这是为了重写linenum
@@ -88,44 +87,11 @@ const app = {
         });
 
         // 在搜索关键字输入框里enter/shift+enter时触发向后找/向前找
-        // 此时第一步是需要进行关键字着色，这里改了好多遍，注意下面的那个正则的使用，下来后要继续多深入学习下正则了-_-!
+        // 此时第一步是需要进行关键字着色，这里改了好多遍，注意search()里的正则的使用，下来后要继续多深入学习正则-_-!
         txtSearch.addEventListener('keyup', (e) => {
-            if(e.key == 'Enter' || (e.shiftKey && e.key == 'Enter')) {
-                let kw = txtSearch.value.trim();
-                if(this.keyword.now == kw) {
-                    return;
-                }
-                this.keyword.last = this.keyword.now;
-                this.keyword.now = kw;
-            }
             if(e.key == 'Enter') {
                 // 向后找
-                let searchText = txtSearch.value.trim();
-                if(undefined == searchText || '' == searchText) {
-                    console.info('clear hilight');
-                    this.clearHilight();
-                    return;
-                }
-                let textContent = el.textContent.trim();
-                if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
-                    return;
-                }
-                this.clearHilight();
-                let content = el.innerHTML;//, reg = new RegExp(searchText, 'gi');
-                let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + searchText + ')', 'gi');
-                let arr = content.match(reg), i = -1;
-                if(undefined == arr || null == arr) {
-                    console.info('there is no match');
-                    this.match = 'match:0'
-                    return;
-                }
-                content = content.replace(reg, '$1$2<span id="result" class="hilight">$3</span>');
-                // content = content.replace(reg, (e) => {
-                //     i++;
-                //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
-                // });
-                el.innerHTML = '<pre>' + content + '</pre>';
-                this.match = 'match:' + arr.length;
+                this.search();
             }
             if(e.shiftKey && e.key == 'Enter') {
                 // 向前找
@@ -163,6 +129,45 @@ const app = {
             let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
             el.innerHTML = content.replaceAll(m, this.keyword.last);
             this.match = '';
+        },
+        recordKeyword() {
+            let kw = txtSearch.value.trim();
+            if(this.keyword.now == kw) {
+                return;
+            }
+            this.keyword.last = this.keyword.now;
+            this.keyword.now = kw;
+        },
+        search() {
+            this.recordKeyword();
+            this.clearHilight();
+            let el = document.getElementById('ta');
+            let searchText = txtSearch.value.trim();
+            if(undefined == searchText || '' == searchText) {
+                console.info('clear hilight');
+                this.clearHilight();
+                return;
+            }
+            let textContent = el.textContent.trim();
+            if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
+                return;
+            }
+            this.clearHilight();
+            let content = el.innerHTML;//, reg = new RegExp(searchText, 'gi');
+            let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + searchText + ')', 'gi');
+            let arr = content.match(reg), i = -1;
+            if(undefined == arr || null == arr) {
+                console.info('there is no match');
+                this.match = 'match:0'
+                return;
+            }
+            content = content.replace(reg, '$1$2<span id="result" class="hilight">$3</span>');
+            // content = content.replace(reg, (e) => {
+            //     i++;
+            //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
+            // });
+            el.innerHTML = '<pre>' + content + '</pre>';
+            this.match = 'match:' + arr.length;
         }
     }
 }
