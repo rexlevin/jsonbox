@@ -22,8 +22,8 @@
         <div id="foo" class="frame_footer">
             <div class="ffItem item01"><button id="btnParse" @click="parse">parse</button></div>
             <div class="ffItem item02"><span id="match">{{match}}</span><input type="text" name="" id="txtSearch">&nbsp;
-                <!-- <button id="btnNext">&gt;</button>&nbsp;
-                <button id="btnPre">&lt;</button> -->
+                <button id="btnNext" @click="next">&gt;</button>&nbsp;
+                <button id="btnPre" @click="previous">&lt;</button>
             </div>
         </div>
     </div>

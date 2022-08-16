@@ -3,7 +3,9 @@ const app = {
         return {
             lineCount: 1,
             keyword: {},
-            match: ''
+            match: '',
+            totalMatch: 0,
+            checkIndex: 0
         }
     },
     created() {
@@ -125,10 +127,11 @@ const app = {
             this.lineCount = after.split('\n').length;
         },
         clearHilight() {
-            let m = '<span id="result" class="hilight">' + this.keyword.last + '</span>'
+            let m = new RegExp('<span id="result" class="hilight">' + this.keyword.last + '</span>', 'gi');
             let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
             el.innerHTML = content.replaceAll(m, this.keyword.last);
             this.match = '';
+            this.totalMatch = 0;
         },
         recordKeyword() {
             let kw = txtSearch.value.trim();
@@ -139,6 +142,7 @@ const app = {
             this.keyword.now = kw;
         },
         search() {
+            this.checkIndex = 0;
             this.recordKeyword();
             this.clearHilight();
             let el = document.getElementById('ta');
@@ -159,6 +163,7 @@ const app = {
             if(undefined == arr || null == arr) {
                 console.info('there is no match');
                 this.match = 'match:0'
+                this.totalMatch = 0;
                 return;
             }
             content = content.replace(reg, '$1$2<span id="result" class="hilight">$3</span>');
@@ -168,6 +173,29 @@ const app = {
             // });
             el.innerHTML = '<pre>' + content + '</pre>';
             this.match = 'match:' + arr.length;
+            this.totalMatch = arr.length;
+            this.locate();
+        },
+        locate() {
+            let hilight = document.querySelectorAll('.hilight');
+            console.info('===xx.length========%s', hilight.length);
+            let container = document.getElementById('container');
+            // container.scrollTop = 900;
+            console.info(hilight[24].offsetHeight + '====' + hilight[24].offsetTop);
+            container.scrollTo({
+                top: hilight[this.checkIndex].offsetTop,
+                behavior: 'smooth'
+            });
+        },
+        next() {
+            if(this.checkIndex == this.totalMatch) return;
+            this.checkIndex++;
+            this.locate();
+        },
+        previous() {
+            if(this.checkIndex === 0) return;
+            this.checkIndex--;
+            this.locate();
         }
     }
 }
