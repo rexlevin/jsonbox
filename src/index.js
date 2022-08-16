@@ -129,9 +129,21 @@ const app = {
         clearHilight() {
             let m = new RegExp('<span id="result" class="hilight">' + this.keyword.last + '</span>', 'gi');
             let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
-            el.innerHTML = content.replaceAll(m, this.keyword.last);
+
+            let arr = content.match(m), i = -1;
+            content = content.replace(m, () => {
+                i++;
+                arr[i] = arr[i].replace('<span id="result" class="hilight">', '');
+                arr[i] = arr[i].replace('</span>', '');
+                return arr[i];
+            });
+            el.innerHTML = content;
             this.match = '';
             this.totalMatch = 0;
+
+            // el.innerHTML = content.replaceAll(m, this.keyword.last);
+            // this.match = '';
+            // this.totalMatch = 0;
         },
         recordKeyword() {
             let kw = txtSearch.value.trim();
@@ -178,10 +190,7 @@ const app = {
         },
         locate() {
             let hilight = document.querySelectorAll('.hilight');
-            console.info('===xx.length========%s', hilight.length);
             let container = document.getElementById('container');
-            // container.scrollTop = 900;
-            console.info(hilight[24].offsetHeight + '====' + hilight[24].offsetTop);
             container.scrollTo({
                 top: hilight[this.checkIndex].offsetTop,
                 behavior: 'smooth'
