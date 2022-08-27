@@ -67,6 +67,7 @@ const app = {
                 navigator.clipboard.readText().then(text => {
                     el.textContent = text;
                     this.parse();
+                    this.search();
                 });
                 return;
             }
@@ -77,6 +78,7 @@ const app = {
                 node.innerText = text;
                 range.insertNode(node);
                 this.parse();
+                this.search()
             });
         });
 
@@ -154,21 +156,28 @@ const app = {
             this.keyword.now = kw;
         },
         search() {
+            let el = document.getElementById('ta');
+            let textContent = el.textContent.trim();
+            let searchText = txtSearch.value.trim();
+            console.info('%s=============%s', this.keyword.last, this.keyword.now);
+            if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
+                this.clearHilight();
+                return;
+            }
+            if(this.keyword.now == searchText) {
+                console.info('now locate to next');
+                this.next();
+                return;
+            }
             this.checkIndex = 0;
             this.recordKeyword();
-            this.clearHilight();
-            let el = document.getElementById('ta');
-            let searchText = txtSearch.value.trim();
             if(undefined == searchText || '' == searchText) {
                 console.info('clear hilight');
                 this.clearHilight();
                 return;
             }
-            let textContent = el.textContent.trim();
-            if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
-                return;
-            }
             this.clearHilight();
+            console.info('%s=============%s', this.keyword.last, this.keyword.now);
             let content = el.innerHTML;//, reg = new RegExp(searchText, 'gi');
             let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + searchText + ')', 'gi');
             let arr = content.match(reg), i = -1;
@@ -184,7 +193,7 @@ const app = {
             //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
             // });
             el.innerHTML = '<pre>' + content + '</pre>';
-            this.match = 'match:' + arr.length;
+            this.match = 'match:' + (this.checkIndex + 1) + "/" + arr.length;
             this.totalMatch = arr.length;
             this.locate();
         },
@@ -197,13 +206,15 @@ const app = {
             });
         },
         next() {
-            if(this.checkIndex == this.totalMatch) return;
+            if((this.checkIndex + 1) == this.totalMatch) return;
             this.checkIndex++;
+            this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;
             this.locate();
         },
         previous() {
             if(this.checkIndex === 0) return;
             this.checkIndex--;
+            this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;
             this.locate();
         }
     }

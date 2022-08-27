@@ -38,7 +38,7 @@ pre { margin:0; }
 #foo #btnParse{width: 100px;}
 #foo #btnNext{width: 30px;}
 #foo #btnPre{width: 30px;}
-#foo #match{display:inline-block; width:100px; text-align: right; margin-right: 5px;}
+#foo #match{display:inline-block; width:150px; text-align: right; margin-right: 5px;}
 
 .hilight{background:yellow;color:red;}
 
