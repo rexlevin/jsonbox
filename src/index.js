@@ -135,16 +135,28 @@ const app = {
             this.lineCount = after.split('\n').length;
         },
         clearHilight() {
-            let m = new RegExp('<span id="result" class="hilight">' + this.keyword.last + '</span>', 'gi');
+            this.removeCurStyle();
+            let m = new RegExp('<span id="result" class="hilight">' + this.keyword.now + '</span>', 'gi');
             let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
-
             let arr = content.match(m), i = -1;
+            console.info('arr=================='+arr);
+            // if(null == arr) return;
             content = content.replace(m, () => {
                 i++;
                 arr[i] = arr[i].replace('<span id="result" class="hilight">', '');
                 arr[i] = arr[i].replace('</span>', '');
                 return arr[i];
             });
+
+            m = new RegExp('<span id="result" class="hilight" style="">' + this.keyword.now + '</span>', 'gi');
+            arr = content.match(m), i = -1;
+            content = content.replace(m, () => {
+                i++;
+                arr[i] = arr[i].replace('<span id="result" class="hilight" style="">', '');
+                arr[i] = arr[i].replace('</span>', '');
+                return arr[i];
+            });
+
             el.innerHTML = content;
             this.match = '';
             this.totalMatch = 0;
@@ -165,9 +177,15 @@ const app = {
             let el = document.getElementById('ta');
             let textContent = el.textContent.trim();
             let searchText = txtSearch.value.trim();
-            console.info('%s=============%s', this.keyword.last, this.keyword.now);
+            console.info('%s=====b========%s', this.keyword.last, this.keyword.now);
             if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
                 this.clearHilight();
+                return;
+            }
+            if(undefined == searchText || '' == searchText) {
+                console.info('clear hilight');
+                this.clearHilight();
+                this.recordKeyword();
                 return;
             }
             if(this.keyword.now == searchText) {
@@ -175,15 +193,10 @@ const app = {
                 this.next();
                 return;
             }
-            this.checkIndex = 0;
+            this.clearHilight();    // 此处的clearHight一定要在recordKeyword前面哦～
             this.recordKeyword();
-            if(undefined == searchText || '' == searchText) {
-                console.info('clear hilight');
-                this.clearHilight();
-                return;
-            }
-            this.clearHilight();
-            console.info('%s=============%s', this.keyword.last, this.keyword.now);
+            this.checkIndex = 0;
+            console.info('%s=====a========%s', this.keyword.last, this.keyword.now);
             let content = el.innerHTML;//, reg = new RegExp(searchText, 'gi');
             let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + searchText + ')', 'gi');
             let arr = content.match(reg), i = -1;
@@ -205,13 +218,30 @@ const app = {
             this.locate();
         },
         locate() {
-            console.info('==============%d', this.checkIndex);
             let hilight = document.querySelectorAll('.hilight');
             let container = document.getElementById('container');
+            this.removeCurStyle();
+            this.addCurStyle();
             container.scrollTo({
                 top: hilight[this.checkIndex].offsetTop,
                 behavior: 'smooth'
             });
+        },
+        addCurStyle() {
+            let hilight = document.querySelectorAll('.hilight');
+            hilight[this.checkIndex].style.background = '#a8ac94';
+            // if(this.checkIndex > 0) {
+            //     hilight[this.checkIndex - 1].removeAttribute('style');
+            // }
+            // if(this.checkIndex < this.totalMatch - 1) {
+            //     hilight[this.checkIndex + 1].removeAttribute('style');
+            // }
+        },
+        removeCurStyle() {
+            let hilight = document.querySelectorAll('.hilight');
+            for(let item of hilight) {
+                item.removeAttribute('style');
+            }
         },
         next() {
             if((this.checkIndex + 1) == this.totalMatch) return;
