@@ -61,6 +61,7 @@ const app = {
         // 包含全选后粘贴，和 在光标所在处粘贴
         el.addEventListener('paste', (e) => {
             e.preventDefault();
+            this.keyword = {};
             if(document.getSelection().toString().trim() == el.textContent.trim()) {
                 console.info('all selected before ctrl+v');
                 el.innerHTML = '';
@@ -69,17 +70,17 @@ const app = {
                     this.parse();
                     this.search();
                 });
-                return;
+            } else {
+                let selection=window.getSelection()
+                let range=selection.getRangeAt(0)
+                let node = document.createElement("span");
+                navigator.clipboard.readText().then(text => {
+                    node.innerText = text;
+                    range.insertNode(node);
+                    this.parse();
+                    this.search()
+                });
             }
-            let selection=window.getSelection()
-            let range=selection.getRangeAt(0)
-            let node = document.createElement("span");
-            navigator.clipboard.readText().then(text => {
-                node.innerText = text;
-                range.insertNode(node);
-                this.parse();
-                this.search()
-            });
         });
 
         // 在app内ctrl+f时focus到搜索关键字输入框
@@ -107,6 +108,11 @@ const app = {
         });
     },
     methods: {
+        manParse() {
+            this.keyword = {};
+            this.parse();
+            this.search();
+        },
         parse() {
             let el = document.getElementById('ta'), tmp;
             content = el.textContent;
@@ -193,11 +199,13 @@ const app = {
             //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
             // });
             el.innerHTML = '<pre>' + content + '</pre>';
+            console.info('checkIndex======%d', this.checkIndex);
             this.match = 'match:' + (this.checkIndex + 1) + "/" + arr.length;
             this.totalMatch = arr.length;
             this.locate();
         },
         locate() {
+            console.info('==============%d', this.checkIndex);
             let hilight = document.querySelectorAll('.hilight');
             let container = document.getElementById('container');
             container.scrollTo({
