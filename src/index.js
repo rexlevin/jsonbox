@@ -108,7 +108,7 @@ const app = {
         });
     },
     methods: {
-        manParse() {
+        manuParse() {
             this.keyword = {};
             this.parse();
             this.search();
