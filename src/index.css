@@ -1,5 +1,5 @@
 /* 将默认body 的margin值改为0，当内容出现滚动条则不包含margin部分 */
-html body{background-color: #e7eaed; height:100%; margin: 0 !important; font-family: Arial, Helvetica, sans-serif; font-size:20px; line-height: 20px;}
+html, body{background-color: #e7eaed; height:100%; margin: 0 !important; font-family: Arial, Helvetica, sans-serif; font-size:20px; line-height: 20px;}
 button {height: 30px; font-size: 20px; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,.2); text-shadow: 0 1px 1px rgba(0,0,0,.3);}
 button:hover{text-decoration: none;}
 input {width: 210px; height: 25px;}
