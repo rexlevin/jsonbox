@@ -1,6 +1,9 @@
 const { app, BrowserWindow, Menu, Tray, ipcMain } = require('electron')
 const path = require('path')
 
+// 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
+
 let win;
 
 app.whenReady().then(() => {
