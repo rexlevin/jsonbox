@@ -6,17 +6,17 @@
 
 # 功能/计划
 
-1. 粘贴即格式化（偶尔会不灵敏，就点下“parse”:cry:）
+- [x] 粘贴即格式化（偶尔会不灵敏，就点下“parse”:cry:）
 
-2. 代码着色（感谢“化名三爷”的[json着色](https://blog.csdn.net/zlxls/article/details/83185627)）
+- [x] 代码着色（感谢“化名三爷”的[json着色](https://blog.csdn.net/zlxls/article/details/83185627)）
 
-3. ctrl + f 搜索
+- [x] ctrl + f 搜索
 
-4. 搜索定位
+- [x] 搜索定位
 
-5. 搜索上一个、下一个 
+- [x] 搜索上一个、下一个 
 
-5. 行号
+- [x] 行号
 
 # 开发
 
