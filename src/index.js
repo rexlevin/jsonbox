@@ -84,7 +84,7 @@ const app = {
         });
 
         // 在app内ctrl+f时focus到搜索关键字输入框
-        document.addEventListener('keypress', (e) => {
+        document.addEventListener('keyup', (e) => {
             if (!(e.ctrlKey && (e.key == 'f' || e.key == 'F'))) {
                 return;
             }
