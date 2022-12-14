@@ -272,6 +272,7 @@ function Process(text) {
         }
         let obj = eval(text); // eval("[" + text + "]");
         html = ProcessObject(obj[0], 0, false, false, false);
+        console.info(html)
         return html;
     } catch (e) {}
 }
@@ -334,6 +335,7 @@ function ProcessObject(obj, indent, addComma, isArray, isPropertyContent) {
 function FormatLiteral(literal, quote, comma, indent, isArray, style) {
     if (typeof literal == "string") {
         literal = literal.split("<").join("&lt;").split(">").join("&gt;");
+        literal = literal.split("\"").join("\\\""); // 20221214，针对字符串内的双引号，加上转义符\
     }
     var str = "<span class='" + style + "'>" + quote + literal + quote + comma + "</span>";
     if (isArray) {
