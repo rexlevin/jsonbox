@@ -68,7 +68,7 @@ const app = {
                 navigator.clipboard.readText().then(text => {
                     el.textContent = text;
                     this.parse();
-                    this.search();
+                    // this.search();
                 });
             } else {
                 let selection=window.getSelection()
@@ -78,7 +78,7 @@ const app = {
                     node.innerText = text;
                     range.insertNode(node);
                     this.parse();
-                    this.search()
+                    // this.search()
                 });
             }
         });
@@ -160,10 +160,6 @@ const app = {
             el.innerHTML = content;
             this.match = '';
             this.totalMatch = 0;
-
-            // el.innerHTML = content.replaceAll(m, this.keyword.last);
-            // this.match = '';
-            // this.totalMatch = 0;
         },
         recordKeyword() {
             let kw = txtSearch.value.trim();
@@ -177,18 +173,19 @@ const app = {
             let el = document.getElementById('ta');
             let textContent = el.textContent.trim();
             let searchText = txtSearch.value.trim();
-            console.info('%s=====b========%s', this.keyword.last, this.keyword.now);
+            console.info('keyword.last==%s========keyword.now==%s', this.keyword.last, this.keyword.now);
             if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
-                this.clearHilight();
+                // this.clearHilight();
                 return;
             }
             if(undefined == searchText || '' == searchText) {
                 console.info('clear hilight');
                 this.clearHilight();
-                this.recordKeyword();
+                // this.recordKeyword();
                 return;
             }
             if(this.keyword.now == searchText) {
+                if(this.totalMatch == 0) return;
                 console.info('now locate to next');
                 this.next();
                 return;
@@ -272,7 +269,6 @@ function Process(text) {
         }
         let obj = eval(text); // eval("[" + text + "]");
         html = ProcessObject(obj[0], 0, false, false, false);
-        console.info(html)
         return html;
     } catch (e) {}
 }
