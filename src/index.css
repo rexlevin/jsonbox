@@ -9,7 +9,7 @@ pre { margin:0; }
 .frame_page { display: flex; height:100vh; flex-direction:column; margin: 0 10;}
 .frame_header { height:40px; }
 .frame_content { flex:1; overflow:auto; }
-.frame_footer { height: 60px; line-height: 60px; }
+.frame_footer { height: 40px; line-height: 40px; }
 
 /* #app{width:100%; height: 100%;} */
 #container{width:100%; height:100%; overflow-y:auto; background-color: white; cursor:text;}

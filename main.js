@@ -41,7 +41,6 @@ const createWindow = () => {
         spellcheck: false
     }
     config.useContentSize = true;
-    console.info('config====%s', config);
 
     win = new BrowserWindow(config);
     if(isMax) win.maximize();

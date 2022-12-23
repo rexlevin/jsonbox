@@ -241,6 +241,7 @@ const app = {
             }
         },
         next() {
+            if(this.checkIndex == 0) return;
             if((this.checkIndex + 1) == this.totalMatch) return;
             this.checkIndex++;
             this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;
