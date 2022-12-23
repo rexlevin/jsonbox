@@ -32,7 +32,7 @@ const createWindow = () => {
         config.minWidth = position.width;
         config.minHeight = position.height;
         config.x = position.x;
-        config.y = position.x;
+        config.y = position.y;
     }
 
     config.icon = path.join(__dirname, './src/logo.png');
@@ -50,12 +50,8 @@ const createWindow = () => {
     // 关闭主窗口事件，记录窗口大小和位置
     win.on('close', (e) => {
         console.info('close main window, we need record postion of mainWindow and it\'s size');
-        if(win.isMaximized()) {
-            store.set('isMax', true);
-            return;
-        }
-        let position = win.getContentBounds()
-        store.set('mainPosition', position)
+        store.set('isMax', win.isMaximized());
+        store.set('mainPosition', win.getContentBounds())
     });
 }
 
