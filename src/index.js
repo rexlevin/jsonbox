@@ -105,6 +105,10 @@ const app = {
                     return;
                 }
             }
+            if(e.key == 'Escape') {
+                // 取消搜索，聚焦到json输入框
+                el.focus();
+            }
         });
     },
     methods: {
@@ -241,7 +245,8 @@ const app = {
             }
         },
         next() {
-            if(this.checkIndex == 0) return;
+            console.info('%s========%s', this.checkIndex, this.totalMatch)
+            if(this.checkIndex === this.totalMatch) return;
             if((this.checkIndex + 1) == this.totalMatch) return;
             this.checkIndex++;
             this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;

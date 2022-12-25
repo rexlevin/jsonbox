@@ -12,6 +12,9 @@ const store = new Store();  // 开启electron-store
 app.whenReady().then(() => {
     createTray();
     createWindow()
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    })
 })
 
 app.on('window-all-closed', () => {
