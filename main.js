@@ -36,8 +36,12 @@ const createWindow = () => {
         config.minHeight = position.height;
         config.x = position.x;
         config.y = position.y;
+    } else if(!isMax && ('' == position || undefined == position)) {
+        config.width = 800;
+        config.height = 600;
+        config.minWidth = 800;
+        config.minHeight = 600;
     }
-
     config.icon = path.join(__dirname, './src/logo.png');
     config.webPreferences = {
         preload: path.join(__dirname, './src/preload.js'),
