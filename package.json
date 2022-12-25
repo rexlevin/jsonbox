@@ -1,48 +1,49 @@
 {
-    "name": "jsonbox",
-    "version": "1.4.6",
-    "description": "JsonBox-跨平台的json格式化工具",
-    "main": "main.js",
-    "scripts": {
-        "start": "electron .",
-        "build-pack": "electron-builder --dir",
-        "build-dist:linux": "electron-builder -l",
-        "build-dist:win": "electron-builder -w"
+  "name": "jsonbox",
+  "version": "1.4.6",
+  "description": "JsonBox-跨平台的json格式化工具",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-pack": "electron-builder --dir",
+    "build-dist:linux": "electron-builder -l",
+    "build-dist:win": "electron-builder -w"
+  },
+  "build": {
+    "appId": "com.lizl6.jsonbox",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "asar": true,
+    "directories": {
+      "output": "./dist"
     },
-    "build": {
-        "appId": "com.lizl6.jsonbox",
-        "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-        "asar": true,
-        "directories": {
-            "output": "./dist"
-        },
-        "linux": {
-            "target": [
-                "appimage"
-            ]
-        },
-        "win": {
-            "icon": "./src/logo.png",
-            "target": [
-                "nsis"
-            ]
-        },
-        "nsis": {
-            "oneClick": false,
-            "perMachine": false,
-            "allowElevation": true
-        }
+    "linux": {
+      "target": [
+        "appimage"
+      ]
     },
-    "keywords": [
-        "json"
-    ],
-    "author": "lizl6",
-    "license": "Apache-2.0",
-    "devDependencies": {
-        "electron": "^19.0.8"
+    "win": {
+      "icon": "./src/logo.png",
+      "target": [
+        "nsis"
+      ]
     },
-    "dependencies": {
-        "electron-store": "^8.1.0",
-        "vue": "^3.2.37"
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true
     }
+  },
+  "keywords": [
+    "json"
+  ],
+  "author": "lizl6",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "electron": "^19.0.8"
+  },
+  "dependencies": {
+    "bootstrap-icons": "^1.10.2",
+    "electron-store": "^8.1.0",
+    "vue": "^3.2.37"
+  }
 }
