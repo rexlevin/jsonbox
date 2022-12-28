@@ -44,7 +44,6 @@ const app = {
 
         // 可编辑div里的内容变化事件，这是为了重写linenum
         el.addEventListener('DOMNodeInserted', () => {
-            console.info(el.offsetHeight / 20);
             this.lineCount = Math.ceil(el.offsetHeight / 20)
         });
 
@@ -96,21 +95,25 @@ const app = {
         // 在搜索关键字输入框里enter/shift+enter时触发向后找/向前找
         // 此时第一步是需要进行关键字着色，这里改了好多遍，注意search()里的正则的使用，下来后要继续多深入学习正则-_-!
         txtSearch.addEventListener('keyup', (e) => {
-            if(e.key == 'Enter') {
+            if(e.ctrlKey && e.key == 'Enter') return;
+            if(e.altKey && e.key == 'Enter') return;
+            if(!e.shiftKey && e.key == 'Enter') {
                 // 向后找
-                this.search();
+                this.next();
             }
             if(e.shiftKey && e.key == 'Enter') {
+                e.preventDefault();
                 // 向前找
-                let searchText = txtSearch.value.trim();
-                if(undefined == searchText || '' == searchText) {
-                    return;
-                }
+                this.previous();
             }
             if(e.key == 'Escape') {
                 // 取消搜索，聚焦到json输入框
                 el.focus();
             }
+        });
+        txtSearch.addEventListener('input', (e) => {
+            // console.info(txtSearch.value.trim());
+            this.search();
         });
     },
     methods: {
@@ -146,7 +149,6 @@ const app = {
             let m = new RegExp('<span id="result" class="hilight">' + this.keyword.now + '</span>', 'gi');
             let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
             let arr = content.match(m), i = -1;
-            console.info('arr=================='+arr);
             // if(null == arr) return;
             content = content.replace(m, () => {
                 i++;
@@ -206,7 +208,7 @@ const app = {
             let arr = content.match(reg), i = -1;
             if(undefined == arr || null == arr) {
                 console.info('there is no match');
-                this.match = 'match:0'
+                this.match = '0'
                 this.totalMatch = 0;
                 return;
             }
@@ -217,7 +219,7 @@ const app = {
             // });
             el.innerHTML = '<pre>' + content + '</pre>';
             console.info('checkIndex======%d', this.checkIndex);
-            this.match = 'match:' + (this.checkIndex + 1) + "/" + arr.length;
+            this.match = (this.checkIndex + 1) + "/" + arr.length;
             this.totalMatch = arr.length;
             this.locate();
         },
@@ -248,17 +250,24 @@ const app = {
             }
         },
         next() {
-            console.info('%s========%s', this.checkIndex, this.totalMatch)
-            if(this.checkIndex === this.totalMatch) return;
-            if((this.checkIndex + 1) == this.totalMatch) return;
+            let searchText = txtSearch.value.trim();
+            if(undefined == searchText || '' == searchText) {
+                return;
+            }
+            // 搜索到最后一个，继续从头开始
+            if(this.checkIndex + 1 === this.totalMatch && this.totalMatch != 0) this.checkIndex = -1;
             this.checkIndex++;
-            this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;
+            this.match = (this.checkIndex + 1) + "/" + this.totalMatch;
             this.locate();
         },
         previous() {
-            if(this.checkIndex === 0) return;
+            let searchText = txtSearch.value.trim();
+            if(undefined == searchText || '' == searchText) {
+                return;
+            }
+            if(this.checkIndex === 0) this.checkIndex = this.totalMatch;
             this.checkIndex--;
-            this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;
+            this.match = (this.checkIndex + 1) + "/" + this.totalMatch;
             this.locate();
         },
         openSettings() {

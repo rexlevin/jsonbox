@@ -27,6 +27,8 @@ body{
 #container #con #ta pre{ margin:0; height:100%; overflow-y: hidden; overflow-x: auto; font-size:20px;}
 #container #con #ta pre::-webkit-scrollbar{display: none;}
 
+#frame_footer #match{display:table-cell; width:150px; text-align: right;}
+
 /* 搜索高亮 */
 .hilight{background:yellow;color:red;}
 
