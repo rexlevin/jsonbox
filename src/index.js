@@ -22,12 +22,13 @@ const app = {
         // 设置title
         document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
 
-        let con = document.getElementById('container');
+        let con = document.getElementById('app');
+        let container = document.getElementById('container')
         let txtSearch = document.getElementById('txtSearch');
         let el = document.getElementById('ta');
         el.focus();
 
-        con.addEventListener('click', () => {
+        container.addEventListener('click', () => {
             // el.focus(() => {});
             el.focus();
             let selection = window.getSelection();
@@ -43,7 +44,8 @@ const app = {
 
         // 可编辑div里的内容变化事件，这是为了重写linenum
         el.addEventListener('DOMNodeInserted', () => {
-            this.lineCount = el.offsetHeight / 20;
+            console.info(el.offsetHeight / 20);
+            this.lineCount = Math.ceil(el.offsetHeight / 20)
         });
 
         // 可编辑div里的内容全选后删除事件，尤其内容特别多的时候，必须自己来写全选后的删除，否則会卡得cpu狂飙
@@ -53,7 +55,7 @@ const app = {
                     console.info('all selected before delete');
                     el.innerText = ''; // el.innerHTML = '';
                 }
-                this.lineCount = el.offsetHeight / 20;
+                this.lineCount = Math.ceil(el.offsetHeight / 20);
             }
         });
 
@@ -120,6 +122,7 @@ const app = {
         parse() {
             let el = document.getElementById('ta'), tmp;
             content = el.textContent;
+            if(undefined == content || '' == content) return;
             try {
                 // tmp = JSON.parse(el.textContent);
                 tmp = eval("[" + content + "]");
@@ -257,6 +260,9 @@ const app = {
             this.checkIndex--;
             this.match = 'match:' + (this.checkIndex + 1) + "/" + this.totalMatch;
             this.locate();
+        },
+        openSettings() {
+            // 打开设置dialog
         }
     }
 }

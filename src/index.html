@@ -5,29 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON格式化小工具</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-    <div id="app" class="frame_page">
-        <!-- <div class='frame_header'></div> -->
-        <div id="container" class="frame_content">
-            <div id="ln">
-                <ul>
-                    <li v-for="index of lineCount">{{index}}</li>
-                </ul>
+    <div id="app" class="container-fluid h-100 frame_page">
+        <!-- <div class="row">this is tabs header</div> -->
+        <div class="row frame_content">
+            <div class="col" id="container">
+                <div id="ln">
+                    <ul>
+                        <li v-for="index of lineCount">{{index}}</li>
+                    </ul>
+                </div>
+                <div id="con">
+                    <div id="ta" class="code" contenteditable="true"></div>
+                </div>
             </div>
-            <div id="ta" class="code" contenteditable="true"></div>
-            <!-- <br style="clear:both"/> -->
         </div>
-        <div id="foo" class="frame_footer">
-            <div class="ffItem item01"><button id="btnParse" @click="manuParse">parse</button></div>
-            <div class="ffItem item02"><span id="match">{{match}}</span><input type="text" name="" id="txtSearch">&nbsp;
-                <button id="btnNext" @click="next">&gt;</button>&nbsp;
-                <button id="btnPre" @click="previous">&lt;</button>
+        <div class="row frame_footer align-items-center">
+            <div class="col-2">
+                <button class="btn btn-primary btn-sm" style="width: 80px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i> Parse</button>
             </div>
+            <div class="col">
+                <span id="match">{{match}}</span><input type="text" name="" id="txtSearch">&nbsp;
+                    <i class="bi bi-arrow-down icon" @click="next" title="下一个"></i>&nbsp;
+                    <i class="bi bi-arrow-up icon" @click="previous" title="上一个"></i>
+            </div>
+            <div class="col-1 text-end"><i class="bi bi-sliders icon" @click="openSettings" title="设置"></i></div>
         </div>
     </div>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/vue/dist/vue.global.prod.js" charset="utf-8"></script>
     <script src="./index.js"></script>
 </body>
