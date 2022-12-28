@@ -40,7 +40,7 @@ const createWindow = () => {
         config.width = 800;
         config.height = 600;
     }
-    config.minWidth = 500;
+    config.minWidth = 600;
     config.minHeight = 600;
     config.icon = path.join(__dirname, './src/logo.png');
     config.webPreferences = {
