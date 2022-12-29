@@ -1,75 +1,105 @@
-const app = {
+const jsonbox = {
     data() {
         return {
-            lineCount: 1,
-            keyword: {},
-            match: '',
-            totalMatch: 0,
-            checkIndex: 0
+            boxes: [],
+            strJson: '',
+            lineCount: 1,   // 总行数
+            searchText: '',
+            keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
+            match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
+            totalMatch: 0,  // 搜索总匹配数
+            checkIndex: 0   // 当前是第几个搜索匹配，从0开始计数
         }
     },
+    setup() {
+        // const app = ref(null)
+        //     // , txtSearch = ref(null)
+        //     // , divJson = ref(null)
+        // return {
+        //     app,
+        //     // txtSearch,
+        //     // divJson
+        // };
+    },
     created() {
-        document.addEventListener('keyup', (e) => {
-            if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
-                window.api.devTools();
-            }
-            if (e.ctrlKey && (e.key == 'r' || e.key == 'R')) {
-                window.api.reload();
-            }
-        });
+        // app.addEventListener('keyup', (e) => {
+        //     if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
+        //         window.api.devTools();
+        //     }
+        //     if (e.ctrlKey && (e.key == 'r' || e.key == 'R')) {
+        //         window.api.reload();
+        //     }
+        // });
     },
     mounted() {
         // 设置title
         document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
 
-        let con = document.getElementById('app');
-        let container = document.getElementById('container')
-        let txtSearch = document.getElementById('txtSearch');
-        let el = document.getElementById('ta');
-        el.focus();
+        let txtSearch = this.$refs.txtSearch
+          , divJson = this.$refs.divJson;
 
-        container.addEventListener('click', () => {
-            // el.focus(() => {});
-            el.focus();
+        divJson.focus();
+
+        document.querySelector('#app').addEventListener('keyup', (e) => {
+            if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
+                // 打开开发者工具
+                window.api.devTools();
+            }
+            if (e.ctrlKey && (e.key == 'r' || e.key == 'R')) {
+                // 重新加载页面
+                window.api.reload();
+            }
+            // if(e.ctrlKey && (e.key == 'n' || e.key == 'N')) {
+            //     // 新建标签页
+            //     alert(1)
+            // }
+            if(e.ctrlKey && (e.key == 'f' || e.key == 'F')) {
+                // 在app内ctrl+f时focus到搜索关键字输入框
+                txtSearch.focus();
+            }
+        });
+
+        document.querySelector('#container').addEventListener('click', () => {
+            // divJson.focus(() => {});
+            divJson.focus();
             let selection = window.getSelection();
             if(selection.anchorOffset != 0) {
                 return;
             };
             let range = document.createRange();
-            range.selectNodeContents(el);
+            range.selectNodeContents(divJson);
             range.collapse(false);
             selection.removeAllRanges();
             selection.addRange(range);
         });
 
         // 可编辑div里的内容变化事件，这是为了重写linenum
-        el.addEventListener('DOMNodeInserted', () => {
-            this.lineCount = Math.ceil(el.offsetHeight / 20)
+        divJson.addEventListener('DOMNodeInserted', () => {
+            this.lineCount = Math.ceil(divJson.offsetHeight / 20)
         });
 
         // 可编辑div里的内容全选后删除事件，尤其内容特别多的时候，必须自己来写全选后的删除，否則会卡得cpu狂飙
-        el.addEventListener('keydown', (e) => {
+        divJson.addEventListener('keydown', (e) => {
             if(e.key == 'Backspace' || e.key == 'Delete') {
-                if(document.getSelection().toString().trim() == el.textContent.trim()) {
+                if(document.getSelection().toString().trim() == divJson.textContent.trim()) {
                     console.info('all selected before delete');
-                    el.innerText = ''; // el.innerHTML = '';
+                    divJson.innerText = ''; // divJson.innerHTML = '';
                 }
-                this.lineCount = Math.ceil(el.offsetHeight / 20);
+                this.lineCount = Math.ceil(divJson.offsetHeight / 20);
             }
         });
 
         // 可编辑div里的粘贴事件
         // 包含全选后粘贴，和 在光标所在处粘贴
-        el.addEventListener('paste', (e) => {
+        divJson.addEventListener('paste', (e) => {
             e.preventDefault();
             this.keyword = {};
-            if(document.getSelection().toString().trim() == el.textContent.trim()) {
+            if(document.getSelection().toString().trim() == divJson.textContent.trim()) {
                 console.info('all selected before ctrl+v');
-                el.innerHTML = '';
+                divJson.innerHTML = '';
                 navigator.clipboard.readText().then(text => {
-                    el.textContent = text;
+                    divJson.textContent = text;
                     this.parse();
-                    // this.search();
                 });
             } else {
                 let selection=window.getSelection()
@@ -79,17 +109,8 @@ const app = {
                     node.innerText = text;
                     range.insertNode(node);
                     this.parse();
-                    // this.search()
                 });
             }
-        });
-
-        // 在app内ctrl+f时focus到搜索关键字输入框
-        document.addEventListener('keyup', (e) => {
-            if (!(e.ctrlKey && (e.key == 'f' || e.key == 'F'))) {
-                return;
-            }
-            txtSearch.focus();
         });
 
         // 在搜索关键字输入框里enter/shift+enter时触发向后找/向前找
@@ -108,7 +129,7 @@ const app = {
             }
             if(e.key == 'Escape') {
                 // 取消搜索，聚焦到json输入框
-                el.focus();
+                divJson.focus();
             }
         });
         txtSearch.addEventListener('input', (e) => {
@@ -123,11 +144,12 @@ const app = {
             this.search();
         },
         parse() {
-            let el = document.getElementById('ta'), tmp;
-            content = el.textContent;
+            let divJson = this.$refs.divJson
+              , tmp;
+            let content = divJson.textContent;
             if(undefined == content || '' == content) return;
             try {
-                // tmp = JSON.parse(el.textContent);
+                // tmp = JSON.parse(divJson.textContent);
                 tmp = eval("[" + content + "]");
             } catch (err) {
                 console.error(err);
@@ -138,7 +160,7 @@ const app = {
             // 开始代码着色
             after = Process(after);
             // 给定pre标签
-            el.innerHTML = '<pre>' + after + '</pre>';
+            divJson.innerHTML = '<pre>' + after + '</pre>';
 
             // add linenum
             console.info('==current total line=====%d', after.split('\n').length);
@@ -147,7 +169,8 @@ const app = {
         clearHilight() {
             this.removeCurStyle();
             let m = new RegExp('<span id="result" class="hilight">' + this.keyword.now + '</span>', 'gi');
-            let el = document.getElementById('ta'), content = document.getElementById('ta').innerHTML;
+            let divJson = this.$refs.divJson;
+            let content = divJson.innerHTML;
             let arr = content.match(m), i = -1;
             // if(null == arr) return;
             content = content.replace(m, () => {
@@ -166,7 +189,7 @@ const app = {
                 return arr[i];
             });
 
-            el.innerHTML = content;
+            divJson.innerHTML = content;
             this.match = '';
             this.totalMatch = 0;
         },
@@ -179,21 +202,20 @@ const app = {
             this.keyword.now = kw;
         },
         search() {
-            let el = document.getElementById('ta');
-            let textContent = el.textContent.trim();
-            let searchText = txtSearch.value.trim();
+            let divJson = this.$refs.divJson;
+            let textContent = divJson.textContent.trim();
             console.info('keyword.last==%s========keyword.now==%s', this.keyword.last, this.keyword.now);
             if(undefined == textContent || 'undefined' == textContent || '' == textContent || 0 === textContent.length) {
                 // this.clearHilight();
                 return;
             }
-            if(undefined == searchText || '' == searchText) {
+            if(undefined == this.searchText || '' == this.searchText) {
                 console.info('clear hilight');
                 this.clearHilight();
                 // this.recordKeyword();
                 return;
             }
-            if(this.keyword.now == searchText) {
+            if(this.keyword.now == this.searchText) {
                 if(this.totalMatch == 0) return;
                 console.info('now locate to next');
                 this.next();
@@ -203,8 +225,8 @@ const app = {
             this.recordKeyword();
             this.checkIndex = 0;
             console.info('%s=====a========%s', this.keyword.last, this.keyword.now);
-            let content = el.innerHTML;//, reg = new RegExp(searchText, 'gi');
-            let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + searchText + ')', 'gi');
+            let content = divJson.innerHTML;//, reg = new RegExp(searchText, 'gi');
+            let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + this.searchText + ')', 'gi');
             let arr = content.match(reg), i = -1;
             if(undefined == arr || null == arr) {
                 console.info('there is no match');
@@ -217,7 +239,7 @@ const app = {
             //     i++;
             //     return '<span id="result" class="hilight">' + arr[i] + '</span>';
             // });
-            el.innerHTML = '<pre>' + content + '</pre>';
+            divJson.innerHTML = '<pre>' + content + '</pre>';
             console.info('checkIndex======%d', this.checkIndex);
             this.match = (this.checkIndex + 1) + "/" + arr.length;
             this.totalMatch = arr.length;
@@ -250,8 +272,8 @@ const app = {
             }
         },
         next() {
-            let searchText = txtSearch.value.trim();
-            if(undefined == searchText || '' == searchText) {
+            // let searchText = txtSearch.value.trim();
+            if(undefined == this.searchText || '' == this.searchText) {
                 return;
             }
             // 搜索到最后一个，继续从头开始
@@ -261,8 +283,8 @@ const app = {
             this.locate();
         },
         previous() {
-            let searchText = txtSearch.value.trim();
-            if(undefined == searchText || '' == searchText) {
+            // let searchText = txtSearch.value.trim();
+            if(undefined == this.searchText || '' == this.searchText) {
                 return;
             }
             if(this.checkIndex === 0) this.checkIndex = this.totalMatch;
@@ -275,7 +297,7 @@ const app = {
         }
     }
 }
-Vue.createApp(app).mount('#app');
+Vue.createApp(jsonbox).mount('#app');
 
 function IsArray(obj) {
     return obj &&

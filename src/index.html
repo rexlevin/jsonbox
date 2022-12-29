@@ -11,7 +11,20 @@
 </head>
 <body>
     <div id="app" class="container-fluid h-100 frame_page">
-        <!-- <div class="row">this is tabs header</div> -->
+        <!-- <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">New Box</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+        </ul> -->
         <div class="row frame_content">
             <div class="col" id="container">
                 <div id="ln">
@@ -20,7 +33,7 @@
                     </ul>
                 </div>
                 <div id="con">
-                    <div id="ta" class="code" contenteditable="true"></div>
+                    <div ref="divJson" class="code ta" contenteditable="true"></div>
                 </div>
             </div>
         </div>
@@ -29,11 +42,11 @@
                 <button class="btn btn-primary btn-sm" style="width: 80px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i> Parse</button>
             </div>
             <div class="col">
-                <span id="match">{{match}}</span>&nbsp;<input type="text" name="" id="txtSearch">&nbsp;
+                <span id="match">{{match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="searchText">&nbsp;
                     <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
                     <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>
             </div>
-            <div class="col-1 text-end"><i class="bi bi-sliders icon" @click="openSettings" title="设置"></i></div>
+            <!-- <div class="col-1 text-end"><i class="bi bi-sliders icon" @click="openSettings" title="设置"></i></div> -->
         </div>
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

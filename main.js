@@ -6,6 +6,9 @@ const package = require('./package.json')
 // 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
+// 禁用当前应用程序的硬件加速
+app.disableHardwareAcceleration();
+
 let win;
 const store = new Store();  // 开启electron-store
 
@@ -52,6 +55,9 @@ const createWindow = () => {
     win = new BrowserWindow(config);
     if(isMax) win.maximize();
     win.loadFile('./src/index.html');
+
+    // 打开开发者窗口
+    // win.webContents.openDevTools();
     
     // 关闭主窗口事件，记录窗口大小和位置
     win.on('close', (e) => {
