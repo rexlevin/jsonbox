@@ -49,10 +49,10 @@ const jsonbox = {
                 // 重新加载页面
                 window.api.reload();
             }
-            // if(e.ctrlKey && (e.key == 'n' || e.key == 'N')) {
-            //     // 新建标签页
-            //     alert(1)
-            // }
+            if(e.ctrlKey && (e.key == 'n' || e.key == 'N')) {
+                // 新建标签页
+                alert(1)
+            }
             if(e.ctrlKey && (e.key == 'f' || e.key == 'F')) {
                 // 在app内ctrl+f时focus到搜索关键字输入框
                 txtSearch.focus();
@@ -272,10 +272,10 @@ const jsonbox = {
             }
         },
         next() {
-            // let searchText = txtSearch.value.trim();
             if(undefined == this.searchText || '' == this.searchText) {
                 return;
             }
+            if(this.totalMatch == 0) return;    // 没有匹配，不再继续检索
             // 搜索到最后一个，继续从头开始
             if(this.checkIndex + 1 === this.totalMatch && this.totalMatch != 0) this.checkIndex = -1;
             this.checkIndex++;
@@ -283,10 +283,10 @@ const jsonbox = {
             this.locate();
         },
         previous() {
-            // let searchText = txtSearch.value.trim();
             if(undefined == this.searchText || '' == this.searchText) {
                 return;
             }
+            if(this.totalMatch == 0) return;    // 没有匹配，不再继续检索
             if(this.checkIndex === 0) this.checkIndex = this.totalMatch;
             this.checkIndex--;
             this.match = (this.checkIndex + 1) + "/" + this.totalMatch;
