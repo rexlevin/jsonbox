@@ -136,6 +136,10 @@ const jsonbox = {
             // console.info(txtSearch.value.trim());
             this.search();
         });
+        txtSearch.addEventListener('focus', (e) => {
+            // 获取焦点的时候全选内容
+            e.currentTarget.select();
+        });
     },
     methods: {
         manuParse() {
