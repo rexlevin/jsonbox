@@ -13,40 +13,36 @@
     <div id="app" class="container-fluid h-100 frame_page">
         <!-- <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">New Box</a>
+                <a class="nav-link active" data-bs-toggle="tab" aria-current="page" href="#">New Box</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#">Link</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" data-bs-toggle="tab" href="#">Link</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                <a class="nav-link disabled" data-bs-toggle="tab" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
             </li>
         </ul> -->
-        <div class="row frame_content">
-            <div class="col" id="container">
-                <div id="ln">
-                    <ul>
-                        <li v-for="index of lineCount">{{index}}</li>
-                    </ul>
-                </div>
-                <div id="con">
-                    <div ref="divJson" class="code ta" contenteditable="true"></div>
-                </div>
+        <div class="container-fluid content" id="container">
+            <div id="ln" class="position-sticky line">
+                <ul>
+                    <li v-for="index of j.lineCount">{{index}}</li>
+                </ul>
             </div>
+            <div ref="divJson" class="ta" contenteditable="true"></div>
         </div>
-        <div class="row frame_footer align-items-center">
-            <div class="col-2">
-                <button class="btn btn-primary btn-sm" style="width: 80px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i> Parse</button>
+        <div class="container-fluid fixed-bottom position-sticky align-items-center mt-1 mb-1">
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary btn-sm" style="width: 80px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i> Parse</button>&nbsp;&nbsp;
+                    <span id="match">{{j.match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="j.searchText">
+                        <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
+                        <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>
+                </div>
+                <!-- <div class="col-1 text-end"><i class="bi bi-sliders icon" @click="openSettings" title="设置"></i></div> -->
             </div>
-            <div class="col">
-                <span id="match">{{match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="searchText">&nbsp;
-                    <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
-                    <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>
-            </div>
-            <!-- <div class="col-1 text-end"><i class="bi bi-sliders icon" @click="openSettings" title="设置"></i></div> -->
         </div>
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
