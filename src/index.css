@@ -13,26 +13,26 @@ body{
 /* .icon:hover{background-color: dimgray;} */
 
 /* 页面布局 */
-.frame_page { display: flex; height:100vh; flex-direction:column; margin: 0 10;}
+.frame_page { display: flex; height:100vh; flex-direction:column; margin:0 10; padding:0;}
 .frame_header { height:40px; }
-.frame_content { flex:1; overflow:auto; }
-.frame_footer { height: 40px; }
+.frame_content { flex:1; padding:0; overflow:auto; }
+.frame_footer { height:30px; position: sticky!important; margin-top:2px; margin-bottom:2px; }
 
 /* 标签tabs区域 */
 .nav {min-height:30px;}
 .nav>li>a {height:30px; padding-top:4px; font-size:20px;}
 
 /* 格式化区域 */
-#container{background-color:white; width:100%; height:100%; overflow-y:auto; overflow-x:auto; cursor:text; padding:0;}
-#container #ln{width:50px; height: 100%; text-align: right; margin:0 5px 0 0; padding:0; float:left;}
-#container #ln ul{padding-inline-start: 0; margin-block-start: 0; margin-block-end: 0;}
-#container #ln ul li{list-style: none; padding:0; margin:0;}
-#container #con{background-color: white; overflow-x:auto; overflow-y:hidden; padding:0;}
-#container #con .ta{background-color: white; padding: 0; outline: none; overflow:hidden; border: 0;}
-#container #con .ta pre{ margin:0; height:100%; overflow-y: hidden; overflow-x: auto; font-size:20px;}
-#container #con .ta pre::-webkit-scrollbar{display: none;}
+.content{background-color:white; margin:0; padding:0; overflow:auto; display:flex; flex-direction:row; height:100vh;}
+.content .line{top:0; left:0; bottom:0; min-width:50px; text-align:right; background-color:rgb(179, 171, 171); padding-right:5px; overflow-y:auto;}
+.content .line::-webkit-scrollbar{display:none;}
+.content .line ul{padding-inline-start: 0; margin-block-start: 0; margin-block-end: 0;}
+.content .line ul li{list-style: none; padding:0; margin:0;}
+.content .ta{background-color: white; padding: 0; outline: none; border: 0; padding-left: 1px;}
+.content .ta pre{ margin:0; overflow-y:hidden; font-size:20px;}
+.content .ta pre::-webkit-scrollbar{display: none;}
 
-#frame_footer #match{display:table-cell; width:150px; text-align: right;}
+#match{display:inline-block; width:80px; text-align: right;}
 
 /* 搜索高亮 */
 .hilight{background:yellow;color:red;}

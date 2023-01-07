@@ -74,6 +74,10 @@ const jsonbox = {
             selection.removeAllRanges();
             selection.addRange(range);
         });
+        document.querySelector('#container').addEventListener('scroll', (e) => {
+            // console.info(e.currentTarget.scrollTop);
+            document.querySelector('#ln').scrollTop = e.currentTarget.scrollTop; 
+        });
 
         // 可编辑div里的内容变化事件，这是为了重写linenum
         divJson.addEventListener('DOMNodeInserted', () => {
@@ -144,6 +148,10 @@ const jsonbox = {
         });
     },
     methods: {
+        createTemplate() {
+            return 
+            "";
+        },
         manuParse() {
             this.j.keyword = {};
             this.parse();
@@ -232,6 +240,8 @@ const jsonbox = {
             this.j.checkIndex = 0;
             console.info('%s=====a========%s', this.j.keyword.last, this.j.keyword.now);
             let content = divJson.innerHTML;//, reg = new RegExp(searchText, 'gi');
+            content = content.substring(5)  // 去掉开头的<pre>
+            content = content.substring(0, content.length - 6)  // 去掉末尾的</pre>
             let reg = new RegExp('(<span class="[^"]+">)((?:(?!<\/span>).)*?)(' + this.j.searchText + ')', 'gi');
             let arr = content.match(reg), i = -1;
             if(undefined == arr || null == arr) {
@@ -256,8 +266,10 @@ const jsonbox = {
             let container = document.getElementById('container');
             this.removeCurStyle();
             this.addCurStyle();
+            console.info('====================%s', container.offsetWidth);
             container.scrollTo({
-                top: hilight[this.j.checkIndex].offsetTop,
+                top: hilight[this.j.checkIndex].offsetTop - 100,
+                left: (hilight[this.j.checkIndex].offsetLeft < container.offsetWidth ? 0 : hilight[this.j.checkIndex].offsetLeft - container.offsetWidth / 2),
                 behavior: 'smooth'
             });
         },
