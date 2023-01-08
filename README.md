@@ -18,6 +18,10 @@
 
 - [x] 行号
 
+- [x] 多tab页功能，同时操作多个json
+
+- [ ] 增加设置功能
+
 # 开发
 
 ```bash
@@ -39,4 +43,4 @@ npm run build-dist:win
 
 # 截图
 
-![image-20220810141619449](https://imgbd.r-xnoro.com//image-20220810141619449.png)
+![image-20230108203640275](https://imgbd.r-xnoro.com//image-20230108203640275.png)
