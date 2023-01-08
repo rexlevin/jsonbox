@@ -11,20 +11,11 @@
 </head>
 <body>
     <div id="app" class="container-fluid h-100 frame_page">
-        <!-- <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" aria-current="page" href="#">New Box</a>
+        <ul ref="tabs" class="nav nav-tabs">
+            <li class="nav-item" v-for="(j, i) in boxes">
+                <a class="nav-link myTab" :class="{'active': i == getCurrentTabIndex}" ref="'tabItem' + i" @click="switchTab(i, $event)" :index="i" data-bs-toggle="tab" href="#">{{j.title ? j.title : 'NewTab' + i}}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" data-bs-toggle="tab" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
-        </ul> -->
+        </ul>
         <div class="container-fluid content" id="container">
             <div id="ln" class="position-sticky line">
                 <ul>

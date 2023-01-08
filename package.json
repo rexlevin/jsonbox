@@ -1,6 +1,6 @@
 {
   "name": "jsonbox",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "JsonBox-跨平台的json格式化工具",
   "main": "main.js",
   "scripts": {

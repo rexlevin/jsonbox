@@ -9,8 +9,17 @@ const jsonbox = {
                 keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
                 match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
                 totalMatch: 0,  // 搜索总匹配数
-                checkIndex: 0   // 当前是第几个搜索匹配，从0开始计数
+                checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
+                title: '',
+                jText: ''
             },
+            currentTabIndex: -1,    // 当前编辑区是boxes中第几个元素
+            t: 0
+        }
+    },
+    computed:  {
+        getCurrentTabIndex () {
+            return this.currentTabIndex
         }
     },
     setup() {
@@ -24,6 +33,9 @@ const jsonbox = {
         // };
     },
     created() {
+
+        this.boxes.push(this.j);
+        this.currentTabIndex = 0;
         // app.addEventListener('keyup', (e) => {
         //     if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
         //         window.api.devTools();
@@ -51,9 +63,9 @@ const jsonbox = {
                 // 重新加载页面
                 window.api.reload();
             }
-            if(e.ctrlKey && (e.key == 'n' || e.key == 'N')) {
+            if(e.ctrlKey && (e.key == 't' || e.key == 'T')) {
                 // 新建标签页
-                alert(1)
+                this.createTab();
             }
             if(e.ctrlKey && (e.key == 'f' || e.key == 'F')) {
                 // 在app内ctrl+f时focus到搜索关键字输入框
@@ -81,7 +93,8 @@ const jsonbox = {
 
         // 可编辑div里的内容变化事件，这是为了重写linenum
         divJson.addEventListener('DOMNodeInserted', () => {
-            this.j.lineCount = Math.ceil(divJson.offsetHeight / 20)
+            // this.j.lineCount = Math.ceil(divJson.offsetHeight / 20)
+            this.j.lineCount =  divJson.innerHTML.split('\n').length;
         });
 
         // 可编辑div里的内容全选后删除事件，尤其内容特别多的时候，必须自己来写全选后的删除，否則会卡得cpu狂飙
@@ -91,7 +104,8 @@ const jsonbox = {
                     console.info('all selected before delete');
                     divJson.innerText = ''; // divJson.innerHTML = '';
                 }
-                this.j.lineCount = Math.ceil(divJson.offsetHeight / 20);
+                // this.j.lineCount = Math.ceil(divJson.offsetHeight / 20);
+                this.j.lineCount = divJson.innerHTML.split('\n').length
             }
         });
 
@@ -146,11 +160,59 @@ const jsonbox = {
             // 获取焦点的时候全选内容
             e.currentTarget.select();
         });
+
+        // document.querySelector('.myTab').addEventListener('show.bs.tab', (e) => {
+        //     console.info(e);
+        //     console.info(e.target);
+        //     console.info(e.relatedTarget['index']);
+        // });
     },
     methods: {
-        createTemplate() {
-            return 
-            "";
+        switchTab(index, e){
+            this.packData('1');    // 先把当前tab数据进行保存
+            let newTabIndex = e.target.getAttribute('index')
+            console.info('newTabIndex=============%s', newTabIndex)
+            this.j = this.boxes[newTabIndex];
+            this.currentTabIndex = newTabIndex
+            console.info(this.j);
+            console.info('currentTabIndex=============%s', this.currentTabIndex)
+            this.$refs.divJson.innerHTML = this.j.jText;
+        },
+        createTab() {
+            if(this.$refs.divJson.textContent == '') return;
+            this.packData('1');    // 将当前数据放入boxes中
+            this.clearData();   // 清空数据
+            this.boxes.push(this.j);
+            this.currentTabIndex = this.boxes.length - 1
+            console.info('boxes.length====%s', this.boxes.length);
+        },
+        clearData() {
+            this.j = {
+                strJson: '',
+                lineCount: 1,   // 总行数
+                searchText: '',
+                keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
+                match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
+                totalMatch: 0,  // 搜索总匹配数
+                checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
+                title: '',
+                jText: ''
+            };
+            this.$refs.divJson.textContent = ''
+        },
+        packData(operate) {
+            // 将当前数据保存进boxes
+            // operate：0-新增，1-更新，2-删除
+            if('0' == operate) {
+                this.j.jText  = this.$refs.divJson.innerHTML;
+                this.currentTabIndex = this.boxes.push(this.j) - 1;
+            } else if('1' == operate) {
+                this.j.jText  = this.$refs.divJson.innerHTML;
+                this.boxes[this.currentTabIndex] = this.j;
+            } else {
+                delete this.boxes[this.currentTabIndex];
+                this.currentTabIndex--;
+            }
         },
         manuParse() {
             this.j.keyword = {};
@@ -158,6 +220,9 @@ const jsonbox = {
             this.search();
         },
         parse() {
+            if(this.currentTabIndex == -1) { // 当前数据还没有保存进boxes
+                this.packData("0");
+            } 
             let divJson = this.$refs.divJson
               , tmp;
             let content = divJson.textContent;

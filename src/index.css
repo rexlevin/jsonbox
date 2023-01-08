@@ -23,8 +23,8 @@ body{
 .nav>li>a {height:30px; padding-top:4px; font-size:20px;}
 
 /* 格式化区域 */
-.content{background-color:white; margin:0; padding:0; overflow:auto; display:flex; flex-direction:row; height:100vh;}
-.content .line{top:0; left:0; bottom:0; min-width:50px; text-align:right; background-color:rgb(179, 171, 171); padding-right:5px; overflow-y:auto;}
+.content{background-color:white; margin:0; padding:0; cursor:text; overflow:auto; display:flex; flex-direction:row; height:100vh;}
+.content .line{top:0; left:0; bottom:0; min-width:50px; text-align:right; background-color:rgb(245, 240, 240); padding-right:5px; overflow-y:auto;}
 .content .line::-webkit-scrollbar{display:none;}
 .content .line ul{padding-inline-start: 0; margin-block-start: 0; margin-block-end: 0;}
 .content .line ul li{list-style: none; padding:0; margin:0;}
