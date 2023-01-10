@@ -3,6 +3,7 @@ const jsonbox = {
         return {
             boxes: [],
             j: {
+                sid: '',
                 strJson: '',
                 lineCount: 1,   // 总行数
                 searchText: '',
@@ -14,7 +15,7 @@ const jsonbox = {
                 jText: ''
             },
             currentTabIndex: -1,    // 当前编辑区是boxes中第几个元素
-            t: 0
+            tabIndex: 0
         }
     },
     computed:  {
@@ -22,28 +23,11 @@ const jsonbox = {
             return this.currentTabIndex
         }
     },
-    setup() {
-        // const app = ref(null)
-        //     // , txtSearch = ref(null)
-        //     // , divJson = ref(null)
-        // return {
-        //     app,
-        //     // txtSearch,
-        //     // divJson
-        // };
-    },
     created() {
-
-        this.boxes.push(this.j);
+        this.j.sid = window.api.sid();
+        this.j.title = 'NewTab ' + this.tabIndex++;
+        this.boxes.push(Object.assign({}, this.j));
         this.currentTabIndex = 0;
-        // app.addEventListener('keyup', (e) => {
-        //     if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
-        //         window.api.devTools();
-        //     }
-        //     if (e.ctrlKey && (e.key == 'r' || e.key == 'R')) {
-        //         window.api.reload();
-        //     }
-        // });
     },
     mounted() {
         // 设置title
@@ -55,6 +39,7 @@ const jsonbox = {
         divJson.focus();
 
         document.querySelector('#app').addEventListener('keyup', (e) => {
+            e.preventDefault();
             if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
                 // 打开开发者工具
                 window.api.devTools();
@@ -67,9 +52,17 @@ const jsonbox = {
                 // 新建标签页
                 this.createTab();
             }
+            if(e.ctrlKey && (e.key == 'w' || e.key == 'W')) {
+                // 关闭当前标签页
+                this.closeTab();
+            }
             if(e.ctrlKey && (e.key == 'f' || e.key == 'F')) {
                 // 在app内ctrl+f时focus到搜索关键字输入框
                 txtSearch.focus();
+            }
+            if(e.key == 'F2') {
+                // 修改当前tab标签名
+                this.modifyTabTitle();
             }
         });
 
@@ -168,26 +161,31 @@ const jsonbox = {
         // });
     },
     methods: {
+        modifyTabTitle() {
+            // 修改当前tab标签title
+        },
+        showTabContextMenu(index, e) {
+            // tab标签上的右键菜单
+        },
         switchTab(index, e){
             this.packData('1');    // 先把当前tab数据进行保存
             let newTabIndex = e.target.getAttribute('index')
-            console.info('newTabIndex=============%s', newTabIndex)
-            this.j = this.boxes[newTabIndex];
+            this.j = Object.assign({}, this.boxes[newTabIndex]);
             this.currentTabIndex = newTabIndex
-            console.info(this.j);
-            console.info('currentTabIndex=============%s', this.currentTabIndex)
             this.$refs.divJson.innerHTML = this.j.jText;
+        },
+        closeTab() {
+            this.packData('2')
         },
         createTab() {
             if(this.$refs.divJson.textContent == '') return;
             this.packData('1');    // 将当前数据放入boxes中
             this.clearData();   // 清空数据
-            this.boxes.push(this.j);
-            this.currentTabIndex = this.boxes.length - 1
-            console.info('boxes.length====%s', this.boxes.length);
+            this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1
         },
         clearData() {
-            this.j = {
+            let t = {
+                sid: window.api.sid(),
                 strJson: '',
                 lineCount: 1,   // 总行数
                 searchText: '',
@@ -195,23 +193,53 @@ const jsonbox = {
                 match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
                 totalMatch: 0,  // 搜索总匹配数
                 checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
-                title: '',
+                title: 'NewTab ' + this.tabIndex++,
                 jText: ''
             };
-            this.$refs.divJson.textContent = ''
+            this.j = Object.assign({}, t);
+            this.$refs.divJson.textContent = '';
         },
         packData(operate) {
             // 将当前数据保存进boxes
             // operate：0-新增，1-更新，2-删除
-            if('0' == operate) {
-                this.j.jText  = this.$refs.divJson.innerHTML;
-                this.currentTabIndex = this.boxes.push(this.j) - 1;
-            } else if('1' == operate) {
-                this.j.jText  = this.$refs.divJson.innerHTML;
-                this.boxes[this.currentTabIndex] = this.j;
-            } else {
-                delete this.boxes[this.currentTabIndex];
-                this.currentTabIndex--;
+            switch (operate) {
+                case '0':
+                    this.j.sid = window.api.sid();
+                    this.j.jText  = this.$refs.divJson.innerHTML;
+                    this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1;
+                    break;
+                case '1':
+                    this.j.jText  = this.$refs.divJson.innerHTML;
+                    for (let i = 0; i < this.boxes.length; i++) {
+                        const element = this.boxes[i];
+                        if(this.boxes[i].sid == this.j.sid) {
+                            this.boxes[i] = Object.assign({}, this.j);
+                            break;
+                        }
+                    }
+                    break;
+                case '2':
+                    if(this.boxes.length == 1) {
+                        this.clearData();
+                        return;
+                    }
+                    // delete this.boxes[this.currentTabIndex];
+                    let index = 0;
+                    for (let i = 0; i < this.boxes.length; i++) {
+                        if(this.boxes[i].sid == this.j.sid) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if(this.currentTabIndex == (this.boxes.length - 1)) {
+                        this.currentTabIndex--
+                    }
+                    this.boxes.splice(index, 1);
+                    this.j = Object.assign({}, this.boxes[this.currentTabIndex]);
+                    this.$refs.divJson.innerHTML = this.j.jText;
+                    break;
+                default:
+                    break;
             }
         },
         manuParse() {

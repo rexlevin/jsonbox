@@ -1,6 +1,6 @@
 {
   "name": "jsonbox",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "JsonBox-跨平台的json格式化工具",
   "main": "main.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.2",
     "electron-store": "^8.1.0",
+    "nanoid": "^3.3.4",
     "vue": "^3.2.37"
   }
 }
