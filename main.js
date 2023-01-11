@@ -35,8 +35,6 @@ const createWindow = () => {
         // win.setContentBounds(position)
         config.width = position.width;
         config.height = position.height;
-        config.minWidth = position.width;
-        config.minHeight = position.height;
         config.x = position.x;
         config.y = position.y;
     } else if(!isMax && ('' == position || undefined == position)) {
