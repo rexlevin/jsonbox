@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, Tray, ipcMain, dialog } = require('electron')
 const Store = require('electron-store');  // 引入store
 const path = require('path')
 const package = require('./package.json')
+const prompt = require('custom-electron-prompt')
 
 // 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -31,16 +32,6 @@ const createWindow = () => {
     let isMax = store.get('isMax') ? true : false
         , position = store.get('mainPosition')
         , config = {};
-    if(!isMax && !('' == position || undefined == position)) {
-        // win.setContentBounds(position)
-        config.width = position.width;
-        config.height = position.height;
-        config.x = position.x;
-        config.y = position.y;
-    } else if(!isMax && ('' == position || undefined == position)) {
-        config.width = 800;
-        config.height = 600;
-    }
     config.minWidth = 600;
     config.minHeight = 600;
     config.icon = path.join(__dirname, './src/logo.png');
@@ -49,6 +40,7 @@ const createWindow = () => {
         spellcheck: false
     }
     config.useContentSize = true;
+    config.show = false;
 
     win = new BrowserWindow(config);
     if(isMax) win.maximize();
@@ -56,6 +48,15 @@ const createWindow = () => {
 
     // 打开开发者窗口
     // win.webContents.openDevTools();
+    
+    // 启动恢复主窗口位置和大小
+    if(!isMax && !('' == position || undefined == position)) {
+        win.setContentBounds(position)
+    }
+
+    win.on('ready-to-show', ()=>{
+        win.show();
+    });
     
     // 关闭主窗口事件，记录窗口大小和位置
     win.on('close', (e) => {
@@ -66,7 +67,7 @@ const createWindow = () => {
 }
 
 const createTray = () => {
-    tray = new Tray(path.join(__dirname, './src/logo.png'));
+    let tray = new Tray(path.join(__dirname, './src/logo.png'));
     const menu = Menu.buildFromTemplate(trayMenuTemplate);
     tray.setContextMenu(menu);
 }
@@ -99,4 +100,23 @@ ipcMain.on('reload', () => {
 });
 ipcMain.on('exit', () => {
     app.quit();
+});
+ipcMain.on('modifyTitle', (event, options) => {
+    let result = {}
+        , et = event;
+    // 这是修改 tab title 的弹框，需要把 win 作为父窗口
+    prompt(options, win)
+    .then((r) => {
+        if(r === null) {
+            console.log('user cancelled');
+            result = {code: '0001'};
+            et.reply('modifyTitle-reply', result);
+        } else {
+            console.log('result', r);
+            result = {code: '0000', body: r};
+            et.reply('modifyTitle-reply', result);
+        }
+    })
+    .catch(console.error);
+    // event.reply('modifyTitle-reply', result);
 });

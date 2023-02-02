@@ -163,6 +163,14 @@ const jsonbox = {
     methods: {
         modifyTabTitle() {
             // 修改当前tab标签title
+            window.api.modifyTitle({
+                title: '修改title',
+                alwaysOnTop: false,
+                label: '输入新的title'
+            }, (r) => {
+                this.j.title = r.body;
+                this.packData('1'); // 把数据更新到 boxes 中
+            });
         },
         showTabContextMenu(index, e) {
             // tab标签上的右键菜单
@@ -182,6 +190,7 @@ const jsonbox = {
             this.packData('1');    // 将当前数据放入boxes中
             this.clearData();   // 清空数据
             this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1
+            this.$refs.divJson.focus();
         },
         clearData() {
             let t = {

@@ -31,6 +31,12 @@ contextBridge.exposeInMainWorld(
         sid: () => {
             const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
             return nanoid()
+        },
+        modifyTitle: (options, cb) => {
+            ipcRenderer.send('modifyTitle', options);
+            ipcRenderer.on('modifyTitle-reply', (event, r) => {
+                cb(r);
+            });
         }
     }
 );
