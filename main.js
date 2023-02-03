@@ -28,7 +28,7 @@ app.on('window-all-closed', () => {
 });
 
 const createWindow = () => {
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
     
     // 启动恢复主窗口位置和大小
     let isMax = store.get('isMax') ? true : false
@@ -142,11 +142,27 @@ ipcMain.on('settings', () => {
         width: 800,
         height: 600,
         resizable: false,
-        icon: path.join(__dirname, './src/logo.png')
+        icon: path.join(__dirname, './src/logo.png'),
+        webPreferences: {
+            preload: path.join(__dirname, './src/preload.js'),
+            spellcheck: false
+        }
     };
     winSettings = new BrowserWindow(config);
     winSettings.loadFile('./src/settings.html');
     winSettings.on('close', () => {
         winSettings = null;
     });
+});
+ipcMain.on('repository', (event) => {
+    let locale = app.getLocale()
+        , url = ''
+    // 使用ip的话要么自己维护一个ip库放在外部（太大，没必要放项目里），要么使用第三方，都需要进行网络交互
+    // 所以这里使用一个最粗略的方式“语言环境”来判断是否是中国大陆
+    if(locale.indexOf('zh-CN') == -1) {
+        url = 'https://github.com/rexlevin/coderbox'
+    } else {
+        url = 'https://gitee.com/rexlevin/coderbox'
+    }
+    event.reply('repository-reply', url);
 });

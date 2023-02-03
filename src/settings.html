@@ -10,18 +10,35 @@
 </head>
 <body>
     <div class="container-fluid" id="app">
-        <div class="row">
+        <div class="row pt-2">
             <div class="col-3">
                 <ul class="list-group nav">
-                    <li class="list-group-item cursor-pointer">常用</li>
-                    <li class="list-group-item cursor-pointer">快捷键说明</li>
-                    <li class="list-group-item cursor-pointer">关于</li>
+                    <li class="list-group-item cursor-pointer"><a class="active" data-bs-toggle="tab" href="#tabCommon">常用</a></li>
+                    <li class="list-group-item cursor-pointer"><a data-bs-toggle="tab" href="#tabHotkeys">快捷键说明</a></li>
+                    <li class="list-group-item cursor-pointer"><a data-bs-toggle="tab" href="#tabAbout">关于</a></li>
                 </ul>
             </div>
-            <div class="col-9"></div>
+            <div class="col-9">
+                <div class="tab-content">
+                    <div class="tab-pane container-fluid active" id="tabCommon">常用</div>
+                    <div class="tab-pane container-fluid" id="tabHotkeys">hotkeys</div>
+                    <div class="tab-pane container-fluid" id="tabAbout">
+                        <div class="row">
+                            <div class="col">
+                                <p>{{appInfo}}</p>
+                                <p>项目主页：<a href="#" @click="openUrl($event, 'homePage')">{{homePage}}</a></p>
+                                <p>代码仓库：<a href="#" @click="openUrl($event), 'repository'">{{repository}}</a></p>
+                                <p>给小可爱买杯咖啡：</p>
+                                <p><img src="./assets/pay.png" alt=""></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/vue/dist/vue.global.prod.js" charset="utf-8"></script>
+    <script src="./settings.js"></script>
 </body>
 </html>
