@@ -64,6 +64,10 @@ const jsonbox = {
                 // 修改当前tab标签名
                 this.modifyTabTitle();
             }
+            if(e.ctrlKey && (e.key == 's' || e.key == 'S')) {
+                // 保存为文件
+                this.save2File();
+            }
         });
 
         document.querySelector('#container').addEventListener('click', () => {
@@ -161,6 +165,14 @@ const jsonbox = {
         // });
     },
     methods: {
+        save2File() {
+            // 保存为文件
+            window.api.save2File({
+                title: '保存到...',
+                filters: [{name: 'JSON文件', extentions: ['json']}],
+                defaultPath: this.j.title + '.json'
+            }, this.$refs.divJson.textContent);
+        },
         modifyTabTitle() {
             // 修改当前tab标签title
             window.api.modifyTitle({

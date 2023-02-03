@@ -3,6 +3,7 @@ const Store = require('electron-store');  // 引入store
 const path = require('path')
 const package = require('./package.json')
 const prompt = require('custom-electron-prompt')
+const fs = require('fs')
 
 // 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -119,4 +120,15 @@ ipcMain.on('modifyTitle', (event, options) => {
     })
     .catch(console.error);
     // event.reply('modifyTitle-reply', result);
+});
+ipcMain.on('saveFile', (e, options, content) => {
+    dialog.showSaveDialog(options).then(r => {
+        console.info(r);
+        if(r.canceled) {
+            console.info('user canceled');
+        } else {
+            console.info('file path is==%s', r.filePath);
+            fs.writeFileSync(r.filePath, content)
+        }
+    });
 });

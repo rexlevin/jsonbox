@@ -37,6 +37,9 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.on('modifyTitle-reply', (event, r) => {
                 cb(r);
             });
+        },
+        save2File: (options, content) => {
+            ipcRenderer.send('saveFile', options, content);
         }
     }
 );
