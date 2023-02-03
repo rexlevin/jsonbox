@@ -168,6 +168,7 @@ const jsonbox = {
                 alwaysOnTop: false,
                 label: '输入新的title'
             }, (r) => {
+                if('0000' != r.code) return;
                 this.j.title = r.body;
                 this.packData('1'); // 把数据更新到 boxes 中
             });
