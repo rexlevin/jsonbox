@@ -426,7 +426,8 @@ const jsonbox = {
             this.locate();
         },
         openSettings() {
-            // 打开设置dialog
+            // 打开设置窗口
+            window.api.openSettings();
         },
         copy(name) {
             let jsonTxt = this.$refs.divJson.textContent;

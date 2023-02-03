@@ -11,8 +11,9 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // 禁用当前应用程序的硬件加速
 app.disableHardwareAcceleration();
 
-let win;
 const store = new Store();  // 开启electron-store
+
+let win, winSettings = null;
 
 app.whenReady().then(() => {
     createTray();
@@ -27,13 +28,13 @@ app.on('window-all-closed', () => {
 });
 
 const createWindow = () => {
-    Menu.setApplicationMenu(null);
+    // Menu.setApplicationMenu(null);
     
     // 启动恢复主窗口位置和大小
     let isMax = store.get('isMax') ? true : false
         , position = store.get('mainPosition')
         , config = {};
-    config.minWidth = 600;
+    config.minWidth = 800;
     config.minHeight = 600;
     config.icon = path.join(__dirname, './src/logo.png');
     config.webPreferences = {
@@ -130,5 +131,22 @@ ipcMain.on('saveFile', (e, options, content) => {
             console.info('file path is==%s', r.filePath);
             fs.writeFileSync(r.filePath, content)
         }
+    });
+});
+ipcMain.on('settings', () => {
+    if(winSettings) {
+        winSettings.focus();
+        return;
+    }
+    let config = {
+        width: 800,
+        height: 600,
+        resizable: false,
+        icon: path.join(__dirname, './src/logo.png')
+    };
+    winSettings = new BrowserWindow(config);
+    winSettings.loadFile('./src/settings.html');
+    winSettings.on('close', () => {
+        winSettings = null;
     });
 });

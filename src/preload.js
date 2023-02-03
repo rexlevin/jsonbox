@@ -43,6 +43,9 @@ contextBridge.exposeInMainWorld(
         },
         save2File: (options, content) => {
             ipcRenderer.send('saveFile', options, content);
+        },
+        openSettings: (options) => {
+            ipcRenderer.send('settings');
         }
     }
 );

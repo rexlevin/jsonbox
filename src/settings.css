@@ -1,0 +1,11 @@
+html, body{background-color: #e7eaed; height:100%; margin: 0 !important; font-family: Arial, Helvetica, sans-serif;}
+body{
+    font-size:16px; line-height: 16px;
+    /* 下面四行是设定不允许双击选中 */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cursor-pointer{cursor: pointer;}
