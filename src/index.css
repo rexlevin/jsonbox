@@ -34,7 +34,8 @@ body{
 .content .ta pre{ margin:0; overflow-y:hidden; font-size:20px;}
 .content .ta pre::-webkit-scrollbar{display: none;}
 
-#match{display:inline-block; width:80px; text-align: right;}
+#match{display:inline-block; width:60px; text-align: right;}
+#txtSearch{width:170px;}
 
 /* 搜索高亮 */
 .hilight{background:yellow;color:red;}

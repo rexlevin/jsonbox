@@ -4,6 +4,9 @@ const package = require('../package.json');
 
 contextBridge.exposeInMainWorld(
     'api', {
+        notification: (options) => {
+            new window.Notification(options.title, options);
+        },
         devTools: () => {ipcRenderer.send('devTools');},
         reload: () => {ipcRenderer.send('reload');},
         getDescription: () => {

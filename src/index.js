@@ -427,6 +427,30 @@ const jsonbox = {
         },
         openSettings() {
             // 打开设置dialog
+        },
+        copy(name) {
+            let jsonTxt = this.$refs.divJson.textContent;
+            // if('' == name || undefined == name) {
+            //     let title = this.operation == 'format' ? '格式化' : '压缩'
+            //     navigator.clipboard.writeText(this.strJson)
+            //     parent.notification({title: 'note', body: title + '结果内容已经复制到剪贴板'})
+            //     return;
+            // }
+            let jsonObj = eval("(" + jsonTxt + ")")
+                , re;
+            const handlers = {
+                'xml': function(jsonObj) {
+                    let x2js = new X2JS();
+                    re = x2js.js2xml(jsonObj)
+                },
+                'yaml': function() {
+                    let yaml = new YAML();
+                    re = yaml.j2y(jsonObj)
+                }
+            }
+            handlers[name](jsonObj)
+            navigator.clipboard.writeText(re)
+            window.api.notification({title: '复制成功', body: `${name}格式内容已经复制到剪贴板`})
         }
     }
 }
