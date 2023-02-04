@@ -30,7 +30,7 @@
 
 - [ ] 设置-保存会话
 
-- [ ] 设置-快捷键说明
+- [x] 设置-快捷键说明
 
 # 开发
 
@@ -53,4 +53,10 @@ npm run build-dist:win
 
 # 截图
 
-![image-20230108203640275](https://imgbd.r-xnoro.com//image-20230108203640275.png)
+![image-20230204151508674](https://imgbd.r-xnoro.com//image-20230204151508674.png)
+
+![image-20230204151829103](https://imgbd.r-xnoro.com//image-20230204151829103.png)
+
+![image-20230204151800184](https://imgbd.r-xnoro.com//image-20230204151800184.png)
+
+![image-20230204152659117](https://imgbd.r-xnoro.com//image-20230204152659117.png)
