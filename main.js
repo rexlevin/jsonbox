@@ -160,9 +160,9 @@ ipcMain.on('repository', (event) => {
     // 使用ip的话要么自己维护一个ip库放在外部（太大，没必要放项目里），要么使用第三方，都需要进行网络交互
     // 所以这里使用一个最粗略的方式“语言环境”来判断是否是中国大陆
     if(locale.indexOf('zh-CN') == -1) {
-        url = 'https://github.com/rexlevin/coderbox'
+        url = 'https://github.com/rexlevin/jsonbox'
     } else {
-        url = 'https://gitee.com/rexlevin/coderbox'
+        url = 'https://gitee.com/rexlevin/jsonbox'
     }
     event.reply('repository-reply', url);
 });

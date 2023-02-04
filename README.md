@@ -20,9 +20,9 @@
 
 - [x] 多tab页功能，同时操作多个json
 
-- [x] 修改tab标签title
+- [x] F2 修改tab标签title
 
-- [x] 保存为文件
+- [x] ctrl + s 保存文件
 
 - [ ] 复制为xml
 
