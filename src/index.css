@@ -21,8 +21,9 @@ body{
 .frame_footer { height:30px; position: sticky!important; margin-top:2px; margin-bottom:2px; }
 
 /* 标签tabs区域 */
-.nav {min-height:30px;}
-.nav>li>a {height:30px; padding-top:4px; font-size:20px;}
+.nav .nav-tabs {min-height:30px;}
+.nav-item {min-height:30px; height:30px;}
+.nav>li>a {width:100%; height:100%; padding-top:0px; padding-bottom:0px; display:block; line-height:30px; font-size:15px;}
 
 /* 格式化区域 */
 .content{background-color:white; margin:0; padding:0; cursor:text; overflow:auto; display:flex; flex-direction:row; height:100vh;}
