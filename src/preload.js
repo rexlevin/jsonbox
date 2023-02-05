@@ -41,6 +41,10 @@ contextBridge.exposeInMainWorld(
             const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
             return nanoid()
         },
+        getBoxes(cb) {
+            ipcRenderer.send('getBoxes');
+            ipcRenderer.on('getBoxes-reply', (e, r) => { cb(r); });
+        },
         modifyTitle: (options, cb) => {
             ipcRenderer.send('modifyTitle', options);
             ipcRenderer.on('modifyTitle-reply', (event, r) => {
@@ -55,6 +59,24 @@ contextBridge.exposeInMainWorld(
         },
         openUrl: (url) => {
             shell.openExternal(url);
+        },
+        getSettings(cb) {
+            ipcRenderer.send('getSettings');
+            ipcRenderer.on('getSettings-reply', (e, r) => {
+                cb(r);
+            });
+        },
+        saveSettings(s) {
+            ipcRenderer.send('saveSettings', s);
+        },
+        appCloseHandler(cb) {
+            ipcRenderer.on('close', cb);
+        },
+        saveBoxes(boxes, cb) {
+            ipcRenderer.send('saveBoxes', boxes);
+            ipcRenderer.on('saveBoxes-reply', (e, r) => {
+                cb(r);
+            })
         }
     }
 );

@@ -15,7 +15,7 @@ const jsonbox = {
                 jText: ''
             },
             currentTabIndex: -1,    // 当前编辑区是boxes中第几个元素
-            tabIndex: 0
+            tabIndex: 0         // 标签计数器
         }
     },
     computed:  {
@@ -24,12 +24,39 @@ const jsonbox = {
         }
     },
     created() {
-        this.j.sid = window.api.sid();
-        this.j.title = 'NewTab ' + this.tabIndex++;
-        this.boxes.push(Object.assign({}, this.j));
-        this.currentTabIndex = 0;
+        window.api.getSettings(r => {
+            if(undefined == r) return;
+            if(!r.saveSession) return;
+            window.api.getBoxes(r => {
+                if(undefined === r || r.length == 0) {
+                    this.j.sid = window.api.sid();
+                    this.j.title = 'NewTab_' + this.tabIndex++;
+                    this.boxes.push(Object.assign({}, this.j));
+                    this.currentTabIndex = 0;
+                    return;
+                }
+                this.boxes = r;
+                this.j = this.boxes[0];
+                this.$refs.divJson.innerHTML = this.j.jText;
+                this.currentTabIndex = 0;
+                this.tabIndex = this.boxes.length;
+            });
+        });
     },
     mounted() {
+        window.api.appCloseHandler(e => {
+            window.api.getSettings(r => {
+                if(undefined != r && r.saveSession) {
+                    // 保存一下当前的 json
+                    this.packData('1');
+                    // 保存 boxes
+                    window.api.saveBoxes(JSON.stringify(this.boxes), (r)=>{
+                        console.info(r);
+                        e.sender.send('close-reply', 'ok');
+                    });
+                }
+            });
+        });
         // 设置title
         document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
 
@@ -196,13 +223,13 @@ const jsonbox = {
             this.$refs.divJson.innerHTML = this.j.jText;
         },
         closeTab() {
-            this.packData('2')
+            this.packData('2');
         },
         createTab() {
             if(this.$refs.divJson.textContent == '') return;
             this.packData('1');    // 将当前数据放入boxes中
             this.clearData();   // 清空数据
-            this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1
+            this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1;
             this.$refs.divJson.focus();
         },
         clearData() {
@@ -215,7 +242,7 @@ const jsonbox = {
                 match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
                 totalMatch: 0,  // 搜索总匹配数
                 checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
-                title: 'NewTab ' + this.tabIndex++,
+                title: 'NewTab_' + this.tabIndex++,
                 jText: ''
             };
             this.j = Object.assign({}, t);
@@ -564,3 +591,5 @@ function GetRow(indent, data, isPropertyContent) {
     }
     return tabs + data;
 }
+
+let name = 'lizl6';

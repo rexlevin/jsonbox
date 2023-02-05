@@ -20,7 +20,15 @@
             </div>
             <div class="col-9">
                 <div class="tab-content">
-                    <div class="tab-pane container-fluid active" id="tabCommon">常用</div>
+                    <div class="tab-pane container-fluid active" id="tabCommon">
+                        <div class="row">
+                            <div class="col">
+                                <label for="chkSaveSession">
+                                    <input type="checkbox" id="chkSaveSession" v-model="s.saveSession" @click="changeSaveSession">&nbsp;&nbsp;退出时保存会话
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane container-fluid" id="tabHotkeys">
                         <div class="row">
                             <div class="col">

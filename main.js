@@ -64,7 +64,11 @@ const createWindow = () => {
     win.on('close', (e) => {
         console.info('close main window, we need record postion of mainWindow and it\'s size');
         store.set('isMax', win.isMaximized());
-        store.set('mainPosition', win.getContentBounds())
+        store.set('mainPosition', win.getContentBounds());
+        if(null != winSettings) winSettings.close();    // 关闭子窗口
+        e.preventDefault();
+        // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
+        win.webContents.send('close');
     });
 }
 
@@ -165,4 +169,22 @@ ipcMain.on('repository', (event) => {
         url = 'https://gitee.com/rexlevin/jsonbox'
     }
     event.reply('repository-reply', url);
+});
+ipcMain.on('getSettings', (event) => {
+    let s = store.get('settings')
+    event.reply('getSettings-reply', s);
+});
+ipcMain.on('saveSettings', (e, settings) => {
+    store.set('settings', JSON.parse(settings));
+})
+ipcMain.on('getBoxes', (e) => {
+    let boxes = store.get('boxes');
+    e.reply('getBoxes-reply', boxes);
+});
+ipcMain.on('close-reply', (e, r) => {
+    app.exit();
+});
+ipcMain.on('saveBoxes', (e, boxes) => {
+    store.set('boxes', JSON.parse(boxes));
+    e.reply('saveBoxes-reply', 'ok');
 });
