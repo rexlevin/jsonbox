@@ -26,15 +26,17 @@
         </div>
         <div class="container-fluid fixed-bottom position-sticky align-items-center mt-1 mb-1">
             <div class="row">
-                <div class="col">
-                    <button class="btn btn-primary btn-sm" style="width: 80px; margin-left:37px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i> Parse</button>&nbsp;&nbsp;
+                <div class="col-4">
                     <span id="match">{{j.match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="j.searchText">
                         <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
                         <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>&nbsp;
-                        <button class="btn btn-primary btn-sm" @click="save2File">保存为文件(s)</button>&nbsp;
-                        <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为yaml</button>
                 </div>
-                <div class="col-1 text-end"><i class="bi bi-sliders icon" @click="openSettings" title="设置/settings"></i></div>
+                <div class="col text-end">
+                    <button class="btn btn-primary btn-sm" style="width: 80px; margin-left:37px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i>&nbsp;格式化</button>&nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" @click="save2File">保存为文件(s)</button>&nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为yaml</button>&nbsp;&nbsp;
+                    <i class="bi bi-sliders icon" @click="openSettings" title="设置/settings"></i>
+                </div>
             </div>
         </div>
     </div>

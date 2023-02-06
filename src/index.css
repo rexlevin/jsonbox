@@ -22,8 +22,12 @@ body{
 
 /* 标签tabs区域 */
 .nav .nav-tabs {min-height:30px;}
-.nav-item {min-height:30px; height:30px;}
-.nav>li>a {width:100%; height:100%; padding-top:0px; padding-bottom:0px; display:block; line-height:30px; font-size:15px;}
+.nav-item {min-height:30px; height:30px;
+    background:linear-gradient(to bottom, #ebe6e6, #b8b4b4)
+              ,linear-gradient(to right, #ebe6e6 0%, #b8b4b4 51%, #ebe6e6 100%);
+}
+.nav li a {width:100%; height:100%; padding-top:0px; padding-bottom:0px; display:block; line-height:30px; font-size:15px; color:black;}
+.nav li a:hover{color:black;}
 
 /* 格式化区域 */
 .content{background-color:white; margin:0; padding:0; cursor:text; overflow:auto; display:flex; flex-direction:row; height:100vh;}
