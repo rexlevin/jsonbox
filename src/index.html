@@ -34,7 +34,8 @@
                 <div class="col text-end">
                     <button class="btn btn-primary btn-sm" style="width: 80px; margin-left:37px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i>&nbsp;格式化</button>&nbsp;&nbsp;
                     <button class="btn btn-primary btn-sm" @click="save2File">保存为文件(s)</button>&nbsp;&nbsp;
-                    <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为yaml</button>&nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为 YAML</button>&nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" @click="copy('xml')">复制为 XML</button>&nbsp;&nbsp;
                     <i class="bi bi-sliders icon" @click="openSettings" title="设置/settings"></i>
                 </div>
             </div>
@@ -42,6 +43,7 @@
     </div>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/vue/dist/vue.global.prod.js" charset="utf-8"></script>
+    <script src="../node_modules/x2js/x2js.js"></script>
     <script src="./lib/json.yaml.js"></script>
     <script src="./index.js"></script>
 </body>
