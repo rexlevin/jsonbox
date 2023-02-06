@@ -1,6 +1,6 @@
 # 说明
 
-这是一个基于 electron 的json格式化工具
+这是一个基于 electron 的json格式化工具，下载地址：https://docs.r-xnoro.com/jsonbox
 
 吐个槽，electron 的体积是真大啊
 
