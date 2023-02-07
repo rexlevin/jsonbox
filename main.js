@@ -114,11 +114,9 @@ ipcMain.on('modifyTitle', (event, options) => {
     prompt(options, win)
     .then((r) => {
         if(r === null) {
-            console.log('user cancelled');
             result = {code: '0001'};
             et.reply('modifyTitle-reply', result);
         } else {
-            console.log('result', r);
             result = {code: '0000', body: r};
             et.reply('modifyTitle-reply', result);
         }
@@ -128,7 +126,6 @@ ipcMain.on('modifyTitle', (event, options) => {
 });
 ipcMain.on('saveFile', (e, options, content) => {
     dialog.showSaveDialog(options).then(r => {
-        console.info(r);
         if(r.canceled) {
             console.info('user canceled');
         } else {
@@ -137,7 +134,7 @@ ipcMain.on('saveFile', (e, options, content) => {
         }
     });
 });
-ipcMain.on('settings', () => {
+ipcMain.on('openSettings', () => {
     if(winSettings) {
         winSettings.focus();
         return;
@@ -157,6 +154,9 @@ ipcMain.on('settings', () => {
     winSettings.on('close', () => {
         winSettings = null;
     });
+});
+ipcMain.on('exitSettings', () => {
+    winSettings.close();
 });
 ipcMain.on('repository', (event) => {
     let locale = app.getLocale()

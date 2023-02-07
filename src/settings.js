@@ -19,6 +19,14 @@ const c = {
             this.repository = r;
         });
     },
+    mounted() {
+        document.addEventListener('keyup', (e) => {
+            e.preventDefault();
+            if(e.key === 'Escape') {
+                window.api.exitSettings();
+            }
+        });
+    },
     methods: {
         changeSaveSession() {
             console.info(this.s.saveSession);

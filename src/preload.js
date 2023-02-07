@@ -55,7 +55,10 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.send('saveFile', options, content);
         },
         openSettings: (options) => {
-            ipcRenderer.send('settings');
+            ipcRenderer.send('openSettings');
+        },
+        exitSettings() {
+            ipcRenderer.send('exitSettings');
         },
         openUrl: (url) => {
             shell.openExternal(url);
