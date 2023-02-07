@@ -3,6 +3,7 @@ const c = {
         return {
             s: {
                 saveSession: false,
+                closeAppConfirm: false
             },
             appInfo: '',
             homePage: 'https://docs.r-xnoro.com/jsonbox',
@@ -12,7 +13,11 @@ const c = {
     created() {
         window.api.getSettings(r => {
             if(undefined == r) return;
-            this.s = r
+            // this.s = r;
+            this.s = Object.assign({
+                saveSession: false,
+                closeAppConfirm: false
+            }, r);
         });
         this.appInfo = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox')
         window.api.getRepository((r) => {
@@ -28,6 +33,12 @@ const c = {
         });
     },
     methods: {
+        changeCloseAppConfirm() {
+            console.info(this.s.closeAppConfirm);
+            this.s.closeAppConfirm = !this.s.closeAppConfirm;
+            console.info(this.s.closeAppConfirm);
+            window.api.saveSettings(JSON.stringify(this.s));
+        },
         changeSaveSession() {
             console.info(this.s.saveSession);
             this.s.saveSession = !this.s.saveSession;

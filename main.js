@@ -62,13 +62,40 @@ const createWindow = () => {
     
     // 关闭主窗口事件，记录窗口大小和位置
     win.on('close', (e) => {
-        console.info('close main window, we need record postion of mainWindow and it\'s size');
-        store.set('isMax', win.isMaximized());
-        store.set('mainPosition', win.getContentBounds());
-        if(null != winSettings) winSettings.close();    // 关闭子窗口
         e.preventDefault();
-        // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
-        win.webContents.send('close');
+        let s = store.get('settings');
+        let closeAppConfirm = s.closeAppConfirm;
+        if(!closeAppConfirm) {
+            console.info('close main window, we need record postion of mainWindow and it\'s size');
+            store.set('isMax', win.isMaximized());
+            store.set('mainPosition', win.getContentBounds());
+            if(null != winSettings) winSettings.close();    // 关闭子窗口
+            // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
+            win.webContents.send('close');
+            return;
+        }
+        dialog.showMessageBox({
+            type: 'info',
+            title: '确认关闭',
+            defaultId: 0,
+            message: '是否要退出 JsonBox ?',
+            buttons: ['取消', '退出']
+        }).then(result => {
+            console.info(result);
+            if(0 === result.response) {
+                // 取消
+                return;
+            }
+            if(1 === result.response) {
+                // 确认退出
+                console.info('close main window, we need record postion of mainWindow and it\'s size');
+                store.set('isMax', win.isMaximized());
+                store.set('mainPosition', win.getContentBounds());
+                if(null != winSettings) winSettings.close();    // 关闭子窗口
+                // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
+                win.webContents.send('close');
+            }
+        });
     });
 }
 
