@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-    <div id="app" class="container-fluid h-100 frame_page">
+    <div id="app" class="container-fluid frame_page">
         <ul ref="tabs" class="nav nav-tabs">
             <li class="nav-item" v-for="(j, i) in boxes">
                 <a class="nav-link myTab" :class="{'active': i == getCurrentTabIndex}" ref="'tabItem' + i" @click="switchTab(i, $event)" @contextmenu.prevent="showTabContextMenu(i, $event)" :id="j.sid" :index="i" data-bs-toggle="tab" href="#">{{j.title}}</a>
@@ -24,18 +24,23 @@
             </div>
             <div ref="divJson" class="ta" contenteditable="true"></div>
         </div>
-        <div class="container-fluid fixed-bottom position-sticky align-items-center mt-1 mb-1">
-            <div class="row">
-                <div class="col-4">
+        <div class="container-fluid fixed-bottom position-sticky mt-1 mb-1">
+            <div class="row h-100">
+                <div class="col-4 align-self-center">
                     <span id="match">{{j.match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="j.searchText">&nbsp;
                         <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
                         <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>
+                        <!-- <span class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></span>&nbsp;
+                        <span class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></span> -->
+                        <!-- <span class="icon"><i class="bi bi-arrow-down" @click="next" title="下一个 Enter"></i></span>&nbsp;
+                        <span class="icon"><i class="bi bi-arrow-up" @click="previous" title="上一个 Shift Enter"></i></span> -->
                 </div>
-                <div class="col text-end">
+                <div class="col text-end align-self-center">
                     <button class="btn btn-primary btn-sm" style="width: 80px; margin-left:37px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i>&nbsp;格式化</button>&nbsp;&nbsp;
                     <button class="btn btn-primary btn-sm" @click="save2File">保存为文件(s)</button>&nbsp;&nbsp;
                     <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为 YAML</button>&nbsp;&nbsp;
                     <button class="btn btn-primary btn-sm" @click="copy('xml')">复制为 XML</button>&nbsp;&nbsp;
+                    <!-- <span class="icon"><i class="bi bi-sliders" @click="openSettings" title="设置/settings"></i></span> -->
                     <i class="bi bi-sliders icon" @click="openSettings" title="设置/settings"></i>
                 </div>
             </div>
