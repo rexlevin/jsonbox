@@ -26,7 +26,13 @@ const jsonbox = {
     created() {
         window.api.getSettings(r => {
             if(undefined == r) return;
-            if(!r.saveSession) return;
+            if(!r.saveSession) {
+                this.j.sid = window.api.sid();
+                this.j.title = 'NewTab_' + this.tabIndex++;
+                this.boxes.push(Object.assign({}, this.j));
+                this.currentTabIndex = 0;
+                return;
+            }
             window.api.getBoxes(r => {
                 if(undefined === r || r.length == 0) {
                     this.j.sid = window.api.sid();
@@ -46,12 +52,20 @@ const jsonbox = {
     mounted() {
         window.api.appCloseHandler(e => {
             window.api.getSettings(r => {
-                if(undefined != r && r.saveSession) {
+                if(undefined === r) {
+                    e.sender.send('close-reply', 'ok');
+                    return;
+                }
+                if(r.saveSession) {
                     // 保存一下当前的 json
                     this.packData('1');
                     // 保存 boxes
                     window.api.saveBoxes(JSON.stringify(this.boxes), (r)=>{
-                        console.info(r);
+                        e.sender.send('close-reply', 'ok');
+                    });
+                } else {
+                    // 将 boxes 置空
+                    window.api.saveBoxes(JSON.stringify([]), (r)=>{
                         e.sender.send('close-reply', 'ok');
                     });
                 }
