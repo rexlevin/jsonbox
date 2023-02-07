@@ -25,8 +25,7 @@ const jsonbox = {
     },
     created() {
         window.api.getSettings(r => {
-            if(undefined == r) return;
-            if(!r.saveSession) {
+            if(undefined == r || !r.saveSession) {
                 this.j.sid = window.api.sid();
                 this.j.title = 'NewTab_' + this.tabIndex++;
                 this.boxes.push(Object.assign({}, this.j));

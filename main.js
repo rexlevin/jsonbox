@@ -66,8 +66,8 @@ const createWindow = () => {
         let s = store.get('settings')
             , closeAppConfirm = false;
         if(undefined === s) closeAppConfirm = false;
-        if(undefined === s.closeAppConfirm) closeAppConfirm = false;
-        closeAppConfirm = s.closeAppConfirm;
+        else if(undefined === s.closeAppConfirm) closeAppConfirm = false;
+        else closeAppConfirm = s.closeAppConfirm;
         if(!closeAppConfirm) {
             store.set('isMax', win.isMaximized());
             store.set('mainPosition', win.getContentBounds());
