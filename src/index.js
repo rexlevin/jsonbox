@@ -282,7 +282,12 @@ const jsonbox = {
                     break;
                 case '2':
                     if(this.boxes.length == 1) {
+                        this.currentTabIndex = 0;
+                        this.tabIndex = 0;
                         this.clearData();
+                        this.boxes[0] = Object.assign({
+                            title: 'NewTab_0'
+                        },this.j);
                         return;
                     }
                     // delete this.boxes[this.currentTabIndex];
