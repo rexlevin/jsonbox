@@ -26,7 +26,7 @@
         </div>
         <div class="container-fluid fixed-bottom position-sticky mt-1 mb-1">
             <div class="row h-100">
-                <div class="col-4 align-self-center" style="padding-left:0; padding-right:0;">
+                <div class="col-4 align-self-center" style="padding-left:0; padding-right:0; width:300px;">
                     <span id="match">{{j.match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="j.searchText">&nbsp;
                         <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
                         <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>
@@ -35,7 +35,7 @@
                         <!-- <span class="icon"><i class="bi bi-arrow-down" @click="next" title="下一个 Enter"></i></span>&nbsp;
                         <span class="icon"><i class="bi bi-arrow-up" @click="previous" title="上一个 Shift Enter"></i></span> -->
                 </div>
-                <div class="col text-end align-self-center">
+                <div class="col text-end align-self-center" style="padding-left:0;">
                     <button class="btn btn-primary btn-sm" style="width: 80px; margin-left:37px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i>&nbsp;格式化</button>&nbsp;&nbsp;
                     <button class="btn btn-primary btn-sm" @click="save2File">保存为文件(s)</button>&nbsp;&nbsp;
                     <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为 YAML</button>&nbsp;&nbsp;

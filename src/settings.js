@@ -13,7 +13,6 @@ const c = {
     created() {
         window.api.getSettings(r => {
             if(undefined == r) return;
-            // this.s = r;
             this.s = Object.assign({
                 saveSession: false,
                 closeAppConfirm: false
