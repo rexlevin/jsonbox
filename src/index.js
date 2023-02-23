@@ -6,15 +6,15 @@ const jsonbox = {
                 sid: '',
                 strJson: '',
                 lineCount: 1,   // 总行数
-                searchText: '',
+                searchText: '', // 当前搜索关键字
                 keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
                 match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
                 totalMatch: 0,  // 搜索总匹配数
                 checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
                 title: '',
-                jText: ''
+                jText: ''       // 格式化后的 json 内容，包含 html 标签
             },
-            currentTabIndex: -1,    // 当前编辑区是boxes中第几个元素
+            currentTabIndex: -1,    // 当前编辑区是 boxes 中第几个元素
             tabIndex: 0         // 标签计数器
         }
     },
@@ -48,7 +48,23 @@ const jsonbox = {
             });
         });
     },
+    destroyed() {
+        clearInterval(this.timerSave);
+    },
     mounted() {
+        this.timerSave = setInterval(() => {
+            window.api.getSt(r => {
+                console.info(r);
+                if(undefined === r) return;
+                if(r.saveSession) {
+                    this.packData('1');
+                    window.api.saveBxs(JSON.stringify(this.boxes), (r)=>{
+                        console.info('save boxes success==%s', r)
+                    });
+                }
+            });
+        }, 3000);
+
         window.api.appCloseHandler(e => {
             window.api.getSettings(r => {
                 if(undefined === r) {
@@ -273,7 +289,6 @@ const jsonbox = {
                 case '1':
                     this.j.jText  = this.$refs.divJson.innerHTML;
                     for (let i = 0; i < this.boxes.length; i++) {
-                        const element = this.boxes[i];
                         if(this.boxes[i].sid == this.j.sid) {
                             this.boxes[i] = Object.assign({}, this.j);
                             break;

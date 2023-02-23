@@ -34,7 +34,7 @@ const createWindow = () => {
     let isMax = store.get('isMax') ? true : false
         , position = store.get('mainPosition')
         , config = {};
-    config.minWidth = 800;
+    config.minWidth = 820;
     config.minHeight = 600;
     config.icon = path.join(__dirname, './src/logo.png');
     config.webPreferences = {

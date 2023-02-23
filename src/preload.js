@@ -2,6 +2,8 @@ const { contextBridge, ipcRenderer, shell } = require('electron');
 const { nanoid, customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('../package.json');
 
+const Store = require('electron-store');  // 引入store
+
 contextBridge.exposeInMainWorld(
     'api', {
         notification: (options) => {
@@ -62,6 +64,16 @@ contextBridge.exposeInMainWorld(
         },
         openUrl: (url) => {
             shell.openExternal(url);
+        },
+        getSt(cb) {
+            let store = new Store();  // 开启electron-store
+            let s = store.get('settings');
+            cb(s);
+        },
+        saveBxs(boxes, cb) {
+            let store = new Store();
+            store.set('boxes', JSON.parse(boxes));
+            cb('ok');
         },
         getSettings(cb) {
             ipcRenderer.send('getSettings');
