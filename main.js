@@ -175,12 +175,16 @@ ipcMain.on('openSettings', () => {
         webPreferences: {
             preload: path.join(__dirname, './src/preload.js'),
             spellcheck: false
-        }
+        },
+        show: false
     };
     winSettings = new BrowserWindow(config);
     winSettings.loadFile('./src/settings.html');
     winSettings.on('close', () => {
         winSettings = null;
+    });
+    winSettings.on('ready-to-show', () => {
+        winSettings.show();
     });
 });
 ipcMain.on('exitSettings', () => {
