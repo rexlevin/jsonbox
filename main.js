@@ -16,7 +16,7 @@ const store = new Store();  // 开启electron-store
 let win, winSettings = null;
 
 app.whenReady().then(() => {
-    createTray();
+    // createTray();
     createWindow()
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
