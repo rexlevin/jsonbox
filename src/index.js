@@ -1,19 +1,23 @@
+const tmpJ = {
+    sid: '',
+    type: 0,   // 类型，0-会话，1-文件
+    path: '',   // 类型为 1 时，这里是文件路径， 如：C:\Users\brood\Documents\NewTab_0.json
+    strJson: '',
+    lineCount: 1,   // 总行数
+    searchText: '', // 当前搜索关键字
+    keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
+    match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
+    totalMatch: 0,  // 搜索总匹配数
+    checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
+    title: '',
+    jText: ''       // 格式化后的 json 内容，包含 html 标签
+};
+
 const jsonbox = {
     data() {
         return {
             boxes: [],
-            j: {
-                sid: '',
-                strJson: '',
-                lineCount: 1,   // 总行数
-                searchText: '', // 当前搜索关键字
-                keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
-                match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
-                totalMatch: 0,  // 搜索总匹配数
-                checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
-                title: '',
-                jText: ''       // 格式化后的 json 内容，包含 html 标签
-            },
+            j: Object.assign({}, tmpJ),
             currentTabIndex: -1,    // 当前编辑区是 boxes 中第几个元素
             tabIndex: 0         // 标签计数器
         }
@@ -54,12 +58,12 @@ const jsonbox = {
     mounted() {
         this.timerSave = setInterval(() => {
             window.api.getSt(r => {
-                console.info(r);
+                // console.info(r);
                 if(undefined === r) return;
                 if(r.saveSession) {
                     this.packData('1');
                     window.api.saveBxs(JSON.stringify(this.boxes), (r)=>{
-                        console.info('save boxes success==%s', r)
+                        console.info('save boxes success==%s', r);
                     });
                 }
             });
@@ -227,7 +231,11 @@ const jsonbox = {
                 title: '保存到...',
                 filters: [{name: 'JSON文件', extentions: ['json']}],
                 defaultPath: this.j.title + '.json'
-            }, this.$refs.divJson.textContent);
+            }, this.$refs.divJson.textContent, (r) => {
+                // TODO
+                // todo
+                //
+            });
         },
         modifyTabTitle() {
             // 修改当前tab标签title
@@ -262,19 +270,11 @@ const jsonbox = {
             this.$refs.divJson.focus();
         },
         clearData() {
-            let t = {
+            this.j = Object.assign({}, tmpJ, {
                 sid: window.api.sid(),
-                strJson: '',
-                lineCount: 1,   // 总行数
-                searchText: '',
-                keyword: {},    // keyword: {last: "上次搜索关键字", now: "本次搜索关键字"}
-                match: '',      // 搜索结果显示字符串，格式：1/2，第二个数字是搜搜匹配总数，第一个数是当前是第几个搜索匹配
-                totalMatch: 0,  // 搜索总匹配数
-                checkIndex: 0,  // 当前是第几个搜索匹配，从0开始计数
-                title: 'NewTab_' + this.tabIndex++,
-                jText: ''
-            };
-            this.j = Object.assign({}, t);
+                title: 'NewTab_' + this.tabIndex++
+            });
+            console.info(this.j.title);
             this.$refs.divJson.textContent = '';
         },
         packData(operate) {

@@ -152,13 +152,16 @@ ipcMain.on('modifyTitle', (event, options) => {
     .catch(console.error);
     // event.reply('modifyTitle-reply', result);
 });
-ipcMain.on('saveFile', (e, options, content) => {
+ipcMain.on('saveFile', (e, options, content, cb) => {
     dialog.showSaveDialog(options).then(r => {
         if(r.canceled) {
             console.info('user canceled');
         } else {
-            console.info('file path is==%s', r.filePath);
-            fs.writeFileSync(r.filePath, content)
+            // console.info('file path is==%s', r.filePath);
+            fs.writeFile(r.filePath, content, (err) => {
+                if(err) e.reply('saveFile-reply', {code: '001'});
+                e.reply('saveFile-reply', {code: '0000', body: r.filePath});
+            })
         }
     });
 });
