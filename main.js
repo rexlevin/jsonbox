@@ -153,7 +153,7 @@ ipcMain.on('modifyTitle', (event, options) => {
     // event.reply('modifyTitle-reply', result);
 });
 ipcMain.on('saveFile', (e, options, content, cb) => {
-    dialog.showSaveDialog(options).then(r => {
+    dialog.showSaveDialog(win, options).then(r => {
         if(r.canceled) {
             console.info('user canceled');
         } else {

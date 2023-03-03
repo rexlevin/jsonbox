@@ -56,7 +56,6 @@ contextBridge.exposeInMainWorld(
         save2File: (options, content, cb) => {
             ipcRenderer.send('saveFile', options, content);
             ipcRenderer.on('saveFile-reply', (e, r) => {
-                console.info(r);
                 if(cb) cb(r);
             });
         },

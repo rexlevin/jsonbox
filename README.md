@@ -53,6 +53,8 @@ npm run build-dist:linux
 npm run build-dist:win
 ```
 
+bootstrap icon: https://icons.getbootstrap.com/
+
 # 截图
 
 ![image-20230204151508674](https://imgbd.r-xnoro.com//image-20230204151508674.png)

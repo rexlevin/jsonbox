@@ -56,6 +56,10 @@ const jsonbox = {
         clearInterval(this.timerSave);
     },
     mounted() {
+        window.api.notifyChangeSettings((e, r) => {
+            console.info(r);
+        });
+
         this.timerSave = setInterval(() => {
             window.api.getSt(r => {
                 // console.info(r);
@@ -90,6 +94,7 @@ const jsonbox = {
                 }
             });
         });
+
         // 设置title
         document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
 
@@ -229,12 +234,21 @@ const jsonbox = {
             // 保存为文件
             window.api.save2File({
                 title: '保存到...',
-                filters: [{name: 'JSON文件', extentions: ['json']}],
+                filters: [{name: 'JSON文件', extensions: ['json']}],
                 defaultPath: this.j.title + '.json'
             }, this.$refs.divJson.textContent, (r) => {
                 // TODO
                 // todo
-                //
+                console.info(r);
+                if(!'0000' === r.code) {
+                    alert('文件保存失败');
+                    return;
+                }
+                alert('文件保存成功');
+                this.j.type = 1;
+                this.j.path = r.body;
+                let pathArr = r.body.split('\\');
+                this.j.title = pathArr[pathArr.length - 1];
             });
         },
         modifyTabTitle() {
