@@ -56,10 +56,6 @@ const jsonbox = {
         clearInterval(this.timerSave);
     },
     mounted() {
-        window.api.notifyChangeSettings((e, r) => {
-            console.info(r);
-        });
-
         this.timerSave = setInterval(() => {
             window.api.getSt(r => {
                 // console.info(r);
