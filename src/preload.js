@@ -2,6 +2,8 @@ const { contextBridge, ipcRenderer, shell } = require('electron');
 const { nanoid, customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('../package.json');
 
+const fs = require('fs')
+
 const Store = require('electron-store');  // 引入store
 
 contextBridge.exposeInMainWorld(
@@ -95,6 +97,12 @@ contextBridge.exposeInMainWorld(
             ipcRenderer.on('saveBoxes-reply', (e, r) => {
                 cb(r);
             })
+        },
+        autoSaveFile(options, cb) {
+            fs.writeFile(options.path, options.content, (err) => {
+                if(err) return cb({code: '0001', desc: err});
+                return cb({code: '0000'});
+            });
         }
     }
 );

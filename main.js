@@ -28,7 +28,7 @@ app.on('window-all-closed', () => {
 });
 
 const createWindow = () => {
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
     
     // 启动恢复主窗口位置和大小
     let isMax = store.get('isMax') ? true : false
