@@ -13,7 +13,7 @@
     <div id="app" class="container-fluid frame_page">
         <ul ref="tabs" class="nav nav-tabs">
             <li class="nav-item" v-for="(j, i) in boxes">
-                <a class="nav-link myTab" :class="{'active': i == getCurrentTabIndex}" ref="'tabItem' + i" @click="switchTab(i, $event)" @contextmenu.prevent="showTabContextMenu(i, $event)" :id="j.sid" :index="i" data-bs-toggle="tab" href="#">{{j.title}}</a>
+                <a class="nav-link myTab" :class="{'active': i == getCurrentTabIndex}" :title="j.path" ref="'tabItem' + i" @click="switchTab(i, $event)" @contextmenu.prevent="showTabContextMenu(i, $event)" :id="j.sid" :index="i" data-bs-toggle="tab" href="#"><i class="bi bi-file-text-fill" v-show="j.path != ''">&nbsp;</i>{{j.title}}</a>
             </li>
         </ul>
         <div class="container-fluid content" id="container">
