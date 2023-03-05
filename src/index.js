@@ -101,6 +101,8 @@ const jsonbox = {
 
         document.querySelector('#app').addEventListener('keyup', (e) => {
             e.preventDefault();
+            e.cancelable = true;
+            console.info(e);
             if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
                 // 打开开发者工具
                 window.api.devTools();
@@ -109,7 +111,7 @@ const jsonbox = {
                 // 重新加载页面
                 window.api.reload();
             }
-            if(e.ctrlKey && (e.key == 't' || e.key == 'T')) {
+            if(e.ctrlKey && e.code == 'KeyT') {
                 // 新建标签页
                 this.createTab();
             }
@@ -125,9 +127,13 @@ const jsonbox = {
                 // 修改当前tab标签名
                 this.modifyTabTitle();
             }
-            if(e.ctrlKey && (e.key == 's' || e.key == 'S')) {
+            if(e.ctrlKey && !e.altKey && (e.key == 's' || e.key == 'S')) {
                 // 保存为文件
                 this.save2File();
+            }
+            if(e.altKey && e.code == 'KeyS') {
+                // 打开i设置面板
+                this.openSettings();
             }
         });
 
@@ -233,9 +239,7 @@ const jsonbox = {
                 filters: [{name: 'JSON文件', extensions: ['json']}],
                 defaultPath: this.j.title + '.json'
             }, this.$refs.divJson.textContent, (r) => {
-                // TODO
-                // todo
-                console.info(r);
+                console.info('save2file call back=====%s', r);
                 if(!'0000' === r.code) {
                     alert('文件保存失败');
                     return;
