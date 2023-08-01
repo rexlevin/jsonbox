@@ -39,16 +39,15 @@
   ],
   "author": "lizl6",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "electron": "^19.0.8"
-  },
   "dependencies": {
-    "bootstrap": "^5.2.3",
-    "bootstrap-icons": "^1.10.2",
     "custom-electron-prompt": "^1.5.1",
     "electron-store": "^8.1.0",
+    "element-plus": "^2.3.1",
     "nanoid": "^3.3.4",
     "vue": "^3.2.37",
     "x2js": "^3.4.4"
+  },
+  "devDependencies": {
+    "electron": "^24.1.3"
   }
 }

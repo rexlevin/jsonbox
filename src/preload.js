@@ -1,5 +1,6 @@
-const { contextBridge, ipcRenderer, shell } = require('electron');
-const { nanoid, customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
+const { contextBridge, ipcRenderer, remote, shell } = require('electron');
+// const { nanoid, customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
+// const {naoid, customAlphabet} = require('../node_modules/nanoid/nanoid');
 const package = require('../package.json');
 
 const fs = require('fs')
@@ -42,8 +43,8 @@ contextBridge.exposeInMainWorld(
         },
         exit: () => {ipcRenderer.send('exit');},
         sid: () => {
-            const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
-            return nanoid()
+            // const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
+            // return nanoid()
         },
         getBoxes(cb) {
             ipcRenderer.send('getBoxes');

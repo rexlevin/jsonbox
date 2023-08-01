@@ -5,51 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON格式化小工具</title>
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="./index.css">
+    <!-- <link rel="stylesheet" href="../node_modules/element-plus/dist/index.css"> -->
+    <!-- <link rel="stylesheet" href="./index.css"> -->
 </head>
 <body>
-    <div id="app" class="container-fluid frame_page">
-        <ul ref="tabs" class="nav nav-tabs">
-            <li class="nav-item" v-for="(j, i) in boxes">
-                <a class="nav-link myTab" :class="{'active': i == getCurrentTabIndex}" :title="j.path" ref="'tabItem' + i" @click="switchTab(i, $event)" @contextmenu.prevent="showTabContextMenu(i, $event)" :id="j.sid" :index="i" data-bs-toggle="tab" href="#"><i class="bi bi-file-text-fill" v-show="j.path != ''">&nbsp;</i>{{j.title}}</a>
-            </li>
-        </ul>
-        <div class="container-fluid content" id="container">
-            <div id="ln" class="position-sticky line">
-                <ul>
-                    <li v-for="index of j.lineCount">{{index}}</li>
-                </ul>
-            </div>
-            <div ref="divJson" class="ta" contenteditable="true"></div>
-        </div>
-        <div class="container-fluid fixed-bottom position-sticky mt-1 mb-1">
-            <div class="row h-100">
-                <div class="col-4 align-self-center" style="padding-left:0; padding-right:0; width:300px;">
-                    <span id="match">{{j.match}}</span>&nbsp;<input type="text" id="txtSearch" ref="txtSearch" v-model="j.searchText">&nbsp;
-                        <i class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></i>&nbsp;
-                        <i class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></i>
-                        <!-- <span class="bi bi-arrow-down icon" @click="next" title="下一个 Enter"></span>&nbsp;
-                        <span class="bi bi-arrow-up icon" @click="previous" title="上一个 Shift Enter"></span> -->
-                        <!-- <span class="icon"><i class="bi bi-arrow-down" @click="next" title="下一个 Enter"></i></span>&nbsp;
-                        <span class="icon"><i class="bi bi-arrow-up" @click="previous" title="上一个 Shift Enter"></i></span> -->
-                </div>
-                <div class="col text-end align-self-center" style="padding-left:0;">
-                    <button class="btn btn-primary btn-sm" style="width: 80px; margin-left:37px;" @click="manuParse" title="格式化"><i class="bi bi-arrow-clockwise"></i>&nbsp;格式化</button>&nbsp;&nbsp;
-                    <button class="btn btn-primary btn-sm" @click="save2File">保存为文件(s)</button>&nbsp;&nbsp;
-                    <button class="btn btn-primary btn-sm" @click="copy('yaml')">复制为 YAML</button>&nbsp;&nbsp;
-                    <button class="btn btn-primary btn-sm" @click="copy('xml')">复制为 XML</button>&nbsp;&nbsp;
-                    <!-- <span class="icon"><i class="bi bi-sliders" @click="openSettings" title="设置/settings"></i></span> -->
-                    <i class="bi bi-sliders icon" @click="openSettings" title="设置/settings"></i>
-                </div>
-            </div>
-        </div>
+    <div id="app">
+        <h1>{{message}}</h1>
     </div>
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="../node_modules/element-plus/dist/index.full.min.js"></script> -->
     <script src="../node_modules/vue/dist/vue.global.prod.js" charset="utf-8"></script>
-    <script src="../node_modules/x2js/x2js.js"></script>
-    <script src="./lib/json.yaml.js"></script>
+    <!-- <script src="../node_modules/x2js/x2js.js"></script> -->
+    <!-- <script src="./lib/json.yaml.js"></script> -->
+    <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
     <script src="./index.js"></script>
 </body>
 </html>
