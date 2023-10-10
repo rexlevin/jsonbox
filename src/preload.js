@@ -5,6 +5,7 @@ const package = require('../package.json');
 
 const fs = require('fs')
 
+const monaco = require('monaco-editor');
 const Store = require('electron-store');  // 引入store
 
 contextBridge.exposeInMainWorld(
