@@ -114,6 +114,19 @@ const jsonbox = {
             });
         });
 
+        window.api.renameTab(e => {
+            this.modifyTabTitle();
+        });
+        window.api.searchText(e => {
+            this.$refs.txtSearch.focus();
+        });
+        window.api.newTab(e => {
+            this.createTab();
+        });
+        window.api.closeTab(e => {
+            this.closeTab();
+        });
+
         // 设置title
         document.title = window.api.getDescription() + ' - v' + window.api.getVersion('jsonbox');
 
@@ -123,41 +136,13 @@ const jsonbox = {
         divJson.focus();
 
         document.querySelector('#app').addEventListener('keyup', (e) => {
-            e.preventDefault();
-            e.cancelable = true;
-            if (e.ctrlKey && e.shiftKey && (e.key == 'I' || e.key ==  'i')) {
-                // 打开开发者工具
-                window.api.devTools();
-            }
-            if (e.ctrlKey && (e.key == 'r' || e.key == 'R')) {
-                // 重新加载页面
-                window.api.reload();
-            }
-            if(e.ctrlKey && e.code == 'KeyT') {
-                // 新建标签页
-                this.createTab();
-            }
-            if(e.ctrlKey && (e.key == 'w' || e.key == 'W')) {
-                // 关闭当前标签页
-                this.closeTab();
-            }
-            if(e.ctrlKey && (e.key == 'f' || e.key == 'F')) {
-                // 在app内ctrl+f时focus到搜索关键字输入框
-                txtSearch.focus();
-            }
-            if(e.key == 'F2') {
-                // 修改当前tab标签名
-                this.modifyTabTitle();
-            }
-            if(e.ctrlKey && !e.altKey && (e.key == 's' || e.key == 'S')) {
-                // 保存为文件
-                this.save2File();
-            }
-            if(e.altKey && e.code == 'KeyS') {
-                // 打开i设置面板
-                this.openSettings();
-            }
-        });
+            // e.preventDefault();
+            // e.cancelable = true;
+            // if(e.ctrlKey && !e.altKey && (e.key == 's' || e.key == 'S')) {
+            //     // 保存为文件
+            //     this.save2File();
+            // }
+        }, false);
 
         document.querySelector('#container').addEventListener('click', () => {
             // divJson.focus(() => {});
@@ -252,6 +237,9 @@ const jsonbox = {
         //     console.info(e.target);
         //     console.info(e.relatedTarget['index']);
         // });
+    },
+    beforeUnmount() {
+        
     },
     methods: {
         save2File() {

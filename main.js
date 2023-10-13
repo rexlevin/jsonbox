@@ -1,9 +1,10 @@
-const { app, BrowserWindow, Menu, Tray, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, Menu, MenuItem, Tray, ipcMain, dialog } = require('electron')
 const Store = require('electron-store');  // 引入store
 const path = require('path')
 const package = require('./package.json')
 const prompt = require('custom-electron-prompt')
-const fs = require('fs')
+const fs = require('fs');
+const { toUnicode } = require('punycode');
 
 // 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -12,6 +13,9 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 app.disableHardwareAcceleration();
 
 const store = new Store();  // 开启electron-store
+const menu = new Menu();
+
+const isDarwin = process.platform === 'darwin' ? true : false;
 
 let win, winSettings = null;
 
@@ -28,7 +32,7 @@ app.on('window-all-closed', () => {
 });
 
 const createWindow = () => {
-    Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
     
     // 启动恢复主窗口位置和大小
     let isMax = store.get('isMax') ? true : false
@@ -100,12 +104,106 @@ const createWindow = () => {
     });
 }
 
+function openSettings() {
+    if(winSettings) {
+        winSettings.focus();
+        return;
+    }
+    let config = {
+        width: 800,
+        height: 600,
+        resizable: false,
+        icon: path.join(__dirname, './src/logo.png'),
+        webPreferences: {
+            preload: path.join(__dirname, './src/preload.js'),
+            spellcheck: false
+        },
+        show: false
+    };
+    winSettings = new BrowserWindow(config);
+    winSettings.loadFile('./src/settings.html');
+    winSettings.on('close', () => {
+        winSettings = null;
+    });
+    winSettings.on('ready-to-show', () => {
+        winSettings.show();
+    });
+}
+
+const menuTemplate = [{
+    label: 'File',
+    submenu: [{
+        label: 'Save JSON',
+        accelerator: isDarwin ? 'Cmd+S' : 'Ctrl+S',
+        click: () => {
+            win.webContents.send('save');
+        }
+    }, {
+        type: 'separator'
+    }, {
+        // role: 'Exit',
+        label: 'Exit',
+        // accelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+I',
+        click: () => { app.quit(); }
+    }]
+}, {
+    label: 'Edit',
+    submenu: [{
+        label: 'Rename Tab',
+        accelerator: 'F2',
+        click: () => {
+            win.webContents.send('renameTab');
+        }
+    }, {
+        label: 'Search',
+        accelerator: isDarwin ? 'Cmd+F' : 'Ctrl+F',
+        click: () => {
+            win.webContents.send('search');
+        }
+    }, {
+        label: 'New Tab',
+        accelerator: isDarwin ? 'Cmd+T' : 'Ctrl+T',
+        click: () => {
+            win.webContents.send('newTab');
+        }
+    }, {
+        label: 'Close Tab',
+        accelerator: isDarwin ? 'Cmd+W' : 'Ctrl+W',
+        click: () => {
+            win.webContents.send('closeTab');
+        }
+    }]
+}, {
+    label: 'Help',
+    submenu: [{
+        label: 'Config',
+        accelerator: 'Alt+S',
+        click: () => {
+            openSettings();
+        }
+    }, {
+        label: 'Reload App',
+        accelerator: isDarwin ? 'Cmd+R' : 'Ctrl+R',
+        click: () => { win.reload(); }
+    }, {
+        label: 'Toggle Developer Tools',
+        accelerator: isDarwin ? 'Alt+Cmd+I' : 'Alt+Shift+I',
+        click: () => {
+            if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
+            else win.webContents.openDevTools();
+        }
+    }, {
+        type: 'separator'
+    }, {
+        label: 'About'
+    }]
+}];
+
 const createTray = () => {
     let tray = new Tray(path.join(__dirname, './src/logo.png'));
     const menu = Menu.buildFromTemplate(trayMenuTemplate);
     tray.setContextMenu(menu);
 }
-
 const trayMenuTemplate = [{
     label: 'about',
     type: 'normal',
@@ -124,17 +222,6 @@ const trayMenuTemplate = [{
     }
 }]
 
-ipcMain.on('devTools', () => {
-    if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
-    else win.webContents.openDevTools();
-});
-ipcMain.on('reload', () => {
-    win.reload();
-    // win.webContents.reload();
-});
-ipcMain.on('exit', () => {
-    app.quit();
-});
 ipcMain.on('modifyTitle', (event, options) => {
     let result = {}
         , et = event;
@@ -166,29 +253,7 @@ ipcMain.on('saveFile', (e, options, content, cb) => {
     });
 });
 ipcMain.on('openSettings', () => {
-    if(winSettings) {
-        winSettings.focus();
-        return;
-    }
-    let config = {
-        width: 800,
-        height: 600,
-        resizable: false,
-        icon: path.join(__dirname, './src/logo.png'),
-        webPreferences: {
-            preload: path.join(__dirname, './src/preload.js'),
-            spellcheck: false
-        },
-        show: false
-    };
-    winSettings = new BrowserWindow(config);
-    winSettings.loadFile('./src/settings.html');
-    winSettings.on('close', () => {
-        winSettings = null;
-    });
-    winSettings.on('ready-to-show', () => {
-        winSettings.show();
-    });
+    openSettings();
 });
 ipcMain.on('exitSettings', () => {
     winSettings.close();

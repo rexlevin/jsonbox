@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, shell } = require('electron');
+const { contextBridge, ipcRenderer, shell, dialog } = require('electron');
 const { nanoid, customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('../package.json');
 
@@ -11,8 +11,6 @@ contextBridge.exposeInMainWorld(
         notification: (options) => {
             new window.Notification(options.title, options);
         },
-        devTools: () => {ipcRenderer.send('devTools');},
-        reload: () => {ipcRenderer.send('reload');},
         getDescription: () => {
             return package.description;
         },
@@ -40,7 +38,6 @@ contextBridge.exposeInMainWorld(
                 cb(r);
             });
         },
-        exit: () => {ipcRenderer.send('exit');},
         sid: () => {
             const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
             return nanoid()
@@ -88,6 +85,27 @@ contextBridge.exposeInMainWorld(
         },
         saveSettings(s) {
             ipcRenderer.send('saveSettings', s);
+        },
+        saveJSON() {
+            ipcRenderer.on('save', () => {
+                dialog.showMessageBox({
+                    type: 'info',
+                    title: '关于',
+                    message: 'xxxxxxxxxxxxxxxx'
+                });
+            });
+        },
+        renameTab(fn) {
+            ipcRenderer.on('renameTab', fn);
+        },
+        searchText(fn) {
+            ipcRenderer.on('search', fn);
+        },
+        newTab(fn) {
+            ipcRenderer.on('newTab', fn);
+        },
+        closeTab(fn) {
+            ipcRenderer.on('closeTab', fn);
         },
         appCloseHandler(cb) {
             ipcRenderer.on('close', cb);
