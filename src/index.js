@@ -114,6 +114,9 @@ const jsonbox = {
             });
         });
 
+        window.api.saveJSON(e => {
+            this.save2File();
+        });
         window.api.renameTab(e => {
             this.modifyTabTitle();
         });
@@ -134,15 +137,6 @@ const jsonbox = {
           , divJson = this.$refs.divJson;
 
         divJson.focus();
-
-        document.querySelector('#app').addEventListener('keyup', (e) => {
-            // e.preventDefault();
-            // e.cancelable = true;
-            // if(e.ctrlKey && !e.altKey && (e.key == 's' || e.key == 'S')) {
-            //     // 保存为文件
-            //     this.save2File();
-            // }
-        }, false);
 
         document.querySelector('#container').addEventListener('click', () => {
             // divJson.focus(() => {});
@@ -231,12 +225,6 @@ const jsonbox = {
             // 获取焦点的时候全选内容
             e.currentTarget.select();
         });
-
-        // document.querySelector('.myTab').addEventListener('show.bs.tab', (e) => {
-        //     console.info(e);
-        //     console.info(e.target);
-        //     console.info(e.relatedTarget['index']);
-        // });
     },
     beforeUnmount() {
         

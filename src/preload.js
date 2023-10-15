@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, shell, dialog } = require('electron');
+const { contextBridge, ipcRenderer, shell } = require('electron');
 const { nanoid, customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('../package.json');
 
@@ -86,14 +86,8 @@ contextBridge.exposeInMainWorld(
         saveSettings(s) {
             ipcRenderer.send('saveSettings', s);
         },
-        saveJSON() {
-            ipcRenderer.on('save', () => {
-                dialog.showMessageBox({
-                    type: 'info',
-                    title: '关于',
-                    message: 'xxxxxxxxxxxxxxxx'
-                });
-            });
+        saveJSON(fn) {
+            ipcRenderer.on('save', fn);
         },
         renameTab(fn) {
             ipcRenderer.on('renameTab', fn);

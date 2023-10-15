@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, MenuItem, Tray, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, Menu, Tray, ipcMain, dialog } = require('electron')
 const Store = require('electron-store');  // 引入store
 const path = require('path')
 const package = require('./package.json')
