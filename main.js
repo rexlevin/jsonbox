@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, Menu, Tray, ipcMain, dialog, shell } = require('electron')
 const Store = require('electron-store');  // 引入store
 const path = require('path')
 const package = require('./package.json')
@@ -47,6 +47,7 @@ const createWindow = () => {
     }
     config.useContentSize = true;
     config.show = false;
+    config.autoHideMenuBar = true;
 
     win = new BrowserWindow(config);
     if(isMax) win.maximize();
@@ -118,7 +119,8 @@ function openSettings() {
             preload: path.join(__dirname, './src/preload.js'),
             spellcheck: false
         },
-        show: false
+        show: false,
+        autoHideMenuBar: true
     };
     winSettings = new BrowserWindow(config);
     winSettings.loadFile('./src/settings.html');
@@ -127,6 +129,14 @@ function openSettings() {
     });
     winSettings.on('ready-to-show', () => {
         winSettings.show();
+    });
+}
+
+function openAbout() {
+    dialog.showMessageBox({
+        type: 'info',
+        title: '关于',
+        message: package.name + ':' + package.version + '\n' + package.description + '\nnode:' + process.versions['node'] + '\nchrome:' + process.versions['chrome'] + '\nelectron:' + process.versions['electron']
     });
 }
 
@@ -143,7 +153,7 @@ const menuTemplate = [{
     }, {
         // role: 'Exit',
         label: 'Exit',
-        // accelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+I',
+        accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
         click: () => { app.quit(); }
     }]
 }, {
@@ -195,7 +205,15 @@ const menuTemplate = [{
     }, {
         type: 'separator'
     }, {
-        label: 'About'
+        label: 'HomePage',
+        click: () => {
+            shell.openExternal('https://docs.r-xnoro.com/jsonbox/#/');
+        }
+    }, {
+        label: 'About',
+        click: () => {
+            openAbout();
+        }
     }]
 }];
 
@@ -208,11 +226,7 @@ const trayMenuTemplate = [{
     label: 'about',
     type: 'normal',
     click: function() {
-        dialog.showMessageBox({
-            type: 'info',
-            title: '关于',
-            message: package.name + ':' + package.version + '\n' + package.description + '\nnode:' + process.versions['node'] + '\nchrome:' + process.versions['chrome'] + '\nelectron:' + process.versions['electron']
-        });
+        openAbout();
     }
 }, {
     label: 'quit',
