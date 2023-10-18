@@ -16,6 +16,7 @@ const tmpJ = {
 const jsonbox = {
     data() {
         return {
+            activeTab: '',  // 当前激活tab编号，会保存入config.json，用于打开app时恢复session
             boxes: [],
             j: Object.assign({}, tmpJ),
             currentTabIndex: -1,    // 当前编辑区是 boxes 中第几个元素
@@ -28,7 +29,14 @@ const jsonbox = {
         }
     },
     created() {
+    },
+    destroyed() {
+        clearInterval(this.timerSave);
+    },
+    mounted() {
+
         window.api.getSettings(r => {
+            console.info('===%s', JSON.stringify(r));
             if(undefined == r || !r.saveSession) {
                 this.j.sid = window.api.sid();
                 this.j.title = 'NewTab_' + this.tabIndex++;
@@ -37,6 +45,7 @@ const jsonbox = {
                 return;
             }
             window.api.getBoxes(r => {
+                console.info('===%s', JSON.stringify(r));
                 if(undefined === r || r.length == 0) {
                     this.j.sid = window.api.sid();
                     this.j.title = 'NewTab_' + this.tabIndex++;
@@ -51,13 +60,9 @@ const jsonbox = {
                 this.tabIndex = this.boxes.length;
             });
         });
-    },
-    destroyed() {
-        clearInterval(this.timerSave);
-    },
-    mounted() {
+
         this.timerSave = setInterval(() => {
-            window.api.getSt(r => {
+            window.api.getSettings(r => {
                 // console.info(r);
                 if(undefined === r) return;
                 if(r.saveSession) {
@@ -74,7 +79,7 @@ const jsonbox = {
                     //     });
                     // }
                     // 然后才是 boxes 保存
-                    window.api.saveBxs(JSON.stringify(this.boxes), (r)=>{
+                    window.api.saveBoxs(JSON.stringify(this.boxes), this.activeTab, (r)=>{
                         console.info('save boxes success==%s', r);
                     });
                 }
@@ -226,9 +231,6 @@ const jsonbox = {
             e.currentTarget.select();
         });
     },
-    beforeUnmount() {
-        
-    },
     methods: {
         save2File() {
             // 保存为文件
@@ -271,6 +273,7 @@ const jsonbox = {
             this.j = Object.assign({}, this.boxes[newTabIndex]);
             this.currentTabIndex = newTabIndex
             this.$refs.divJson.innerHTML = this.j.jText;
+            this.activeTab = this.j.sid;   // 记录当前激活tab
         },
         closeTab() {
             this.packData('2');
@@ -281,6 +284,7 @@ const jsonbox = {
             this.clearData();   // 清空数据
             this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1;
             this.$refs.divJson.focus();
+            this.activeTab = this.j.sid;
         },
         clearData() {
             this.j = Object.assign({}, tmpJ, {
@@ -299,6 +303,7 @@ const jsonbox = {
                     this.j.jString = this.$refs.divJson.textContent;
                     this.j.jText  = this.$refs.divJson.innerHTML;
                     this.currentTabIndex = this.boxes.push(Object.assign({}, this.j)) - 1;
+                    this.activeTab = this.j.sid;
                     break;
                 case '1':
                     this.j.jString = this.$refs.divJson.textContent;
@@ -309,6 +314,7 @@ const jsonbox = {
                             break;
                         }
                     }
+                    this.activeTab = this.j.sid;
                     break;
                 case '2':
                     if(this.boxes.length == 1) {
@@ -318,6 +324,7 @@ const jsonbox = {
                         this.boxes[0] = Object.assign({
                             title: 'NewTab_0'
                         },this.j);
+                        this.activeTab = this.j.sid;
                         return;
                     }
                     // delete this.boxes[this.currentTabIndex];
@@ -334,6 +341,7 @@ const jsonbox = {
                     this.boxes.splice(index, 1);
                     this.j = Object.assign({}, this.boxes[this.currentTabIndex]);
                     this.$refs.divJson.innerHTML = this.j.jText;
+                    this.activeTab = this.j.sid;
                     break;
                 default:
                     break;

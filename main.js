@@ -4,7 +4,6 @@ const path = require('path')
 const package = require('./package.json')
 const prompt = require('custom-electron-prompt')
 const fs = require('fs');
-const { toUnicode } = require('punycode');
 
 // 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -284,17 +283,9 @@ ipcMain.on('repository', (event) => {
     }
     event.reply('repository-reply', url);
 });
-ipcMain.on('getSettings', (event) => {
-    let s = store.get('settings')
-    event.reply('getSettings-reply', s);
-});
 ipcMain.on('saveSettings', (e, settings) => {
     store.set('settings', JSON.parse(settings));
 })
-ipcMain.on('getBoxes', (e) => {
-    let boxes = store.get('boxes');
-    e.reply('getBoxes-reply', boxes);
-});
 ipcMain.on('close-reply', (e, r) => {
     app.exit();
 });

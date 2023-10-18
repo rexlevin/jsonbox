@@ -5,6 +5,7 @@ const package = require('../package.json');
 const fs = require('fs')
 
 const Store = require('electron-store');  // 引入store
+const store = new Store();
 
 contextBridge.exposeInMainWorld(
     'api', {
@@ -42,10 +43,6 @@ contextBridge.exposeInMainWorld(
             const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
             return nanoid()
         },
-        getBoxes(cb) {
-            ipcRenderer.send('getBoxes');
-            ipcRenderer.on('getBoxes-reply', (e, r) => { cb(r); });
-        },
         modifyTitle: (options, cb) => {
             ipcRenderer.send('modifyTitle', options);
             ipcRenderer.on('modifyTitle-reply', (event, r) => {
@@ -67,21 +64,16 @@ contextBridge.exposeInMainWorld(
         openUrl: (url) => {
             shell.openExternal(url);
         },
-        getSt(cb) {
-            let store = new Store();  // 开启electron-store
-            let s = store.get('settings');
-            cb(s);
-        },
-        saveBxs(boxes, cb) {
-            let store = new Store();
+        saveBoxs(boxes, activeTab, cb) {
             store.set('boxes', JSON.parse(boxes));
+            store.set('activeTab', activeTab);
             cb('ok');
         },
+        getBoxes(cb) {
+            cb(store.get('boxes'));
+        },
         getSettings(cb) {
-            ipcRenderer.send('getSettings');
-            ipcRenderer.on('getSettings-reply', (e, r) => {
-                cb(r);
-            });
+            cb(store.get('settings'));
         },
         saveSettings(s) {
             ipcRenderer.send('saveSettings', s);
