@@ -36,7 +36,6 @@ const jsonbox = {
     mounted() {
 
         window.api.getSettings(r => {
-            console.info('===%s', JSON.stringify(r));
             if(undefined == r || !r.saveSession) {
                 this.j.sid = window.api.sid();
                 this.j.title = 'NewTab_' + this.tabIndex++;
@@ -44,8 +43,7 @@ const jsonbox = {
                 this.currentTabIndex = 0;
                 return;
             }
-            window.api.getBoxes(r => {
-                console.info('===%s', JSON.stringify(r));
+            window.api.getBoxes((r, activeTab) => {
                 if(undefined === r || r.length == 0) {
                     this.j.sid = window.api.sid();
                     this.j.title = 'NewTab_' + this.tabIndex++;
@@ -54,16 +52,12 @@ const jsonbox = {
                     return;
                 }
                 this.boxes = r;
-                this.j = this.boxes[0];
-                this.$refs.divJson.innerHTML = this.j.jText;
-                this.currentTabIndex = 0;
-                this.tabIndex = this.boxes.length;
+                this.switchTab(null, activeTab, null);
             });
         });
 
         this.timerSave = setInterval(() => {
             window.api.getSettings(r => {
-                // console.info(r);
                 if(undefined === r) return;
                 if(r.saveSession) {
                     this.packData('1');
@@ -267,13 +261,27 @@ const jsonbox = {
         showTabContextMenu(index, e) {
             // tab标签上的右键菜单
         },
-        switchTab(index, e){
-            this.packData('1');    // 先把当前tab数据进行保存
-            let newTabIndex = e.target.getAttribute('index')
-            this.j = Object.assign({}, this.boxes[newTabIndex]);
-            this.currentTabIndex = newTabIndex
+        switchTab(index, sid, e){
+            if(null == index || undefined == index) {
+                for(let i = 0; i < this.boxes.length; i++) {
+                    if(this.boxes[i].sid === sid) {
+                        console.info('=======%s', i);
+                        this.j = Object.assign({}, this.boxes[i]);
+                        this.currentTabIndex = i;
+                        this.$refs.divJson.innerHTML = this.j.jText;
+                        this.activeTab = this.j.sid;   // 记录当前激活tab
+                        break;
+                    }
+                }
+                this.packData('1');    // 先把当前tab数据进行保存
+                return;
+            }
+            console.info('%s===%s', index, sid);
+            this.j = Object.assign({}, this.boxes[index]);
+            this.currentTabIndex = index;
             this.$refs.divJson.innerHTML = this.j.jText;
             this.activeTab = this.j.sid;   // 记录当前激活tab
+            this.packData('1');    // 先把当前tab数据进行保存
         },
         closeTab() {
             this.packData('2');

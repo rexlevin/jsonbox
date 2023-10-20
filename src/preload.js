@@ -70,7 +70,7 @@ contextBridge.exposeInMainWorld(
             cb('ok');
         },
         getBoxes(cb) {
-            cb(store.get('boxes'));
+            cb(store.get('boxes'), store.get('activeTab'));
         },
         getSettings(cb) {
             cb(store.get('settings'));
