@@ -52,6 +52,7 @@ const jsonbox = {
                     return;
                 }
                 this.boxes = r;
+                this.tabIndex = this.boxes.length;
                 this.switchTab(null, activeTab, null);
             });
         });
@@ -350,6 +351,7 @@ const jsonbox = {
                     this.j = Object.assign({}, this.boxes[this.currentTabIndex]);
                     this.$refs.divJson.innerHTML = this.j.jText;
                     this.activeTab = this.j.sid;
+                    this.tabIndex--;
                     break;
                 default:
                     break;
