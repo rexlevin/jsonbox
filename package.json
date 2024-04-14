@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "electron-store": "^8.2.0",
+        "monaco-editor": "^0.47.0",
         "vue": "^3.4.21"
     },
     "devDependencies": {
