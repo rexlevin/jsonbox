@@ -46,9 +46,9 @@
         "bootstrap": "^5.2.3",
         "bootstrap-icons": "^1.10.2",
         "custom-electron-prompt": "^1.5.1",
-        "electron-store": "^8.1.0",
+        "electron-store": "^8.2.0",
         "nanoid": "^3.3.4",
-        "vue": "^3.2.37",
+        "vue": "^3.4.21",
         "x2js": "^3.4.4"
     }
 }
