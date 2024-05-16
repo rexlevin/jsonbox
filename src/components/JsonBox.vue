@@ -1,21 +1,16 @@
 <template>
-    <!-- <el-container>
-        <el-header></el-header>
-        <el-main>
+    <div id="container">
+        <header>
+            <ul>
+                <li v-for="(item, index) in boxes"></li>
+            </ul>
+        </header>
+        <main>
             <div class="editor" ref="editor">
                 <div class="editor-placeholder"># Placeholder Example</div>
             </div>
-        </el-main>
-        <el-footer></el-footer>
-    </el-container> -->
-    <div id="containder">
-        <div id="header"></div>
-        <div id="main">
-            <div class="editor" ref="editor">
-                <div class="editor-placeholder"># Placeholder Example</div>
-            </div>
-        </div>
-        <div id="footer"></div>
+        </main>
+        <footer></footer>
     </div>
 </template>
 
@@ -23,13 +18,11 @@
 import * as monaco from 'monaco-editor';
 import { onMounted, ref } from 'vue';
 
-// import ElementPlus from 'element-plus'
-// import 'element-plus/dist/index.css'
-
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
 // const editor = ref(null);
+const boxs =ref(null);
 
 self.MonacoEnvironment = {
     getWorker: function(moduleId, label) {
@@ -40,6 +33,10 @@ self.MonacoEnvironment = {
     }
 };
 
+onBeforeMount(() => {
+    // 从存储中查询 boxes 数据
+    boxes = {};
+});
 
 onMounted(() => {
     const instance = monaco.editor.create(document.querySelector('.editor'), {
@@ -49,8 +46,8 @@ onMounted(() => {
         automaticLayout: true,  // 自适应布局
         overviewRulerBorder: false, // 不要滚动条的边框
         formatOnPaste: true,    // 粘贴即格式化，默认false
-        // formatOnType: true,     // 按键即格式化，默认false
-        contextmenu: false,
+        formatOnType: true,     // 按键即格式化，默认false
+        contextmenu: true,     // 右键菜单
         fontSize: 15
     });
     showPlaceholder('');
@@ -75,13 +72,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* .el-container {height:100%;}
-.el-header, .el-main, .el-footer{padding:0;} */
-
-#container { display: flex; height:100%; flex-direction:column; margin:0 10; padding:0;}
-#header { height:40px; }
-#main { flex:1; padding:0; overflow:auto;}
-#footer { height:30px; position: sticky!important; margin-top:2px; margin-bottom:2px; }
+#container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
+header { height:33px; background-color: gray; }
+main { flex: 1; background-color: #dee2e6;}
+footer { height:30px; background-color: blue; }
 
 .editor {
     width: 100%;
