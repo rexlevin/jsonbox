@@ -2,7 +2,7 @@
     <div id="container">
         <header>
             <ul>
-                <li v-for="(item, index) in boxes"></li>
+                <!-- <li v-for="(item, index) in boxes"></li> -->
             </ul>
         </header>
         <main>
@@ -16,13 +16,13 @@
 
 <script setup>
 import * as monaco from 'monaco-editor';
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
 // const editor = ref(null);
-const boxs =ref(null);
+const boxes = ref(null);
 
 self.MonacoEnvironment = {
     getWorker: function(moduleId, label) {
@@ -34,8 +34,9 @@ self.MonacoEnvironment = {
 };
 
 onBeforeMount(() => {
+    // console.info(boxes.value);
     // 从存储中查询 boxes 数据
-    boxes = {};
+    boxes.value = {};
 });
 
 onMounted(() => {
