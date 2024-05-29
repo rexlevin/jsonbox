@@ -10,7 +10,15 @@
                 <div class="editor-placeholder"># Placeholder Example</div>
             </div>
         </main>
-        <footer></footer>
+        <footer>
+            <div class="bottom">
+                <div></div>
+                <div class="btngroup">
+                    <button class="btn" @click="">压缩并复制</button>
+                </div>
+                <div class="divSettingsBtn"></div>
+            </div>
+        </footer>
     </div>
 </template>
 
@@ -26,10 +34,11 @@ const boxes = ref(null);
 
 self.MonacoEnvironment = {
     getWorker: function(moduleId, label) {
-        if(label == 'json') {
-            return new JsonWorker();
-        }
-        return new EditorWorker();
+        return new JsonWorker();
+        // if(label == 'json') {
+        //     return new JsonWorker();
+        // }
+        // return new EditorWorker();
     }
 };
 
@@ -76,7 +85,30 @@ onMounted(() => {
 #container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
 header { height:33px; background-color: gray; }
 main { flex: 1; background-color: #dee2e6;}
-footer { height:30px; background-color: blue; }
+footer { height:40px; background-color: rgb(245, 245, 248);}
+
+.bottom{
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: auto 300px 50px;
+}
+.btngroup{
+    width: 100%; height: 100%;
+    background-color: blue;
+}
+.divSettingsBtn{
+    width: 100%; height: 100%;
+    background-color: red;
+    width: 50px; height: 100%;
+}
+
+.btn{
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+}
 
 .editor {
     width: 100%;
