@@ -2,7 +2,7 @@
     <div id="container">
         <header>
             <ul>
-                <!-- <li v-for="(item, index) in boxes"></li> -->
+                <li v-for="(item, index) in boxes"></li>
             </ul>
         </header>
         <main>
@@ -16,7 +16,7 @@
                 <div class="btngroup">
                     <button class="btn" @click="">压缩并复制</button>
                 </div>
-                <div class="divSettingsBtn"></div>
+                <div class="divSettings"></div>
             </div>
         </footer>
     </div>
@@ -26,8 +26,15 @@
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, ref } from 'vue';
 
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+//import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+
+const tmpJ = {
+    sId: '',
+    type: 0,
+    path: '',
+    content: ''
+};
 
 // const editor = ref(null);
 const boxes = ref(null);
@@ -45,7 +52,9 @@ self.MonacoEnvironment = {
 onBeforeMount(() => {
     // console.info(boxes.value);
     // 从存储中查询 boxes 数据
-    boxes.value = {};
+    window.api.getBoxes(data => {
+        console.info(data);
+    });
 });
 
 onMounted(() => {
@@ -96,10 +105,9 @@ footer { height:40px; background-color: rgb(245, 245, 248);}
     width: 100%; height: 100%;
     background-color: blue;
 }
-.divSettingsBtn{
+.divSettings{
     width: 100%; height: 100%;
-    background-color: red;
-    width: 50px; height: 100%;
+    background-color: rgb(160, 147, 147);
 }
 
 .btn{
