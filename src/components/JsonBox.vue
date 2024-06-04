@@ -2,7 +2,7 @@
     <div id="container">
         <header>
             <ul>
-                <li v-for="(item, index) in boxes"></li>
+                <li v-for="(item, index) in boxes">asdfsaf</li>
             </ul>
         </header>
         <main>
