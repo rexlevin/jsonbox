@@ -11,7 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 contextBridge.exposeInMainWorld(
     'api', {
-        saveBoxes: () => {},
+        saveBoxes: (boxes, callback) => {
+            callback(localStorage.setItem('saveBoxes', JSON.stringify(boxes)));
+        },
         getBoxes: (callback) => {
             callback(JSON.parse(localStorage.getItem('boxes') || '[]'));
             // callback(JSON.parse(store.get('boxes') || '[]'));

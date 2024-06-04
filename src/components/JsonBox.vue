@@ -53,7 +53,10 @@ onBeforeMount(() => {
     // console.info(boxes.value);
     // 从存储中查询 boxes 数据
     window.api.getBoxes(data => {
-        console.info(data);
+        if(null == data || undefined == data || data.length == 0) {
+            boxes.value = [];
+            boxes.value.push(Object.assign([], tmpJ));
+        }
     });
 });
 
