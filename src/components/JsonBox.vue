@@ -1,9 +1,11 @@
 <template>
     <div id="container">
         <header>
-            <ul>
-                <li v-for="(item, index) in boxes">asdfsaf</li>
-            </ul>
+            <div class="tabs header">
+                <ul>
+                    <li v-for="(item, index) in boxes">kkkkk</li>
+                </ul>
+            </div>
         </header>
         <main>
             <div class="editor" ref="editor">
@@ -14,7 +16,7 @@
             <div class="bottom">
                 <div></div>
                 <div class="btngroup">
-                    <button class="btn" @click="">压缩并复制</button>
+                    <button class="btn mybtn" @click="">压缩并复制</button>
                 </div>
                 <div class="divSettings"></div>
             </div>
@@ -95,14 +97,25 @@ onMounted(() => {
 
 <style scoped>
 #container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
-header { height:33px; background-color: gray; }
+header { height:33px;}
 main { flex: 1; background-color: #dee2e6;}
-footer { height:40px; background-color: rgb(245, 245, 248);}
+footer { height:40px;}
 
+.tabs {height: 100%; width: 100%; margin: 0; padding: 0;}
+.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; background-color: #f5f7fa;}
+.tabs ul li {width: 100px; height: 100%; text-align: center; line-height: 100%;}
+.tabs ul li::before {display: inline-block; content: ""; height: 100%; vertical-align: middle;}
+
+.btn {border: none; text-align: center;}
+
+.header {
+    background-color: rgb(245, 245, 248);
+}
 .bottom{
     width: 100%; height: 100%;
     display: grid;
     grid-template-columns: auto 300px 50px;
+    background-color: rgb(245, 245, 248);
 }
 .btngroup{
     width: 100%; height: 100%;
@@ -113,11 +126,7 @@ footer { height:40px; background-color: rgb(245, 245, 248);}
     background-color: rgb(160, 147, 147);
 }
 
-.btn{
-    background-color: #008CBA;
-    border: none;
-    color: white;
-    text-align: center;
+.mybtn{ background-color: #008CBA; color: white;
     font-size: 14px;
 }
 
