@@ -3,7 +3,7 @@
         <header>
             <div class="tabs header">
                 <ul>
-                    <li v-for="(item, index) in boxes">kkkkk</li>
+                    <li v-for="(item, index) in boxes">{{item.title}}</li>
                 </ul>
             </div>
         </header>
@@ -33,7 +33,8 @@ import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
 const tmpJ = {
     sId: '',
-    type: 0,
+    type: 0,    // 当前 json 类型，0-会话，1-文件
+    title: "",
     path: '',
     content: ''
 };
@@ -52,12 +53,13 @@ self.MonacoEnvironment = {
 };
 
 onBeforeMount(() => {
-    // console.info(boxes.value);
     // 从存储中查询 boxes 数据
     window.api.getBoxes(data => {
-        if(null == data || undefined == data || data.length == 0) {
+        boxes.value = data || [];
+        if(data.length == 0) {
             boxes.value = [];
-            boxes.value.push(Object.assign([], tmpJ));
+            let j = Object.assign({}, tmpJ);
+            boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab0"}));
         }
     });
 });
