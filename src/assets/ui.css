@@ -1,19 +1,7 @@
+@import url(./ui/ui-tab.css);
+@import url(./ui/ui-btn.css);
+
 #container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
-header { height:33px;}
+header { background-color: rgb(245, 245, 248);}
 main { flex: 1; background-color: #dee2e6;}
 footer { background-color: rgb(245, 245, 248);}
-
-.tabs {height: 100%; width: 100%; margin: 0; padding: 0;}
-.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; background-color: #f5f7fa;}
-.tabs ul li {width: 100px; height: 100%; text-align: center; line-height: 100%;}
-.tabs ul li::before {display: inline-block; content: ""; height: 100%; vertical-align: middle;}
-
-.btn {border:1px solid #eee; height:35px; border-radius:3px; padding:0 10px;}
-.btn-primary {border: 0; background-color: #008CBA; color: #fff;}
-.btn-secondary {border: 0; background-color: #6f6d6d; color: #fff;}
-.btn-success {border: 0; background-color: #44934b; color: #fff;}
-.btn-warning {border: 0; background-color: #ffc901; color: #000;}
-.btn-danger {border: 0; background-color: #b10000; color: #fff;}
-.btn-sm {height:30px;}
-
-.icon-sm{font-size: 20px;}

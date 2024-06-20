@@ -1,0 +1,6 @@
+/**
+*/
+.tabs {height: 100%; width: 100%; margin: 0; padding: 0;}
+.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; background-color: #f5f7fa;}
+.tabs ul li {width: 100px; height: 100%; text-align: center; line-height: 100%; cursor: pointer;}
+.tabs ul li::before {display: inline-block; content: ""; height: 100%; vertical-align: middle;}

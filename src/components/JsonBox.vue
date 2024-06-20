@@ -12,17 +12,22 @@
                 <div class="editor-placeholder"># Placeholder Example</div>
             </div>
         </main>
-        <footer class="bottom">
-            <div></div>
-            <div class="btngroup">
-                <button type="button" class="" @click="">压缩并复制</button>
+        <footer>
+            <div class="bottom">
+                <div style="height: 100%;"></div>
+                <div class="btngroup">
+                    <span class="icon-span" title="格式化 shift+alt+f"><i class="bi bi-braces icon"></i></span>
+                    <span class="icon-span" title="复制压缩"><i class="bi bi-chevron-contract icon"></i></span>
+                    <span class="icon-span" title="复制为yaml"><i class="bi bi-filetype-yml icon"></i></span>
+                    <span class="icon-span" title="复制为xml"><i class="bi bi-code-slash icon"></i></span>
+                </div>
+                <div class="divSettings" title="设置 alt+s">
+                    <span class="icon-span"><i class="bi bi-sliders icon"></i></span></div>
             </div>
-            <div class="divSettings"><i class="bi bi-sliders icon-sm"></i></div>
         </footer>
     </div>
 </template>
 
-<style src="../assets/ui.css" scoped></style>
 <script setup>
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, ref } from 'vue';
@@ -54,14 +59,17 @@ self.MonacoEnvironment = {
 
 onBeforeMount(() => {
     // 从存储中查询 boxes 数据
-    window.api.getBoxes(data => {
-        boxes.value = data || [];
-        if(data.length == 0) {
-            boxes.value = [];
-            let j = Object.assign({}, tmpJ);
-            boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab0"}));
-        }
-    });
+    // window.api.getBoxes(data => {
+    //     boxes.value = data || [];
+    //     if(data.length == 0) {
+    //         boxes.value = [];
+    //         let j = Object.assign({}, tmpJ);
+    //         boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab0"}));
+    //     }
+    // });
+    boxes.value = [];
+    let j = Object.assign({}, tmpJ);
+    boxes.value.push(Object.assign(j, {sId: 'xp983fkls', title: "NewTab0"}));
 });
 
 onMounted(() => {
@@ -97,36 +105,37 @@ onMounted(() => {
 });
 </script>
 
+<style src="../assets/ui.css" scoped></style>
 <style scoped>
 .header {
-    background-color: rgb(245, 245, 248);
+    height:35px;
 }
 .bottom{
     height:35px; width: 100%;
-    line-height: 35px;
     display: grid;
     grid-template-columns: auto 300px 50px;
     
 }
 .btngroup{
-    width: 100%; height: 100%;
-    background-color: blue;
-}
-.divSettings{
-    width: 100%; height: 100%;
-    /* background-color: rgb(160, 147, 147); */
-    text-align: center;
-    line-height: 30px;
+    width: 100%; height: 100%; float: right;
 }
 
-.mybtn{ background-color: #008CBA; color: white;
-    font-size: 14px;
+.icon-span {display:inline-block; width: 40px; height: 35px; text-align: center;
+    border-radius: 20px;
+    display: table-cell;
+    vertical-align:middle;}
+.icon {font-size: 25px; }
+.icon-span:hover {background-color: hsl(0, 0%, 90%); cursor: pointer;}
+.icon-span:active {background-color: hsl(0, 0%, 80%); cursor: pointer;}
+
+.divSettings{
+    width: 100%; height: 100%;
+    text-align: center;
 }
 
 .editor {
     width: 100%;
     height: 100%;
-    /* height: calc(100vh); */
     position: relative;
 }
 .editor-placeholder {

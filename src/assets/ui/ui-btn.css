@@ -1,0 +1,29 @@
+/**
+<button class="btn btn-primary">主要按钮</button>
+*/
+button {
+    /* --primary-bg-color: #008cba; */
+    --primary-bg-color: hsl(195, 100%, 35%);
+    --primary-bg-color-lighter: hsl(195, 100%, 40%);
+    --primary-bg-color-darker: hsl(195, 100%, 30%);
+
+    /* --secondary-bg-color: #6f6d6d; */
+    --secondary-bg-color: hsl(0,1%,45%);
+    --secondary-bg-color-lighter: hsl(0,1%,50%);
+    --secondary-bg-color-darker: hsl(0,1%,40%);
+}
+
+.btn {border:1px solid #eee; height:35px; border-radius:3px; padding:0 10px;}
+
+.btn-primary { border: 0; background-color: var(--primary-bg-color); color: #fff;}
+.btn-primary:hover {background-color: var(--primary-bg-color-lighter);}
+.btn-primary:active {background-color: var(--primary-bg-color-darker);}
+
+.btn-secondary { border: 0; background-color: var(--secondary-bg-color); color: #fff;}
+.btn-secondary:hover { background-color: var(--secondary-bg-color-lighter);}
+.btn-secondary:active { background-color: var(--secondary-bg-color-darker);}
+
+.btn-success {border: 0; background-color: #44934b; color: #fff;}
+.btn-warning {border: 0; background-color: #ffc901; color: #000;}
+.btn-danger {border: 0; background-color: #b10000; color: #fff;}
+.btn-sm {height:30px;}
