@@ -10,6 +10,8 @@
 
 [vue3](https://cn.vuejs.org/)
 
+[Bootstrap Icons](https://icons.getbootstrap.com/)
+
 # monaco-editor api
 
 ```javascript
