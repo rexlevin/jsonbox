@@ -12,21 +12,21 @@
                 <div class="editor-placeholder"># Placeholder Example</div>
             </div>
         </main>
-        <footer>
-            <div class="bottom">
-                <div></div>
-                <div class="btngroup">
-                    <button class="btn mybtn" @click="">压缩并复制</button>
-                </div>
-                <div class="divSettings"></div>
+        <footer class="bottom">
+            <div></div>
+            <div class="btngroup">
+                <button type="button" class="" @click="">压缩并复制</button>
             </div>
+            <div class="divSettings"><i class="bi bi-sliders icon-sm"></i></div>
         </footer>
     </div>
 </template>
 
+<style src="../assets/ui.css" scoped></style>
 <script setup>
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, ref } from 'vue';
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 //import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
@@ -98,26 +98,15 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
-header { height:33px;}
-main { flex: 1; background-color: #dee2e6;}
-footer { height:40px;}
-
-.tabs {height: 100%; width: 100%; margin: 0; padding: 0;}
-.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; background-color: #f5f7fa;}
-.tabs ul li {width: 100px; height: 100%; text-align: center; line-height: 100%;}
-.tabs ul li::before {display: inline-block; content: ""; height: 100%; vertical-align: middle;}
-
-.btn {border: none; text-align: center;}
-
 .header {
     background-color: rgb(245, 245, 248);
 }
 .bottom{
-    width: 100%; height: 100%;
+    height:35px; width: 100%;
+    line-height: 35px;
     display: grid;
     grid-template-columns: auto 300px 50px;
-    background-color: rgb(245, 245, 248);
+    
 }
 .btngroup{
     width: 100%; height: 100%;
@@ -125,7 +114,9 @@ footer { height:40px;}
 }
 .divSettings{
     width: 100%; height: 100%;
-    background-color: rgb(160, 147, 147);
+    /* background-color: rgb(160, 147, 147); */
+    text-align: center;
+    line-height: 30px;
 }
 
 .mybtn{ background-color: #008CBA; color: white;
