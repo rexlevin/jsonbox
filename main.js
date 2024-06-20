@@ -50,7 +50,7 @@ const createWindow = () => {
     win.loadFile('dist/index.html');
 
     // 打开开发者窗口
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
     
     // 启动恢复主窗口位置和大小
     if(!isMax && !('' == position || undefined == position)) {
@@ -64,14 +64,18 @@ const createWindow = () => {
     // 关闭主窗口事件，记录窗口大小和位置
     win.on('close', (e) => {
         e.preventDefault();     // 阻止默认事件
-        let s = store.get('settings')
+        let s = win.webContents.send('getSettings')
             , closeAppConfirm = false;
+        console.info('s===' + s);
         if(undefined === s) closeAppConfirm = false;
         else if(undefined === s.closeAppConfirm) closeAppConfirm = false;
         else closeAppConfirm = s.closeAppConfirm;
         if(!closeAppConfirm) {
-            store.set('isMax', win.isMaximized());
-            store.set('mainPosition', win.getContentBounds());
+            // store.set('isMax', win.isMaximized());
+            // store.set('mainPosition', win.getContentBounds());
+            let isMax = win.isMaximized()
+                , mainPosition = win.getContentBounds();
+            win.webContents.send('saveWindowState', isMax, mainPosition);
             if(null != winSettings) winSettings.close();    // 关闭子窗口
             // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
             win.webContents.send('close');
