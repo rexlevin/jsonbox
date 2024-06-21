@@ -18,7 +18,7 @@
                 <div class="btngroup">
                     <span class="icon-span" title="格式化 shift+alt+f"><i class="bi bi-braces icon"></i></span>
                     <span class="icon-span" title="复制压缩"><i class="bi bi-chevron-contract icon"></i></span>
-                    <span class="icon-span" title="复制为yaml"><i class="bi bi-filetype-yml icon"></i></span>
+                    <span class="icon-span" @click="copy('yaml')" title="复制为yaml"><i class="bi bi-filetype-yml icon"></i></span>
                     <span class="icon-span" title="复制为xml"><i class="bi bi-code-slash icon"></i></span>
                 </div>
                 <div class="divSettings" title="设置 alt+s">
@@ -33,6 +33,8 @@ import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, ref } from 'vue';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import * as YAML from "../lib/json.yaml";
+
 //import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
@@ -44,16 +46,14 @@ const tmpJ = {
     content: ''
 };
 
+const j = Object.assign({}, tmpJ);
+
 // const editor = ref(null);
 const boxes = ref(null);
 
 self.MonacoEnvironment = {
     getWorker: function(moduleId, label) {
         return new JsonWorker();
-        // if(label == 'json') {
-        //     return new JsonWorker();
-        // }
-        // return new EditorWorker();
     }
 };
 
@@ -68,7 +68,6 @@ onBeforeMount(() => {
     //     }
     // });
     boxes.value = [];
-    let j = Object.assign({}, tmpJ);
     boxes.value.push(Object.assign(j, {sId: 'xp983fkls', title: "NewTab0"}));
 });
 
@@ -103,6 +102,20 @@ onMounted(() => {
         document.querySelector('.editor-placeholder').style.display = "none";
     }
 });
+
+function copy(name) {
+    console.info(name);
+    let re,
+        jsonObject = '';
+    const handlers = {
+        'xml': function() {},
+        'yml': function() {
+            re = YAML.j2y(j.content);
+        }
+    };
+    handlers[name](jsonObject);
+    navigator.clipboard.writeText(re)
+}
 </script>
 
 <style src="../assets/ui.css" scoped></style>
