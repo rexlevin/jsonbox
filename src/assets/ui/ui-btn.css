@@ -13,7 +13,7 @@ button {
     --secondary-bg-color-darker: hsl(0,1%,40%);
 }
 
-.btn {border:1px solid #eee; height:35px; border-radius:3px; padding:0 10px;}
+.btn {border:1px solid #eee; height:35px; border-radius:3px; padding:0 10px; cursor: pointer;}
 
 .btn-primary { border: 0; background-color: var(--primary-bg-color); color: #fff;}
 .btn-primary:hover {background-color: var(--primary-bg-color-lighter);}
