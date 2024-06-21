@@ -524,7 +524,8 @@ const jsonbox = {
         },
         copy(name) {
             let jsonTxt = this.$refs.divJson.textContent;
-            let jsonObj = eval("(" + jsonTxt + ")")
+            console.info(jsonTxt);
+            let jsonObj = JSON.parse(jsonTxt)// eval("(" + jsonTxt + ")")
                 , re;
             const handlers = {
                 'xml': function(jsonObj) {
