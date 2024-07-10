@@ -137,7 +137,7 @@ function copy(name) {
     border-radius: 20px;
     display: table-cell;
     vertical-align:middle;}
-.icon {font-size: 25px; }
+.icon {font-size: 20px; }
 .icon-span:hover {background-color: hsl(0, 0%, 90%); cursor: pointer;}
 .icon-span:active {background-color: hsl(0, 0%, 80%); cursor: pointer;}
 

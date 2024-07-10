@@ -1,6 +1,25 @@
 /**
+<div class="tabs">
+    <ul>
+        <li>tab_01</li>
+        <li>tab_02</li>
+    </ul>
+</div>
 */
+
+li {
+    --li-bg-color: hsl(216,35%,85%);
+    --li-bg-color-lighter: hsl(216,35%,95%);
+    --li-bg-color-darker: hsl(216,35%,80%);
+    --li-color-lighter:blue;
+}
+
 .tabs {height: 100%; width: 100%; margin: 0; padding: 0;}
-.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; background-color: #f5f7fa;}
-.tabs ul li {width: 100px; height: 100%; text-align: center; line-height: 100%; cursor: pointer;}
-.tabs ul li::before {display: inline-block; content: ""; height: 100%; vertical-align: middle;}
+.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; vertical-align: middle;}
+.tabs ul li {width: 100px; height: 30px; float:left; text-align: center; line-height: 30px; cursor: pointer; 
+    vertical-align: middle;  background-color: var(--li-bg-color);
+    user-select: none;
+}
+.tabs ul li:hover {color: var(--li-color-lighter);}
+.tabs ul li:active {background-color: var(--li-bg-color-lighter); color: var(--li-color-lighter);}
+.tabs ul li .current {background-color: red;}
