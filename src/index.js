@@ -344,9 +344,9 @@ const jsonbox = {
                             break;
                         }
                     }
-                    // if(this.currentTabIndex == (this.boxes.length - 1)) {
-                    //     this.currentTabIndex--
-                    // }
+                    if(this.currentTabIndex == (this.boxes.length - 1)) {
+                        this.currentTabIndex--
+                    }
                     this.boxes.splice(index, 1);
                     this.j = Object.assign({}, this.boxes[this.currentTabIndex]);
                     this.$refs.divJson.innerHTML = this.j.jText;
