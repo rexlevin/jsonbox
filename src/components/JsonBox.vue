@@ -3,7 +3,7 @@
         <header>
             <div class="tabs header">
                 <ul>
-                    <li v-for="(item, index) in boxes">{{item.title}}</li>
+                    <li v-for="(item, index) in box.data">{{item.title}}</li>
                 </ul>
             </div>
         </header>
@@ -39,17 +39,22 @@ import * as YAML from "../lib/json.yaml";
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
 const tmpJ = {
-    sId: '',
+    id: '',
     type: 0,    // 当前 json 类型，0-会话，1-文件
     title: "",
     path: '',
     content: ''
 };
+const tmpBox = {
+    activeId: '',
+    tabTitleIndex: 0,
+    data: []
+};
 
 const j = Object.assign({}, tmpJ);
 
 // const editor = ref(null);
-const boxes = ref(null);
+const box = ref(null);
 
 self.MonacoEnvironment = {
     getWorker: function(moduleId, label) {
@@ -59,20 +64,25 @@ self.MonacoEnvironment = {
 
 onBeforeMount(() => {
     // 从存储中查询 boxes 数据
-    // window.api.getBoxes(data => {
-    //     boxes.value = data || [];
-    //     if(data.length == 0) {
-    //         boxes.value = [];
-    //         let j = Object.assign({}, tmpJ);
-    //         boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab0"}));
-    //     }
-    // });
-    boxes.value = [];
-    boxes.value.push(Object.assign(j, {sId: 'xp983fkls', title: "NewTab0"}));
+    window.api.getBoxe(res => {
+        console.info('box from localStorage===', res);
+        box.value = res || null;
+        if(null == res) {
+            box.value = Object.assign({}, tmpBox);
+            let j = Object.assign({}, tmpJ);
+            box.value.data.push(Object.assign(j, {id: window.api.sid(), title: "NewTab0"}));
+            return;
+        }
+        box.value.data = res.data;
+        switchTab(res.activeId);
+    });
+    // boxes.value = [];
+    // boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab0"}));
 });
 
+let editorInstance = ref(null);
 onMounted(() => {
-    const instance = monaco.editor.create(document.querySelector('.editor'), {
+    editorInstance = monaco.editor.create(document.querySelector('.editor'), {
         value: '',
         language: 'json',
         autoIndent: true,   // 自动缩进
@@ -84,12 +94,15 @@ onMounted(() => {
         fontSize: 15
     });
     showPlaceholder('');
-    instance.onDidBlurEditorWidget(() => {
-        showPlaceholder(instance.getValue());
+    editorInstance.onDidBlurEditorWidget(() => {
+        showPlaceholder(editorInstance.getValue());
+    });
+    editorInstance.onDidFocusEditorWidget(() => {
+        hidePlaceholder();
     });
 
-    instance.onDidFocusEditorWidget(() => {
-        hidePlaceholder();
+    editorInstance.onDidChangeModelContent(() => {
+        console.info('当前内容===%s', editorInstance.getValue());
     });
 
     function showPlaceholder(value) {
@@ -101,7 +114,37 @@ onMounted(() => {
     function hidePlaceholder() {
         document.querySelector('.editor-placeholder').style.display = "none";
     }
+
+    window.api.newTab(e => {
+        createTab();
+    });
+
 });
+
+function createTab() {
+    console.info('create new tab');
+    if('' == editorInstance.getValue()) {
+        console.info('当前页没有内容，不需要创建新tab页');
+        return;
+    }
+    let j = Object.assign({}, tmpJ);
+    let id = window.api.sid();
+    box.value.tabTitleIndex++;
+    box.value.data.push(Object.assign(j, {id: id, title: "NewTab" + box.value.tabTitleIndex}));
+    console.info('新建tab后的box==', box);
+    switchTab(id);
+}
+
+function switchTab(id) {
+    console.info(id);
+    console.info('content==%s', editorInstance.value);
+    for(let j of box.value.data) {
+        if(j.id === id) {
+            console.info(j);
+            break;
+        }
+    }
+}
 
 function copy(name) {
     console.info(name);

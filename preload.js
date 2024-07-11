@@ -1,5 +1,5 @@
 // const { contextBridge, ipcRenderer, shell } = require('electron');
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 const Store  = require('electron-store');
 const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('./package.json');
@@ -12,11 +12,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 contextBridge.exposeInMainWorld(
     'api', {
-        saveBoxes: (boxes, callback) => {
+        saveBoxe: (boxes, callback) => {
             callback(localStorage.setItem('saveBoxes', JSON.stringify(boxes)));
         },
-        getBoxes: (callback) => {
-            callback(JSON.parse(localStorage.getItem('boxes') || '[]'));
+        getBoxe: (callback) => {
+            callback(JSON.parse(localStorage.getItem('boxes') || null));
             // callback(JSON.parse(store.get('boxes') || '[]'));
         },
         sid: () => {
@@ -30,6 +30,9 @@ contextBridge.exposeInMainWorld(
         getSettings: (fn) => {
             console.info('asdf' + localStorage.getItem('settings'));
             return localStorage.getItem('settings');
+        },
+        newTab(fn) {
+            ipcRenderer.on('newTab', fn);
         }
     }
 );

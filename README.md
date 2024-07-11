@@ -12,7 +12,11 @@
 
 [Bootstrap Icons](https://icons.getbootstrap.com/)
 
-# monaco-editor api
+# monaco-editor
+
+[Monaco-editor 学习文档 (aydk.site)](https://aydk.site/)
+
+## 创建一个editor
 
 ```javascript
 monaco.editor.create(this.$refs.editor, {
