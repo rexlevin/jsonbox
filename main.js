@@ -23,16 +23,16 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-    if(process.platform !== 'darwin') app.quit();
+    if (process.platform !== 'darwin') app.quit();
 });
 
 const createWindow = () => {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
-    
+
     // 启动恢复主窗口位置和大小
-    let isMax = store.get('isMax') ? true : false
-        , position = store.get('mainPosition')
-        , config = {};
+    // let isMax = localStorage.getItem('isMax')
+    //     , position = localStorage.getItem('position')
+    let config = {};
     config.minWidth = 820;
     config.minHeight = 600;
     config.icon = path.join(__dirname, 'logo.png');
@@ -46,62 +46,36 @@ const createWindow = () => {
     config.autoHideMenuBar = true;
 
     win = new BrowserWindow(config);
-    if(isMax) win.maximize();
+
+    // win.webContents.send('getWindowParams', (isMax, position) => {
+    //     console.info(isMax + '==xx==' + position);
+    //     if (isMax) win.maximize();
+
+    //     // 启动恢复主窗口位置和大小
+    //     if (!isMax && !('' == position || undefined == position)) {
+    //         win.setContentBounds(position)
+    //     }
+    // });
+    win.webContents.send('getWindowParams');
+
     win.loadFile('dist/index.html');
 
     // 打开开发者窗口
-    win.webContents.openDevTools();
-    
-    // 启动恢复主窗口位置和大小
-    if(!isMax && !('' == position || undefined == position)) {
-        win.setContentBounds(position)
-    }
+    // win.webContents.openDevTools();
 
-    win.on('ready-to-show', ()=>{
+    win.on('ready-to-show', () => {
         win.show();
     });
-    
+
     // 关闭主窗口事件，记录窗口大小和位置
     win.on('close', (e) => {
         e.preventDefault();     // 阻止默认事件
-        let s = win.webContents.send('getSettings')
-            , closeAppConfirm = false;
-        console.info('s===' + s);
-        if(undefined === s) closeAppConfirm = false;
-        else if(undefined === s.closeAppConfirm) closeAppConfirm = false;
-        else closeAppConfirm = s.closeAppConfirm;
-        if(!closeAppConfirm) {
-            // store.set('isMax', win.isMaximized());
-            // store.set('mainPosition', win.getContentBounds());
-            let isMax = win.isMaximized()
-                , mainPosition = win.getContentBounds();
-            win.webContents.send('saveWindowState', isMax, mainPosition);
-            if(null != winSettings) winSettings.close();    // 关闭子窗口
-            // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
-            win.webContents.send('close');
-        } else {
-            dialog.showMessageBox({
-                type: 'info',
-                title: '确认关闭',
-                defaultId: 0,
-                message: '是否要退出 JsonBox ?',
-                buttons: ['取消', '退出']
-            }).then(result => {
-                // console.info(result);
-                // if(0 === result.response) {
-                //     // 取消
-                //     return;
-                // }
-                if(1 === result.response) {
-                    // 确认退出
-                    store.set('isMax', win.isMaximized());
-                    store.set('mainPosition', win.getContentBounds());
-                    if(null != winSettings) winSettings.close();    // 关闭子窗口
-                    // 这里窗口关闭时向渲染进程发送关闭消息，因为需要判断是否要保存 boxes
-                    win.webContents.send('close');
-                }
-            });
-        }
+        let isMax = win.isMaximized()
+            , mainPosition = win.getContentBounds();
+        // localStorage.setItem('isMax', isMax);
+        // localStorage.setItem('position', mainPosition);
+        console.info('now will close app');
+        win.webContents.send('closeApp', isMax, mainPosition);
     });
 }
 
@@ -164,7 +138,7 @@ const menuTemplate = [{
         label: 'Toggle Developer Tools',
         accelerator: isDarwin ? 'Alt+Cmd+I' : 'Alt+Shift+I',
         click: () => {
-            if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
+            if (win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
             else win.webContents.openDevTools();
         }
     }, {
@@ -181,3 +155,16 @@ const menuTemplate = [{
         }
     }]
 }];
+
+ipcMain.on('close-reply', (e, r) => {
+    console.info('now close app');
+    app.exit();
+});
+ipcMain.on('window-params-replay', (e, isMax, position) => {
+    console.info(isMax + '==xx==' + position);
+    if (isMax) win.maximize();
+    // 启动恢复主窗口位置和大小
+    if (!isMax && !('' == position || undefined == position)) {
+        win.setContentBounds(position)
+    }
+});

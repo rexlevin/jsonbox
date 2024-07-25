@@ -3,7 +3,7 @@
         <header>
             <div class="tabs header">
                 <ul>
-                    <li v-for="(item, index) in box.data">{{item.title}}</li>
+                    <li v-for="(item, index) in box.data" :class="item.id == box.activeId ? 'tab_selected' : 'tab_default'" @click="switchTab(item.id)">{{item.title}}</li>
                 </ul>
             </div>
         </header>
@@ -32,6 +32,8 @@
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, ref } from 'vue';
 import "bootstrap-icons/font/bootstrap-icons.css";
+import 'simple-ui/src/ui.css';
+// import 'simple-ui/src/ui.js';
 
 import * as YAML from "../lib/json.yaml";
 
@@ -53,7 +55,6 @@ const tmpBox = {
 
 const j = Object.assign({}, tmpJ);
 
-// const editor = ref(null);
 const box = ref(null);
 
 self.MonacoEnvironment = {
@@ -69,8 +70,10 @@ onBeforeMount(() => {
         box.value = res || null;
         if(null == res) {
             box.value = Object.assign({}, tmpBox);
+            let id = window.api.sid();
             let j = Object.assign({}, tmpJ);
-            box.value.data.push(Object.assign(j, {id: window.api.sid(), title: "NewTab0"}));
+            box.value.data.push(Object.assign(j, {id: id, title: "NewTab0"}));
+            box.value.activeId = id;
             return;
         }
         box.value.data = res.data;
@@ -102,24 +105,28 @@ onMounted(() => {
     });
 
     editorInstance.onDidChangeModelContent(() => {
+        // 这是editor的onchange事件
         console.info('当前内容===%s', editorInstance.getValue());
     });
-
-    function showPlaceholder(value) {
-        if (value === '') {
-            document.querySelector('.editor-placeholder').style.display = "initial";
-        }
-    }
-
-    function hidePlaceholder() {
-        document.querySelector('.editor-placeholder').style.display = "none";
-    }
 
     window.api.newTab(e => {
         createTab();
     });
+    window.api.closeTab(e => {
+        closeTab();
+    });
 
 });
+
+function showPlaceholder(value) {
+    if (value === '') {
+        document.querySelector('.editor-placeholder').style.display = "initial";
+    }
+}
+
+function hidePlaceholder() {
+    document.querySelector('.editor-placeholder').style.display = "none";
+}
 
 function createTab() {
     console.info('create new tab');
@@ -135,12 +142,46 @@ function createTab() {
     switchTab(id);
 }
 
+function closeTab() {
+    console.info('close current tab');
+    let currentId = box.value.activeId;
+    for(let i = 0; i < box.value.data.length; i++) {
+        if(box.value.data[i].id === currentId) {
+            box.value.data.splice(i, 1);
+            break;
+        }
+    }
+    if(box.value.data.length > 0) {
+        box.value.activeId = box.value.data[0].id;
+        editorInstance.setValue(box.value.data[0].content);
+        if('' != box.value.data[0].content) {
+            hidePlaceholder();
+        }
+    } else {
+        box.value.activeId = '';
+        showPlaceholder('');
+    }
+    console.info('closeTab后的box==', box);
+}
+
 function switchTab(id) {
-    console.info(id);
-    console.info('content==%s', editorInstance.value);
-    for(let j of box.value.data) {
-        if(j.id === id) {
-            console.info(j);
+    let currentId = box.value.activeId;
+    console.info('currentId==%s\nnewId====%s', currentId, id);
+    for(let t of box.value.data) {
+        if(t.id === currentId) {
+            t.content = editorInstance.getValue();
+            break;
+        }
+    }
+    console.info('content==%s', editorInstance.getValue());
+    for(let t of box.value.data) {
+        if(t.id === id) {
+            console.info('t=========%o', t);
+            box.value.activeId = t.id;
+            editorInstance.setValue(t.content);
+            if('' != t.content) {
+                hidePlaceholder();
+            }
             break;
         }
     }
@@ -161,8 +202,13 @@ function copy(name) {
 }
 </script>
 
-<style src="../assets/ui.css" scoped></style>
 <style scoped>
+#container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
+header { background-color: rgb(245, 245, 248);}
+main { flex: 1; background-color: #dee2e6;}
+footer { background-color: rgb(245, 245, 248);}
+
+
 .header {
     height:35px;
 }

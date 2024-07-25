@@ -16,6 +16,8 @@
 
 [Monaco-editor 学习文档 (aydk.site)](https://aydk.site/)
 
+[Monaco Editor Translate (wf0.github.io)](https://wf0.github.io/)
+
 ## 创建一个editor
 
 ```javascript
