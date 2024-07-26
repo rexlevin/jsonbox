@@ -1,15 +1,15 @@
 const { app, BrowserWindow, Menu, Tray, ipcMain, dialog, shell } = require('electron')
 const path = require('path')
-const Store = require('electron-store');  // 引入store
+const Store  = require('electron-store');
 const { sandboxed } = require('process');
+
+Store.initRenderer();
 
 // 清除启动时控制台的“Electron Security Warning (Insecure Content-Security-Policy)”报错信息
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 // 禁用当前应用程序的硬件加速
 app.disableHardwareAcceleration();
-
-const store = new Store();  // 开启electron-store
 
 const isDarwin = process.platform === 'darwin' ? true : false;
 
@@ -157,11 +157,10 @@ const menuTemplate = [{
 }];
 
 ipcMain.on('close-reply', (e, r) => {
-    console.info('now close app');
+    console.info('now close app==' + r);
     app.exit();
 });
-ipcMain.on('window-params-replay', (e, isMax, position) => {
-    console.info(isMax + '==xx==' + position);
+ipcMain.on('window-params-reply', (e, isMax, position) => {
     if (isMax) win.maximize();
     // 启动恢复主窗口位置和大小
     if (!isMax && !('' == position || undefined == position)) {

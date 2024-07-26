@@ -65,14 +65,14 @@ self.MonacoEnvironment = {
 
 onBeforeMount(() => {
     // 从存储中查询 boxes 数据
-    window.api.getBoxe(res => {
-        console.info('box from localStorage===', res);
+    window.api.getBox(res => {
+        console.info('box from store===%o', res);
         box.value = res || null;
         if(null == res) {
             box.value = Object.assign({}, tmpBox);
             let id = window.api.sid();
             let j = Object.assign({}, tmpJ);
-            box.value.data.push(Object.assign(j, {id: id, title: "NewTab0"}));
+            box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
             box.value.activeId = id;
             return;
         }
@@ -80,7 +80,7 @@ onBeforeMount(() => {
         switchTab(res.activeId);
     });
     // boxes.value = [];
-    // boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab0"}));
+    // boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab 0"}));
 });
 
 let editorInstance = ref(null);
@@ -115,6 +115,19 @@ onMounted(() => {
     window.api.closeTab(e => {
         closeTab();
     });
+    window.api.closeApp((isMax, position) => {
+        console.info('isMax==%s, position=%o', isMax, position);
+        // 把当前的数据存入box
+        for (let j of box.value.data) {
+            if(j.id === box.value.activeId) {
+                j.content = editorInstance.getValue();
+                break;
+            }
+        }
+        console.info('box=====%o', box.value);
+        // 把box数据存入store
+        window.api.saveBox(box.value);
+    });
 
 });
 
@@ -137,7 +150,7 @@ function createTab() {
     let j = Object.assign({}, tmpJ);
     let id = window.api.sid();
     box.value.tabTitleIndex++;
-    box.value.data.push(Object.assign(j, {id: id, title: "NewTab" + box.value.tabTitleIndex}));
+    box.value.data.push(Object.assign(j, {id: id, title: "NewTab " + box.value.tabTitleIndex}));
     console.info('新建tab后的box==', box);
     switchTab(id);
 }

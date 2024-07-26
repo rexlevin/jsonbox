@@ -14,33 +14,21 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // 接收来自主窗口的消息，并作出响应
-ipcRenderer.on('closeApp', (event, isMax, position) => {
-    console.info(isMax + '=======' + position);
-    console.info(event);
-    localStorage.setItem('isMax', isMax);
-    localStorage.setItem('position', position);
-    store.set('isMax', isMax);
-    store.set('position', position);
-    event.sender.send('close-reply', 'ok');
-});
-
-// 接收来自主窗口的消息，并作出响应
 ipcRenderer.on('getWindowParams', (event) => {
-    // const isMax = localStorage.getItem('isMax') === 'true';
-    // const position = localStorage.getItem('position');
-    const isMax = store.get('isMax') === 'true';
-    const position = store.get('position');
+    let isMax = store.get('isMax') === 'true';
+    let position = store.get('position');
     event.sender.send('window-params-reply', isMax, position);
 });
 
 contextBridge.exposeInMainWorld(
     'api', {
-        saveBoxe: (boxes, callback) => {
-            callback(localStorage.setItem('saveBoxes', JSON.stringify(boxes)));
+        saveBox: (box, callback) => {
+            store.set('box', box);
+            callback();
         },
-        getBoxe: (callback) => {
-            callback(JSON.parse(localStorage.getItem('boxes') || null));
-            // callback(JSON.parse(store.get('boxes') || '[]'));
+        getBox: (callback) => {
+            console.info('box from store===%o', (store.get('box') || null));
+            callback(store.get('box') || null);
         },
         sid: () => {
             const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
@@ -60,10 +48,22 @@ contextBridge.exposeInMainWorld(
         closeTab(fn) {
             ipcRenderer.on('closeTab', fn);
         },
-        // closeApp(ar) {
-        //     ipcRenderer.on('closeApp', (ar) => {
-        //         console.info(ar + '=======');
-        //     });
-        // },
+        closeApp(fn) {
+            // ipcRenderer.on('closeApp', (event, isMax, position) => {
+            //     store.set('isMax', isMax);
+            //     store.set('position', position);
+            //     event.sender.send('close-reply', 'ok');
+            // });
+            ipcRenderer.on('closeApp', fn(isMax, position));
+        }
     }
 );
+
+
+
+// 接收来自主窗口的消息，并作出响应
+// ipcRenderer.on('closeApp', (event, isMax, position) => {
+//     store.set('isMax', isMax);
+//     store.set('position', position);
+//     event.sender.send('close-reply', 'ok');
+// });
