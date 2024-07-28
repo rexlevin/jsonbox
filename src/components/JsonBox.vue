@@ -76,11 +76,8 @@ onBeforeMount(() => {
             box.value.activeId = id;
             return;
         }
-        box.value.data = res.data;
-        switchTab(res.activeId);
+        box.value = res;
     });
-    // boxes.value = [];
-    // boxes.value.push(Object.assign(j, {sId: window.api.sid(), title: "NewTab 0"}));
 });
 
 let editorInstance = ref(null);
@@ -103,11 +100,13 @@ onMounted(() => {
     editorInstance.onDidFocusEditorWidget(() => {
         hidePlaceholder();
     });
-
     editorInstance.onDidChangeModelContent(() => {
         // 这是editor的onchange事件
         console.info('当前内容===%s', editorInstance.getValue());
     });
+
+    // switchTab(box.value.activeId);
+    init();
 
     window.api.newTab(e => {
         createTab();
@@ -115,8 +114,10 @@ onMounted(() => {
     window.api.closeTab(e => {
         closeTab();
     });
-    window.api.closeApp((isMax, position) => {
-        console.info('isMax==%s, position=%o', isMax, position);
+    window.api.closeApp((event, isMax, position) => {
+        console.info(event);
+        // console.info(JSON.stringify(event));
+        console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
         // 把当前的数据存入box
         for (let j of box.value.data) {
             if(j.id === box.value.activeId) {
@@ -126,7 +127,11 @@ onMounted(() => {
         }
         console.info('box=====%o', box.value);
         // 把box数据存入store
-        window.api.saveBox(box.value);
+        window.api.saveBox(JSON.stringify(box.value));
+        window.api.savePosition(isMax, position);
+        window.api.closeAppReply();
+        // console.info('e.sender==%o', event.sender);
+        // event.sender.send('close-reply', 'ok');
     });
 
 });
@@ -157,22 +162,33 @@ function createTab() {
 
 function closeTab() {
     console.info('close current tab');
+    if(box.value.data.length === 1
+         && box.value.data[0].content === ''
+    ) {
+        console.info('当前只有一个空白页，无法关闭');
+        return;
+    }
+    if(box.value.data.length === 1) {
+        box.value.data[0].title = 'NewTab 0';
+        box.value.data[0].content = '';
+        editorInstance.setValue('');
+        console.info('关闭后只剩下一个空白页了');
+        return;
+    }
     let currentId = box.value.activeId;
     for(let i = 0; i < box.value.data.length; i++) {
         if(box.value.data[i].id === currentId) {
+            let nextId;
+            if(i == 0) {
+                nextId = 1;
+            } else {
+                nextId = i - 1;
+            }
+            box.value.activeId = box.value.data[nextId].id;
+            editorInstance.setValue(box.value.data[nextId].content);
             box.value.data.splice(i, 1);
             break;
         }
-    }
-    if(box.value.data.length > 0) {
-        box.value.activeId = box.value.data[0].id;
-        editorInstance.setValue(box.value.data[0].content);
-        if('' != box.value.data[0].content) {
-            hidePlaceholder();
-        }
-    } else {
-        box.value.activeId = '';
-        showPlaceholder('');
     }
     console.info('closeTab后的box==', box);
 }
@@ -180,7 +196,9 @@ function closeTab() {
 function switchTab(id) {
     let currentId = box.value.activeId;
     console.info('currentId==%s\nnewId====%s', currentId, id);
+    console.info('box.value.data=====%o', box.value.data);
     for(let t of box.value.data) {
+        console.info('tttttt==%o', t);
         if(t.id === currentId) {
             t.content = editorInstance.getValue();
             break;
@@ -198,6 +216,27 @@ function switchTab(id) {
             break;
         }
     }
+}
+
+function init() {
+    // if(null == box.value.activeId) {
+    //     let id = window.api.sid();
+    //     box.value.activeId = id;
+    //     let j = Object.assign({}, tmpJ);
+    //     box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
+    //     editorInstance.setValue(box.value.data[0].content);
+    //     hidePlaceholder();
+    // } else {
+        for(let t of box.value.data) {
+            if(t.id === box.value.activeId) {
+                editorInstance.setValue(t.content);
+                if(''!= t.content) {
+                    hidePlaceholder();
+                }
+                break;
+            }
+        }
+    // }
 }
 
 function copy(name) {

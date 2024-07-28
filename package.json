@@ -9,7 +9,7 @@
         "build": "vite build",
         "preview": "vite preview",
         "start2": "vite build & electron .",
-        "start": "electron ."
+        "start": "electron . --no-sandbox"
     },
     "dependencies": {
         "bootstrap-icons": "^1.10.3",

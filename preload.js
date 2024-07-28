@@ -22,9 +22,13 @@ ipcRenderer.on('getWindowParams', (event) => {
 
 contextBridge.exposeInMainWorld(
     'api', {
-        saveBox: (box, callback) => {
-            store.set('box', box);
-            callback();
+        saveBox: (box) => {
+            store.set('box', JSON.parse(box));
+        },
+        savePosition(isMax, position) {
+            store.set('isMax', isMax);
+            store.set('position', position);
+            return;
         },
         getBox: (callback) => {
             console.info('box from store===%o', (store.get('box') || null));
@@ -54,7 +58,10 @@ contextBridge.exposeInMainWorld(
             //     store.set('position', position);
             //     event.sender.send('close-reply', 'ok');
             // });
-            ipcRenderer.on('closeApp', fn(isMax, position));
+            ipcRenderer.on('closeApp', fn);
+        },
+        closeAppReply() {
+            ipcRenderer.send('close-reply', 'ok');
         }
     }
 );

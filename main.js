@@ -161,6 +161,7 @@ ipcMain.on('close-reply', (e, r) => {
     app.exit();
 });
 ipcMain.on('window-params-reply', (e, isMax, position) => {
+    console.info('isMax===' + isMax + ', position==' + position);
     if (isMax) win.maximize();
     // 启动恢复主窗口位置和大小
     if (!isMax && !('' == position || undefined == position)) {
