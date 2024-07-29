@@ -9,7 +9,35 @@
         "build": "vite build",
         "preview": "vite preview",
         "start2": "vite build & electron .",
-        "start": "electron . --no-sandbox"
+        "start": "electron . --no-sandbox",
+        "build-pack": "electron-builder --dir",
+        "build-dist:linux": "electron-builder -l",
+        "build-dist:win": "electron-builder -w"
+    },
+    "build": {
+        "appId": "com.lizl6.jsonbox",
+        "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+        "asar": true,
+        "directories": {
+            "output": "./build"
+        },
+        "linux": {
+            "target": [
+                "appimage"
+            ]
+        },
+        "win": {
+            "icon": "./public/logo.png",
+            "target": [
+                "nsis"
+            ]
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": false,
+            "allowElevation": true,
+            "shortcutName": "json工具箱"
+        }
     },
     "dependencies": {
         "bootstrap-icons": "^1.10.3",
