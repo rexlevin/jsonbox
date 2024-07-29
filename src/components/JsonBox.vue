@@ -257,7 +257,7 @@ function copy(name) {
 <style scoped>
 #container { display: flex; flex-direction:column; width: 100vw; height: 100vh; margin: 0; padding: 0; }
 header { background-color: rgb(245, 245, 248);}
-main { flex: 1; background-color: #dee2e6;}
+main { flex: 1; background-color: #dee2e6; min-height:0;}
 footer { background-color: rgb(245, 245, 248);}
 
 
