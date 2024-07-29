@@ -24,7 +24,8 @@
         "linux": {
             "target": [
                 "appimage"
-            ]
+            ],
+            "icon": "./public/logo.png"
         },
         "win": {
             "icon": "./public/logo.png",
