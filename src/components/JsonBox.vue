@@ -270,7 +270,9 @@ footer { background-color: rgb(245, 245, 248);}
     
 }
 .btngroup{
-    width: 100%; height: 100%; float: right;
+    width: 100%; height: 100%; display: flex;
+
+justify-content: flex-end;
 }
 
 .icon-span {display:inline-block; width: 40px; height: 35px; text-align: center;
