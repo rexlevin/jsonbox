@@ -14,6 +14,9 @@
         </main>
         <footer>
             <div class="bottom">
+                <div class="divSettings" title="设置 alt+s">
+                    <span class="icon-span"><i class="bi bi-sliders icon"></i></span>
+                </div>
                 <div style="height: 100%;"></div>
                 <div class="btngroup">
                     <span class="icon-span" title="格式化 shift+alt+f"><i class="bi bi-braces icon"></i></span>
@@ -21,8 +24,6 @@
                     <span class="icon-span" @click="copy('yaml')" title="复制为yaml"><i class="bi bi-filetype-yml icon"></i></span>
                     <span class="icon-span" title="复制为xml"><i class="bi bi-code-slash icon"></i></span>
                 </div>
-                <div class="divSettings" title="设置 alt+s">
-                    <span class="icon-span"><i class="bi bi-sliders icon"></i></span></div>
             </div>
         </footer>
     </div>
@@ -66,7 +67,6 @@ self.MonacoEnvironment = {
 onBeforeMount(() => {
     // 从存储中查询 boxes 数据
     window.api.getBox(res => {
-        console.info('box from store===%o', res);
         box.value = res || null;
         if(null == res) {
             box.value = Object.assign({}, tmpBox);
@@ -91,7 +91,8 @@ onMounted(() => {
         formatOnPaste: true,    // 粘贴即格式化，默认false
         formatOnType: true,     // 按键即格式化，默认false
         contextmenu: true,     // 右键菜单
-        fontSize: 15
+        fontSize: 15,
+        mouseWheelZoom: true
     });
     showPlaceholder('');
     editorInstance.onDidBlurEditorWidget(() => {
@@ -115,7 +116,7 @@ onMounted(() => {
         closeTab();
     });
     window.api.closeApp((event, isMax, position) => {
-        console.info(event);
+        console.info('editor===%o',editorInstance);
         // console.info(JSON.stringify(event));
         console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
         // 把当前的数据存入box
@@ -130,8 +131,6 @@ onMounted(() => {
         window.api.saveBox(JSON.stringify(box.value));
         window.api.savePosition(isMax, position);
         window.api.closeAppReply();
-        // console.info('e.sender==%o', event.sender);
-        // event.sender.send('close-reply', 'ok');
     });
 
 });
@@ -267,7 +266,7 @@ footer { background-color: rgb(245, 245, 248);}
 .bottom{
     height:35px; width: 100%;
     display: grid;
-    grid-template-columns: auto 300px 50px;
+    grid-template-columns: 50px auto 300px;
     
 }
 .btngroup{

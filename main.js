@@ -79,6 +79,33 @@ const createWindow = () => {
     });
 }
 
+function openSettings() {
+    if(winSettings) {
+        winSettings.focus();
+        return;
+    }
+    let config = {
+        width: 800,
+        height: 600,
+        resizable: false,
+        icon: path.join(__dirname, './src/logo.png'),
+        webPreferences: {
+            preload: path.join(__dirname, './src/preload.js'),
+            spellcheck: false
+        },
+        show: false,
+        autoHideMenuBar: true
+    };
+    winSettings = new BrowserWindow(config);
+    winSettings.loadFile('./src/settings.html');
+    winSettings.on('close', () => {
+        winSettings = null;
+    });
+    winSettings.on('ready-to-show', () => {
+        winSettings.show();
+    });
+}
+
 const menuTemplate = [{
     label: 'File',
     submenu: [{
