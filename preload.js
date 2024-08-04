@@ -22,6 +22,9 @@ ipcRenderer.on('getWindowParams', (event) => {
 
 contextBridge.exposeInMainWorld(
     'api', {
+        openSettings: () => {
+            ipcRenderer.send('openSettings');
+        },
         saveBox: (box) => {
             store.set('box', JSON.parse(box));
         },

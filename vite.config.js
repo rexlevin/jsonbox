@@ -7,7 +7,14 @@ export default defineConfig({
     plugins: [vue()],
     build: {
         chunkSizeWarningLimit: 1500
-    }
+    },
+    // server: {
+    //     host: '0.0.0.0',
+    //     port: 13000,
+    //     open: true,
+    //     cors: true,
+    //     proxy: {}
+    // },
     // optimizeDeps: {
     //     include: [
     //         'vue',

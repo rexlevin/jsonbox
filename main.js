@@ -39,6 +39,7 @@ const createWindow = () => {
     config.webPreferences = {
         sandbox: false,     // 没有这个配置，加载不到 preload.js
         preload: path.join(__dirname, 'preload.js'),
+        // preload: 'http://localhost:13000',
         spellcheck: false
     }
     config.useContentSize = true;
@@ -47,18 +48,9 @@ const createWindow = () => {
 
     win = new BrowserWindow(config);
 
-    // win.webContents.send('getWindowParams', (isMax, position) => {
-    //     console.info(isMax + '==xx==' + position);
-    //     if (isMax) win.maximize();
-
-    //     // 启动恢复主窗口位置和大小
-    //     if (!isMax && !('' == position || undefined == position)) {
-    //         win.setContentBounds(position)
-    //     }
-    // });
     win.webContents.send('getWindowParams');
 
-    win.loadFile('dist/index.html');
+    win.loadURL('file://' + __dirname + '/dist/index.html');
 
     // 打开开发者窗口
     // win.webContents.openDevTools();
@@ -72,8 +64,6 @@ const createWindow = () => {
         e.preventDefault();     // 阻止默认事件
         let isMax = win.isMaximized()
             , mainPosition = win.getContentBounds();
-        // localStorage.setItem('isMax', isMax);
-        // localStorage.setItem('position', mainPosition);
         console.info('now will close app');
         win.webContents.send('closeApp', isMax, mainPosition);
     });
@@ -88,16 +78,16 @@ function openSettings() {
         width: 800,
         height: 600,
         resizable: false,
-        icon: path.join(__dirname, './src/logo.png'),
+        icon: path.join(__dirname, 'logo.png'),
         webPreferences: {
-            preload: path.join(__dirname, './src/preload.js'),
+            preload: path.join(__dirname, 'preload.js'),
             spellcheck: false
         },
         show: false,
         autoHideMenuBar: true
     };
     winSettings = new BrowserWindow(config);
-    winSettings.loadFile('./src/settings.html');
+    winSettings.loadURL('file://' + __dirname + '/dist/index.html#settings');
     winSettings.on('close', () => {
         winSettings = null;
     });
@@ -194,4 +184,7 @@ ipcMain.on('window-params-reply', (e, isMax, position) => {
     if (!isMax && !('' == position || undefined == position)) {
         win.setContentBounds(position)
     }
+});
+ipcMain.on('openSettings', () => {
+    openSettings();
 });

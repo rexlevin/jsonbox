@@ -5,7 +5,7 @@
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
     "main": "main.js",
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --host 0.0.0.0",
         "build": "vite build",
         "preview": "vite preview",
         "start2": "vite build & electron .",
