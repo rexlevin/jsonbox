@@ -1,12 +1,13 @@
-import Settings from '@/components/Settings.vue';
+import {createRouter, createWebHashHistory} from 'vue-router';
+import Settings from '../components/Settings.vue';
 
 const router = createRouter({
     routes: [
-        // {
-        //     path: '/',
-        //     name: 'home',
-        //     component: () => import('@/views/Home.vue')
-        // },
+        {
+            path: '/',
+            name: 'home',
+            component: () => import('../components/JsonBox.vue')
+        },
         // {
         //     path: '/about',
         //     name: 'about',
@@ -17,5 +18,8 @@ const router = createRouter({
             name: 'settings',
             component: Settings
         }
-    ]
+    ],
+    history: createWebHashHistory()
 });
+
+export default router;

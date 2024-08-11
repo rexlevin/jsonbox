@@ -1,5 +1,4 @@
-// const { contextBridge, ipcRenderer, shell } = require('electron');
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer, shell } = require('electron');
 const Store  = require('electron-store');
 const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('./package.json');
@@ -22,9 +21,12 @@ ipcRenderer.on('getWindowParams', (event) => {
 
 contextBridge.exposeInMainWorld(
     'api', {
-        openSettings: () => {
-            ipcRenderer.send('openSettings');
+        openDevTools: () => {
+            ipcRenderer.on('openDevTools');
         },
+        // openSettings: () => {
+        //     ipcRenderer.send('openSettings');
+        // },
         saveBox: (box) => {
             store.set('box', JSON.parse(box));
         },
@@ -49,12 +51,12 @@ contextBridge.exposeInMainWorld(
             console.info('asdf' + localStorage.getItem('settings'));
             return localStorage.getItem('settings');
         },
-        newTab(fn) {
-            ipcRenderer.on('newTab', fn);
-        },
-        closeTab(fn) {
-            ipcRenderer.on('closeTab', fn);
-        },
+        // newTab(fn) {
+        //     ipcRenderer.on('newTab', fn);
+        // },
+        // closeTab(fn) {
+        //     ipcRenderer.on('closeTab', fn);
+        // },
         closeApp(fn) {
             // ipcRenderer.on('closeApp', (event, isMax, position) => {
             //     store.set('isMax', isMax);

@@ -3,5 +3,6 @@ import JsonBox from './components/JsonBox.vue';
 </script>
 
 <template>
-    <JsonBox/>
+    <!-- <JsonBox/> -->
+    <router-view></router-view>
 </template>

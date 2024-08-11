@@ -31,10 +31,9 @@
 
 <script setup>
 import * as monaco from 'monaco-editor';
-import { onBeforeMount, onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'simple-ui/src/ui.css';
-// import 'simple-ui/src/ui.js';
 
 import * as YAML from "../lib/json.yaml";
 
@@ -57,6 +56,20 @@ const tmpBox = {
 const j = Object.assign({}, tmpJ);
 
 const box = ref(null);
+
+// 监听键盘事件
+const handleKeydown = (event) => {
+    if (event.altKey && event.key === 's') {
+        window.open('index.html#/settings', '_blank');
+    } else if (event.ctrlKey && event.key === 't') {
+        createTab();
+    } else if (event.ctrlKey && event.key === 'w') {
+        closeTab();
+    } else if (event.altKey && event.shiftKey && event.key === 'i') {
+        alert('哈哈');
+        window.api.openDevTools();
+    }
+};
 
 self.MonacoEnvironment = {
     getWorker: function(moduleId, label) {
@@ -82,6 +95,9 @@ onBeforeMount(() => {
 
 let editorInstance = ref(null);
 onMounted(() => {
+    // 挂载键盘监听
+    window.addEventListener('keydown', handleKeydown);
+
     editorInstance = monaco.editor.create(document.querySelector('.editor'), {
         value: '',
         language: 'json',
@@ -91,7 +107,7 @@ onMounted(() => {
         formatOnPaste: true,    // 粘贴即格式化，默认false
         formatOnType: true,     // 按键即格式化，默认false
         contextmenu: true,     // 右键菜单
-        fontSize: 15,
+        fontSize: 17,
         mouseWheelZoom: true
     });
     showPlaceholder('');
@@ -104,17 +120,13 @@ onMounted(() => {
     editorInstance.onDidChangeModelContent(() => {
         // 这是editor的onchange事件
         console.info('当前内容===%s', editorInstance.getValue());
+        // editorInstance.value.trigger('anyString', 'editor.action.formatDocument');
+        // toRaw(editorInstance.value).setValue(toRaw(editorInstance.value).getValue())
     });
 
     // switchTab(box.value.activeId);
     init();
 
-    window.api.newTab(e => {
-        createTab();
-    });
-    window.api.closeTab(e => {
-        closeTab();
-    });
     window.api.closeApp((event, isMax, position) => {
         console.info('editor===%o',editorInstance);
         // console.info(JSON.stringify(event));
@@ -133,6 +145,12 @@ onMounted(() => {
         window.api.closeAppReply();
     });
 
+});
+
+// 组件卸载时解绑事件
+onUnmounted(() => {
+    // 移除keydown监听
+    window.removeEventListener('keydown', handleKeydown);
 });
 
 function showPlaceholder(value) {
@@ -226,7 +244,7 @@ function init() {
     //     editorInstance.setValue(box.value.data[0].content);
     //     hidePlaceholder();
     // } else {
-        for(let t of box.value.data) {
+        for (let t of box.value.data) {
             if(t.id === box.value.activeId) {
                 editorInstance.setValue(t.content);
                 if(''!= t.content) {
@@ -236,10 +254,6 @@ function init() {
             }
         }
     // }
-}
-
-function openSettings() {
-    window.api.openSettings();
 }
 
 function copy(name) {
