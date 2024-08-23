@@ -59,14 +59,16 @@ const box = ref(null);
 
 // 监听键盘事件
 const handleKeydown = (event) => {
+    console.info(event);
     if (event.altKey && event.key === 's') {
         window.open('index.html#/settings', '_blank');
     } else if (event.ctrlKey && event.key === 't') {
         createTab();
     } else if (event.ctrlKey && event.key === 'w') {
         closeTab();
-    } else if (event.altKey && event.shiftKey && event.key === 'i') {
-        alert('哈哈');
+    } else if(event.ctrlKey && event.key == 'r') {
+        window.api.reload();
+    } else if (event.altKey && event.shiftKey && (event.key === 'i' || event.key === 'I')) {
         window.api.openDevTools();
     }
 };
@@ -124,9 +126,10 @@ onMounted(() => {
         // toRaw(editorInstance.value).setValue(toRaw(editorInstance.value).getValue())
     });
 
-    // switchTab(box.value.activeId);
     init();
-
+    
+    // window.api.closeTab(() => closeTab());
+    // window.api.newTab(() => createTab());
     window.api.closeApp((event, isMax, position) => {
         console.info('editor===%o',editorInstance);
         // console.info(JSON.stringify(event));
@@ -144,6 +147,7 @@ onMounted(() => {
         window.api.savePosition(isMax, position);
         window.api.closeAppReply();
     });
+
 
 });
 
@@ -215,7 +219,7 @@ function switchTab(id) {
     console.info('currentId==%s\nnewId====%s', currentId, id);
     console.info('box.value.data=====%o', box.value.data);
     for(let t of box.value.data) {
-        console.info('tttttt==%o', t);
+        // console.info('tttttt==%o', t);
         if(t.id === currentId) {
             t.content = editorInstance.getValue();
             break;
@@ -224,7 +228,7 @@ function switchTab(id) {
     console.info('content==%s', editorInstance.getValue());
     for(let t of box.value.data) {
         if(t.id === id) {
-            console.info('t=========%o', t);
+            // console.info('t=========%o', t);
             box.value.activeId = t.id;
             editorInstance.setValue(t.content);
             if('' != t.content) {

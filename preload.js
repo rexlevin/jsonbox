@@ -21,12 +21,15 @@ ipcRenderer.on('getWindowParams', (event) => {
 
 contextBridge.exposeInMainWorld(
     'api', {
-        openDevTools: () => {
-            ipcRenderer.on('openDevTools');
+        reload: () => {
+            ipcRenderer.send('reload');
         },
-        // openSettings: () => {
-        //     ipcRenderer.send('openSettings');
-        // },
+        openDevTools: () => {
+            ipcRenderer.send('openDevTools');
+        },
+        openSettings: () => {
+            ipcRenderer.send('openSettings');
+        },
         saveBox: (box) => {
             store.set('box', JSON.parse(box));
         },
@@ -58,11 +61,6 @@ contextBridge.exposeInMainWorld(
         //     ipcRenderer.on('closeTab', fn);
         // },
         closeApp(fn) {
-            // ipcRenderer.on('closeApp', (event, isMax, position) => {
-            //     store.set('isMax', isMax);
-            //     store.set('position', position);
-            //     event.sender.send('close-reply', 'ok');
-            // });
             ipcRenderer.on('closeApp', fn);
         },
         closeAppReply() {

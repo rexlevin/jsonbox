@@ -42,7 +42,7 @@ const createWindow = () => {
         },
         useContentSize: true,
         show: false,
-        // autoHideMenuBar: true,
+        autoHideMenuBar: true,
     };
 
     win = new BrowserWindow(config);
@@ -52,6 +52,8 @@ const createWindow = () => {
     // win.loadURL('file://' + __dirname + '/dist/index.html');
     // win.loadURL('file://${__dirname}/dist/index.html');
     win.loadURL(path.join('file://', __dirname, '/dist/index.html'));
+    
+    // win.setMenu(Menu.buildFromTemplate(menuTemplate));
 
     // 打开开发者窗口
     // win.webContents.openDevTools();
@@ -191,7 +193,12 @@ ipcMain.on('window-params-reply', (e, isMax, position) => {
         win.setContentBounds(position)
     }
 });
+ipcMain.on('reload', () => {
+    win.reload();
+});
 ipcMain.on('openDevTools', () => {
     // console.info(22222222222);
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
+    if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
+    else win.webContents.openDevTools();
 });
