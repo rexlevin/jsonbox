@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer, shell } = require('electron');
+const path = require('path')
 const Store  = require('electron-store');
 const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
 const package = require('./package.json');
@@ -21,14 +22,30 @@ ipcRenderer.on('getWindowParams', (event) => {
 
 contextBridge.exposeInMainWorld(
     'api', {
+        notification: (title, options) => {
+            options = Object.assign({
+                // body: 'You have a new notification!',
+                // icon: 'path/to/your/icon.png',
+                icon: path.join(__dirname, 'logo.png'),
+                // silent: false,
+                // sound: true,
+                // click: () => {
+                //     console.log('Notification clicked!');
+                // },
+                // Urgency level
+                // urgency: 'normal'
+            }, options);
+            new window.Notification(title, options);
+        },
         reload: () => {
             ipcRenderer.send('reload');
         },
         openDevTools: () => {
             ipcRenderer.send('openDevTools');
         },
-        openSettings: () => {
-            ipcRenderer.send('openSettings');
+        openWindow: (url, name, options) => {
+            console.info('openWindow, url=%s, name=%s, option=%o', url, name, options);
+            ipcRenderer.send('openWindow', url, name, option);
         },
         saveBox: (box) => {
             store.set('box', JSON.parse(box));

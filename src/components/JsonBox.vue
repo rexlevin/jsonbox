@@ -19,10 +19,10 @@
                 </div>
                 <div style="height: 100%;"></div>
                 <div class="btngroup">
-                    <span class="icon-span" title="格式化 shift+alt+f"><i class="bi bi-braces icon"></i></span>
-                    <span class="icon-span" title="复制压缩"><i class="bi bi-chevron-contract icon"></i></span>
+                    <!-- <span class="icon-span" title="格式化 shift+alt+f"><i class="bi bi-braces icon"></i></span> -->
+                    <span class="icon-span" @click="copy('minify')" title="复制压缩"><i class="bi bi-chevron-contract icon"></i></span>
                     <span class="icon-span" @click="copy('yaml')" title="复制为yaml"><i class="bi bi-filetype-yml icon"></i></span>
-                    <span class="icon-span" title="复制为xml"><i class="bi bi-code-slash icon"></i></span>
+                    <span class="icon-span" @click="copy('xml')" title="复制为xml"><i class="bi bi-code-slash icon"></i></span>
                 </div>
             </div>
         </footer>
@@ -35,7 +35,9 @@ import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'simple-ui/src/ui.css';
 
-import * as YAML from "../lib/json.yaml";
+import X2js from 'x2js';
+import * as Yaml from "../lib/json.yaml";
+import * as FormatXml from "../lib/format.xml";
 
 //import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
@@ -59,9 +61,10 @@ const box = ref(null);
 
 // 监听键盘事件
 const handleKeydown = (event) => {
-    console.info(event);
+    // console.info(event);
     if (event.altKey && event.key === 's') {
-        window.open('index.html#/settings', '_blank');
+        // window.open('index.html#/settings', '_blank', 'resizable=false');
+        openSettings();
     } else if (event.ctrlKey && event.key === 't') {
         createTab();
     } else if (event.ctrlKey && event.key === 'w') {
@@ -121,9 +124,7 @@ onMounted(() => {
     });
     editorInstance.onDidChangeModelContent(() => {
         // 这是editor的onchange事件
-        console.info('当前内容===%s', editorInstance.getValue());
-        // editorInstance.value.trigger('anyString', 'editor.action.formatDocument');
-        // toRaw(editorInstance.value).setValue(toRaw(editorInstance.value).getValue())
+        // console.info('当前内容===%s', editorInstance.getValue());
     });
 
     init();
@@ -225,7 +226,7 @@ function switchTab(id) {
             break;
         }
     }
-    console.info('content==%s', editorInstance.getValue());
+    // console.info('content==%s', editorInstance.getValue());
     for(let t of box.value.data) {
         if(t.id === id) {
             // console.info('t=========%o', t);
@@ -260,18 +261,41 @@ function init() {
     // }
 }
 
+function openSettings() {
+    let options = {
+        width: 800,
+        height: 600,
+        resizable: false,
+        // webPreferences: {
+        //     nodeIntegration: true,
+        //     contextIsolation: false
+        // }
+    };
+    window.api.openWindow('index.html#/settings', 'settings', JSON.stringify(options));
+}
+
 function copy(name) {
     console.info(name);
-    let re,
-        jsonObject = '';
+    let re;
     const handlers = {
-        'xml': function() {},
-        'yml': function() {
-            re = YAML.j2y(j.content);
+        'minify': function(jsonObj) {
+            re = JSON.stringify(jsonObj);
+        },
+        'xml': function(jsonObj) {
+            var x2js = new X2js({
+                useDoubleQuotes: true
+            });
+            re = x2js.js2xml(jsonObj)
+            re = FormatXml.formatXml(re);
+        },
+        'yaml': function(jsonObj) {
+            re = Yaml.j2y(jsonObj);
         }
     };
-    handlers[name](jsonObject);
-    navigator.clipboard.writeText(re)
+    handlers[name](JSON.parse(editorInstance.getValue()));
+    // console.info(re);
+    navigator.clipboard.writeText(re);
+    window.api.notification('复制成功', {body: `${name}格式内容已经复制到剪贴板`});
 }
 </script>
 

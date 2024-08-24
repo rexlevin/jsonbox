@@ -28,7 +28,7 @@ app.on('window-all-closed', () => {
 
 const createWindow = () => {
     // Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
-    Menu.setApplicationMenu(null);
+    // Menu.setApplicationMenu(null);
 
     let config = {
         minWidth: 820,
@@ -54,6 +54,7 @@ const createWindow = () => {
     win.loadURL(path.join('file://', __dirname, '/dist/index.html'));
     
     // win.setMenu(Menu.buildFromTemplate(menuTemplate));
+    win.setMenu(null);
 
     // 打开开发者窗口
     // win.webContents.openDevTools();
@@ -201,4 +202,28 @@ ipcMain.on('openDevTools', () => {
     // win.webContents.openDevTools();
     if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
     else win.webContents.openDevTools();
+});
+
+// 设置一个map集合，用于存放所有打开的window
+const windowMap = new Map();
+ipcMain.on('openWindow',(e, url, name, options) => {
+    if(windowMap.has(name)) {
+        console.info(name + ' is already exists');
+        return;
+    }
+    console.info('openWindow, url: '+ url + ', name: '+ name + ', option: '+ options);
+    let winNew = new BrowserWindow(JSON.parse(options));
+    // winSettings.loadURL(path.join('file://', __dirname, '/dist/index.html#/settings'));
+    url = path.join('file://',  __dirname, '/dist/' + url);
+    // console.info('loadURL, url: '+ url);
+    winNew.loadURL(url);
+    winNew.setMenu(null);
+    // winNew.setMenu(null);
+    windowMap.set(name, {
+        url: url,
+        option: options
+    });
+    winNew.on('close', () => {
+        windowMap.delete(name);
+    });
 });

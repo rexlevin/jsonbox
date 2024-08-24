@@ -1,7 +1,7 @@
 {
     "name": "jsonbox",
     "private": true,
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
     "main": "main.js",
     "scripts": {
@@ -46,7 +46,8 @@
         "monaco-editor": "^0.47.0",
         "nanoid": "^3.3.4",
         "vue": "^3.4.21",
-        "vue-router": "^4.4.0"
+        "vue-router": "^4.4.0",
+        "x2js": "^3.4.4"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.0.4",
