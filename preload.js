@@ -45,7 +45,7 @@ contextBridge.exposeInMainWorld(
         },
         openWindow: (url, name, options) => {
             console.info('openWindow, url=%s, name=%s, option=%o', url, name, options);
-            ipcRenderer.send('openWindow', url, name, option);
+            ipcRenderer.send('openWindow', url, name, options);
         },
         saveBox: (box) => {
             store.set('box', JSON.parse(box));
