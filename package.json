@@ -25,7 +25,7 @@
             "preload.js",
             "index.html",
             "logo.png",
-            "!node_modules"
+            "!node_modules/electron"
         ],
         "directories": {
             "output": "./build"
