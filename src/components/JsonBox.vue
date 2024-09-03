@@ -14,8 +14,8 @@
         </main>
         <footer>
             <div class="bottom">
-                <div class="divSettings" title="设置 alt+s">
-                    <span class="icon-span" @click="openSettings"><i class="bi bi-sliders icon"></i></span>
+                <div class="divSettings">
+                    <!-- <span class="icon-span" @click="openSettings"><i class="bi bi-sliders icon"></i></span> -->
                 </div>
                 <div style="height: 100%;"></div>
                 <div class="btngroup">
