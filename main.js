@@ -31,8 +31,8 @@ const createWindow = () => {
     // Menu.setApplicationMenu(null);
 
     let config = {
-        minWidth: 820,
-        minHeight: 600,
+        minWidth: 700,
+        minHeight: 500,
         icon: path.join(__dirname, 'logo.png'),
         webPreferences: {
             sandbox: false,     // 没有这个配置，加载不到 preload.js

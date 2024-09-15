@@ -184,13 +184,12 @@ function createTab() {
 
 function closeTab() {
     console.info('close current tab');
-    if(box.value.data.length === 1
-         && box.value.data[0].content === ''
-    ) {
-        console.info('当前只有一个空白页，无法关闭');
-        return;
-    }
     if(box.value.data.length === 1) {
+        box.value.tabTitleIndex = 0;
+        if(box.value.data[0].content === '') {
+            console.info('当前只有一个空白页，无法关闭');
+            return;
+        }
         box.value.data[0].title = 'NewTab 0';
         box.value.data[0].content = '';
         editorInstance.setValue('');
