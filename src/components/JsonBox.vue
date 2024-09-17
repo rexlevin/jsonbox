@@ -3,7 +3,7 @@
         <header>
             <div class="tabs header">
                 <ul>
-                    <li v-for="(item, index) in box.data" :class="item.id == box.activeId ? 'tab_selected' : 'tab_default'" @click="switchTab(item.id)">{{item.title}}</li>
+                    <li v-for="(item, index) in box.data" :class="item.id == box.activeId ? 'tab-selected' : 'tab-default'" @click="switchTab(item.id)">{{item.title}}</li>
                 </ul>
             </div>
         </header>
