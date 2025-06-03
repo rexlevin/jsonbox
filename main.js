@@ -37,7 +37,6 @@ const createWindow = () => {
         webPreferences: {
             sandbox: false,     // 没有这个配置，加载不到 preload.js
             preload: path.join(__dirname, 'preload.js'),
-            // preload: 'http://localhost:13000',
             spellcheck: false
         },
         useContentSize: true,
@@ -49,15 +48,14 @@ const createWindow = () => {
 
     win.webContents.send('getWindowParams');
 
-    // win.loadURL('file://' + __dirname + '/dist/index.html');
-    // win.loadURL('file://${__dirname}/dist/index.html');
-    win.loadURL(path.join('file://', __dirname, '/dist/index.html'));
+    win.loadURL(path.join('file://', __dirname, '/build/index.html'));
+    // win.loadURL('http://localhost:12333/');
     
     // win.setMenu(Menu.buildFromTemplate(menuTemplate));
     win.setMenu(null);
 
     // 打开开发者窗口
-    // win.webContents.openDevTools();
+    // win.webContents.openDevTools({mode: 'detach'});
 
     win.on('ready-to-show', () => {
         win.show();
@@ -200,7 +198,7 @@ ipcMain.on('reload', () => {
 ipcMain.on('openDevTools', () => {
     // win.webContents.openDevTools();
     if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
-    else win.webContents.openDevTools();
+    else win.webContents.openDevTools({mode: 'detach'});
 });
 
 // 设置一个map集合，用于存放所有打开的window
