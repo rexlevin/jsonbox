@@ -196,7 +196,6 @@ ipcMain.on('reload', () => {
     win.reload();
 });
 ipcMain.on('openDevTools', () => {
-    // win.webContents.openDevTools();
     if(win.webContents.isDevToolsOpened()) win.webContents.closeDevTools();
     else win.webContents.openDevTools({mode: 'detach'});
 });
