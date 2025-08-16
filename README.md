@@ -57,10 +57,10 @@ bootstrap icon: https://icons.getbootstrap.com/
 
 # 截图
 
-![image-20230204151508674](https://imgbd.r-xnoro.com//image-20230204151508674.png)
+![image-20230204151508674](https://imgbd-lizl6.oss-cn-beijing.aliyuncs.com/image-20230204151508674.png)
 
-![image-20230204151829103](https://imgbd.r-xnoro.com//image-20230204151829103.png)
+![image-20230204151829103](https://imgbd-lizl6.oss-cn-beijing.aliyuncs.com/image-20230204151829103.png)
 
-![image-20230204151800184](https://imgbd.r-xnoro.com//image-20230204151800184.png)
+![image-20230204151800184](https://imgbd-lizl6.oss-cn-beijing.aliyuncs.com/image-20230204151800184.png)
 
-![image-20230204152659117](https://imgbd.r-xnoro.com//image-20230204152659117.png)
+![image-20230204152659117](https://imgbd-lizl6.oss-cn-beijing.aliyuncs.com/image-20230204152659117.png)
