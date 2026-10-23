@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> **本项目已归档（Archived），不再维护。**
+>
+> 这是早期使用 electron 独立实现的 JSON 格式化工具。现在 JSON 功能已作为 `cb-jsonbox` 应用整合进 CanBox 平台，功能更完善、安装管理更方便，并支持 Windows、macOS、Linux 全平台。
+>
+> 请前往 **[CanBox 平台](https://canbox-io.github.io/canbox-pages/)** 下载并使用新的 CanBox（其中的 JsonBox 应用），本仓库仅作历史留存。
+
 # 说明
 
 这是一个基于 electron 的json格式化工具，下载地址：https://docs.r-xnoro.com/jsonbox
